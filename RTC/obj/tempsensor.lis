@@ -1,0 +1,367 @@
+ 0000                   cpu LMM
+                        .module tempsensor.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./tempsensor.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\tempsensor.c
+ 0000                   .dbfunc e TempSensor_Start _TempSensor_Start fV
+ 0000           _TempSensor_Start::
+ 0000                   .dbline -1
+ 0000                   .dbline 8
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #include "TempSensor.h"
+ 0000           ; #include <stdio.h>
+ 0000           ; 
+ 0000           ; 
+ 0000           ; void TempSensor_Start(void)
+ 0000           ; {
+ 0000                   .dbline 9
+ 0000           ;       PGA_Start(PGA_HIGHPOWER);
+ 0000 10                push X
+ 0001 5003              mov A,3
+ 0003 7C0000            xcall _PGA_Start
+ 0006                   .dbline 10
+ 0006           ;       ADCINC_Start(ADCINC_HIGHPOWER);
+ 0006 5003              mov A,3
+ 0008 7C0000            xcall _ADCINC_Start
+ 000B                   .dbline 11
+ 000B           ;       ADCINC_GetSamples(0);
+ 000B 5000              mov A,0
+ 000D 7C0000            xcall _ADCINC_GetSamples
+ 0010 20                pop X
+ 0011                   .dbline -2
+ 0011           L1:
+ 0011                   .dbline 0 ; func end
+ 0011 7F                ret
+ 0012                   .dbend
+ 0012                   .dbfunc e TempSensor_Stop _TempSensor_Stop fV
+ 0012           _TempSensor_Stop::
+ 0012                   .dbline -1
+ 0012                   .dbline 14
+ 0012           ; }
+ 0012           ; void TempSensor_Stop(void)
+ 0012           ; {
+ 0012                   .dbline 15
+ 0012           ;       PGA_Stop();
+ 0012 10                push X
+ 0013 7C0000            xcall _PGA_Stop
+ 0016                   .dbline 16
+ 0016           ;       ADCINC_Stop();
+ 0016 7C0000            xcall _ADCINC_Stop
+ 0019 20                pop X
+ 001A                   .dbline -2
+ 001A           L2:
+ 001A                   .dbline 0 ; func end
+ 001A 7F                ret
+ 001B                   .dbend
+ 001B                   .dbfunc e TempSensor_GetTemp _TempSensor_GetTemp fI
+ 001B           ;         latemp -> X+4
+ 001B           ;           temp -> X+0
+ 001B           _TempSensor_GetTemp::
+ 001B                   .dbline -1
+ 001B 10                push X
+ 001C 4F                mov X,SP
+ 001D 3806              add SP,6
+ 001F                   .dbline 20
+ 001F           ; }
+ 001F           ; 
+ 001F           ; int TempSensor_GetTemp(void)
+ 001F           ; {
+ 001F           L4:
+ 001F                   .dbline 23
+ 001F           ;       float temp;
+ 001F           ;       int latemp;
+ 001F           ;       while (ADCINC_fIsDataAvailable() == 0);
+ 001F           L5:
+ 001F                   .dbline 23
+ 001F 10                push X
+ 0020 7C0000            xcall _ADCINC_fIsDataAvailable
+ 0023 20                pop X
+ 0024 62D000            mov REG[0xd0],>__r0
+ 0027 3900              cmp A,0
+ 0029 AFF5              jz L4
+ 002B                   .dbline 24
+ 002B           ;       temp = ADCINC_wClearFlagGetData();
+ 002B 10                push X
+ 002C 7C0000            xcall _ADCINC_wClearFlagGetData
+ 002F 62D000            mov REG[0xd0],>__r0
+ 0032 5A00              mov [__r0],X
+ 0034 5300              mov [__r1],A
+ 0036 20                pop X
+ 0037 2101              and A,1
+ 0039 5300              mov [__r3],A
+ 003B 5100              mov A,[__r0]
+ 003D 2100              and A,0
+ 003F 5300              mov [__r2],A
+ 0041 5100              mov A,[__r3]
+ 0043 5300              mov [__r7],A
+ 0045 5100              mov A,[__r2]
+ 0047 5300              mov [__r6],A
+ 0049 470080            tst [__r6],-128
+ 004C A009              jz X0
+ 004E 5500FF            mov [__r5],-1
+ 0051 5500FF            mov [__r4],-1
+ 0054 800A              jmp X1
+ 0056           X0:
+ 0056 62D000            mov REG[0xd0],>__r0
+ 0059 550000            mov [__r5],0
+ 005C 550000            mov [__r4],0
+ 005F           X1:
+ 005F 62D000            mov REG[0xd0],>__r0
+ 0062 5100              mov A,[__r4]
+ 0064 08                push A
+ 0065 5100              mov A,[__r5]
+ 0067 08                push A
+ 0068 5100              mov A,[__r6]
+ 006A 08                push A
+ 006B 5100              mov A,[__r7]
+ 006D 08                push A
+ 006E 7C0000            xcall __long2fp
+ 0071 18                pop A
+ 0072 5300              mov [__r7],A
+ 0074 18                pop A
+ 0075 5300              mov [__r6],A
+ 0077 18                pop A
+ 0078 5300              mov [__r5],A
+ 007A 18                pop A
+ 007B 5300              mov [__r4],A
+ 007D 70FB              and F,-5
+ 007F 6E00              rrc [__r0]
+ 0081 6E00              rrc [__r1]
+ 0083 5100              mov A,[__r1]
+ 0085 5300              mov [__r3],A
+ 0087 5100              mov A,[__r0]
+ 0089 5300              mov [__r2],A
+ 008B 470080            tst [__r2],-128
+ 008E A009              jz X2
+ 0090 5500FF            mov [__r1],-1
+ 0093 5500FF            mov [__r0],-1
+ 0096 800A              jmp X3
+ 0098           X2:
+ 0098 62D000            mov REG[0xd0],>__r0
+ 009B 550000            mov [__r1],0
+ 009E 550000            mov [__r0],0
+ 00A1           X3:
+ 00A1 62D000            mov REG[0xd0],>__r0
+ 00A4 5100              mov A,[__r0]
+ 00A6 08                push A
+ 00A7 5100              mov A,[__r1]
+ 00A9 08                push A
+ 00AA 5100              mov A,[__r2]
+ 00AC 08                push A
+ 00AD 5100              mov A,[__r3]
+ 00AF 08                push A
+ 00B0 7C0000            xcall __long2fp
+ 00B3 18                pop A
+ 00B4 5300              mov [__r3],A
+ 00B6 18                pop A
+ 00B7 5300              mov [__r2],A
+ 00B9 18                pop A
+ 00BA 5300              mov [__r1],A
+ 00BC 18                pop A
+ 00BD 08                push A
+ 00BE 5100              mov A,[__r1]
+ 00C0 08                push A
+ 00C1 5100              mov A,[__r2]
+ 00C3 08                push A
+ 00C4 5100              mov A,[__r3]
+ 00C6 08                push A
+ 00C7 5040              mov A,64
+ 00C9 08                push A
+ 00CA 5000              mov A,0
+ 00CC 08                push A
+ 00CD 08                push A
+ 00CE 08                push A
+ 00CF 7C0000            xcall __fpmul
+ 00D2 18                pop A
+ 00D3 5300              mov [__r3],A
+ 00D5 18                pop A
+ 00D6 5300              mov [__r2],A
+ 00D8 18                pop A
+ 00D9 5300              mov [__r1],A
+ 00DB 18                pop A
+ 00DC 5300              mov [__r0],A
+ 00DE 38FC              add SP,-4
+ 00E0 5100              mov A,[__r4]
+ 00E2 08                push A
+ 00E3 5100              mov A,[__r5]
+ 00E5 08                push A
+ 00E6 5100              mov A,[__r6]
+ 00E8 08                push A
+ 00E9 5100              mov A,[__r7]
+ 00EB 08                push A
+ 00EC 5100              mov A,[__r0]
+ 00EE 08                push A
+ 00EF 5100              mov A,[__r1]
+ 00F1 08                push A
+ 00F2 5100              mov A,[__r2]
+ 00F4 08                push A
+ 00F5 5100              mov A,[__r3]
+ 00F7 08                push A
+ 00F8 7C0000            xcall __fpadd
+ 00FB 18                pop A
+ 00FC 5403              mov [X+3],A
+ 00FE 18                pop A
+ 00FF 5402              mov [X+2],A
+ 0101 18                pop A
+ 0102 5401              mov [X+1],A
+ 0104 18                pop A
+ 0105 5400              mov [X+0],A
+ 0107 38FC              add SP,-4
+ 0109                   .dbline 25
+ 0109           ;       latemp = temp;
+ 0109 5200              mov A,[X+0]
+ 010B 08                push A
+ 010C 5201              mov A,[X+1]
+ 010E 08                push A
+ 010F 5202              mov A,[X+2]
+ 0111 08                push A
+ 0112 5203              mov A,[X+3]
+ 0114 08                push A
+ 0115 7C0000            xcall __fp2long
+ 0118 18                pop A
+ 0119 5405              mov [X+5],A
+ 011B 18                pop A
+ 011C 5404              mov [X+4],A
+ 011E 38FE              add SP,-2
+ 0120                   .dbline 26
+ 0120           ;       cprintf("Raw: %d\n",latemp);
+ 0120 5204              mov A,[X+4]
+ 0122 08                push A
+ 0123 5205              mov A,[X+5]
+ 0125 08                push A
+ 0126 5010              mov A,>L7
+ 0128 08                push A
+ 0129 5010              mov A,<L7
+ 012B 08                push A
+ 012C 7C0000            xcall _cprintf
+ 012F 38FC              add SP,-4
+ 0131                   .dbline 27
+ 0131           ;       temp = (((temp)*500.0)/1023.0)-264;//270.5;
+ 0131 62D000            mov REG[0xd0],>__r0
+ 0134 5200              mov A,[X+0]
+ 0136 08                push A
+ 0137 5201              mov A,[X+1]
+ 0139 08                push A
+ 013A 5202              mov A,[X+2]
+ 013C 08                push A
+ 013D 5203              mov A,[X+3]
+ 013F 08                push A
+ 0140 5043              mov A,67
+ 0142 08                push A
+ 0143 50FA              mov A,-6
+ 0145 08                push A
+ 0146 5000              mov A,0
+ 0148 08                push A
+ 0149 08                push A
+ 014A 7C0000            xcall __fpmul
+ 014D 18                pop A
+ 014E 5300              mov [__r3],A
+ 0150 18                pop A
+ 0151 5300              mov [__r2],A
+ 0153 18                pop A
+ 0154 5300              mov [__r1],A
+ 0156 18                pop A
+ 0157 5300              mov [__r0],A
+ 0159 38FC              add SP,-4
+ 015B 5044              mov A,68
+ 015D 08                push A
+ 015E 507F              mov A,127
+ 0160 08                push A
+ 0161 50C0              mov A,-64
+ 0163 08                push A
+ 0164 5000              mov A,0
+ 0166 08                push A
+ 0167 5100              mov A,[__r0]
+ 0169 08                push A
+ 016A 5100              mov A,[__r1]
+ 016C 08                push A
+ 016D 5100              mov A,[__r2]
+ 016F 08                push A
+ 0170 5100              mov A,[__r3]
+ 0172 08                push A
+ 0173 7C0000            xcall __fpdiv
+ 0176 18                pop A
+ 0177 5300              mov [__r3],A
+ 0179 18                pop A
+ 017A 5300              mov [__r2],A
+ 017C 18                pop A
+ 017D 5300              mov [__r1],A
+ 017F 18                pop A
+ 0180 5300              mov [__r0],A
+ 0182 38FC              add SP,-4
+ 0184 5043              mov A,67
+ 0186 08                push A
+ 0187 5084              mov A,-124
+ 0189 08                push A
+ 018A 5000              mov A,0
+ 018C 08                push A
+ 018D 08                push A
+ 018E 5100              mov A,[__r0]
+ 0190 08                push A
+ 0191 5100              mov A,[__r1]
+ 0193 08                push A
+ 0194 5100              mov A,[__r2]
+ 0196 08                push A
+ 0197 5100              mov A,[__r3]
+ 0199 08                push A
+ 019A 7C0000            xcall __fpsub
+ 019D 18                pop A
+ 019E 5403              mov [X+3],A
+ 01A0 18                pop A
+ 01A1 5402              mov [X+2],A
+ 01A3 18                pop A
+ 01A4 5401              mov [X+1],A
+ 01A6 18                pop A
+ 01A7 5400              mov [X+0],A
+ 01A9 38FC              add SP,-4
+ 01AB                   .dbline 28
+ 01AB           ;       latemp = temp;
+ 01AB 5200              mov A,[X+0]
+ 01AD 08                push A
+ 01AE 5201              mov A,[X+1]
+ 01B0 08                push A
+ 01B1 5202              mov A,[X+2]
+ 01B3 08                push A
+ 01B4 5203              mov A,[X+3]
+ 01B6 08                push A
+ 01B7 7C0000            xcall __fp2long
+ 01BA 18                pop A
+ 01BB 5405              mov [X+5],A
+ 01BD 18                pop A
+ 01BE 5404              mov [X+4],A
+ 01C0 38FE              add SP,-2
+ 01C2                   .dbline 29
+ 01C2           ;       cprintf("Conversion: %d\n",latemp);
+ 01C2 5204              mov A,[X+4]
+ 01C4 08                push A
+ 01C5 5205              mov A,[X+5]
+ 01C7 08                push A
+ 01C8 5000              mov A,>L8
+ 01CA 08                push A
+ 01CB 5000              mov A,<L8
+ 01CD 08                push A
+ 01CE 7C0000            xcall _cprintf
+ 01D1 38FC              add SP,-4
+ 01D3                   .dbline 31
+ 01D3           ;       
+ 01D3           ;       return latemp;
+ 01D3 62D000            mov REG[0xd0],>__r0
+ 01D6 5205              mov A,[X+5]
+ 01D8 5300              mov [__r1],A
+ 01DA 5204              mov A,[X+4]
+ 01DC 5300              mov [__r0],A
+ 01DE                   .dbline -2
+ 01DE           L3:
+ 01DE 38FA              add SP,-6
+ 01E0 20                pop X
+ 01E1                   .dbline 0 ; func end
+ 01E1 7F                ret
+ 01E2                   .dbsym l latemp 4 I
+ 01E2                   .dbsym l temp 0 D
+ 01E2                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0000           L8:
+ 0000 436F6E76657273696F6E3A2025640A00  .byte 'C,'o,'n,'v,'e,'r,'s,'i,'o,'n,58,32,37,'d,10,0
+ 0010           L7:
+ 0010 5261773A2025640A00        .byte 'R,'a,'w,58,32,37,'d,10,0

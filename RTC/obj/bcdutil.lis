@@ -1,0 +1,109 @@
+ 0000                   cpu LMM
+                        .module bcdutil.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./bcdutil.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\bcdutil.c
+ 0000                   .dbfunc e bcdToDec _bcdToDec fV
+ 0000           ;            dec -> X-7
+ 0000           ;            bcd -> X-5
+ 0000           ;          bcd10 -> X-4
+ 0000           _bcdToDec::
+ 0000                   .dbline -1
+ 0000 10                push X
+ 0001 4F                mov X,SP
+ 0002                   .dbline 6
+ 0002           ; #include <m8c.h>        // part specific constants and macros
+ 0002           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0002           ; #include "BcdUtil.h"
+ 0002           ; 
+ 0002           ; void bcdToDec(BYTE bcd10, BYTE bcd, BYTE *dec)
+ 0002           ; {
+ 0002                   .dbline 7
+ 0002           ;       *dec = (bcd10 & 0xf) * 10 + (bcd & 0xf);
+ 0002 62D000            mov REG[0xd0],>__r0
+ 0005 52FB              mov A,[X-5]
+ 0007 210F              and A,15
+ 0009 5300              mov [__r0],A
+ 000B 52FC              mov A,[X-4]
+ 000D 210F              and A,15
+ 000F 60E8              mov REG[0xe8],A
+ 0011 62E90A            mov REG[0xe9],10
+ 0014 40                nop
+ 0015 5DEB              mov A,REG[0xeb]
+ 0017 0200              add A,[__r0]
+ 0019 5300              mov [__r0],A
+ 001B 52FA              mov A,[X-6]
+ 001D 5300              mov [__r3],A
+ 001F 52F9              mov A,[X-7]
+ 0021 60D5              mov REG[0xd5],A
+ 0023 5100              mov A,[__r0]
+ 0025 3F00              mvi [__r3],A
+ 0027                   .dbline -2
+ 0027           L1:
+ 0027 20                pop X
+ 0028                   .dbline 0 ; func end
+ 0028 7F                ret
+ 0029                   .dbsym l dec -7 pc
+ 0029                   .dbsym l bcd -5 c
+ 0029                   .dbsym l bcd10 -4 c
+ 0029                   .dbend
+ 0029                   .dbfunc e decToBcd _decToBcd fV
+ 0029           ;            dec -> X-8
+ 0029           ;            bcd -> X-7
+ 0029           ;          bcd10 -> X-5
+ 0029           _decToBcd::
+ 0029                   .dbline -1
+ 0029 10                push X
+ 002A 4F                mov X,SP
+ 002B                   .dbline 11
+ 002B           ; }
+ 002B           ; 
+ 002B           ; void decToBcd(BYTE *bcd10, BYTE *bcd, BYTE dec)
+ 002B           ; {
+ 002B                   .dbline 12
+ 002B           ;       *bcd10 = dec/10;
+ 002B 62D000            mov REG[0xd0],>__r0
+ 002E 500A              mov A,10
+ 0030 08                push A
+ 0031 52F8              mov A,[X-8]
+ 0033 08                push A
+ 0034 7C0000            xcall __divmodu_8X8_8
+ 0037 18                pop A
+ 0038 5300              mov [__r0],A
+ 003A 38FF              add SP,-1
+ 003C 52FC              mov A,[X-4]
+ 003E 5300              mov [__r3],A
+ 0040 52FB              mov A,[X-5]
+ 0042 60D5              mov REG[0xd5],A
+ 0044 5100              mov A,[__r0]
+ 0046 3F00              mvi [__r3],A
+ 0048                   .dbline 13
+ 0048           ;       *bcd = dec - (*bcd10 * 10);
+ 0048 52FC              mov A,[X-4]
+ 004A 5300              mov [__r1],A
+ 004C 52FB              mov A,[X-5]
+ 004E 60D4              mov REG[0xd4],A
+ 0050 3E00              mvi A,[__r1]
+ 0052 60E8              mov REG[0xe8],A
+ 0054 62E90A            mov REG[0xe9],10
+ 0057 40                nop
+ 0058 5DEB              mov A,REG[0xeb]
+ 005A 5300              mov [__r0],A
+ 005C 52F8              mov A,[X-8]
+ 005E 1200              sub A,[__r0]
+ 0060 5300              mov [__r0],A
+ 0062 52FA              mov A,[X-6]
+ 0064 5300              mov [__r3],A
+ 0066 52F9              mov A,[X-7]
+ 0068 60D5              mov REG[0xd5],A
+ 006A 5100              mov A,[__r0]
+ 006C 3F00              mvi [__r3],A
+ 006E                   .dbline -2
+ 006E           L2:
+ 006E 20                pop X
+ 006F                   .dbline 0 ; func end
+ 006F 7F                ret
+ 0070                   .dbsym l dec -8 c
+ 0070                   .dbsym l bcd -7 pc
+ 0070                   .dbsym l bcd10 -5 pc
+ 0070                   .dbend

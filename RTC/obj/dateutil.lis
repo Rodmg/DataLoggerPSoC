@@ -1,0 +1,240 @@
+ 0000                   cpu LMM
+                        .module dateutil.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./dateutil.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\dateutil.c
+ 0000                   .dbfunc e isLeapYear _isLeapYear fc
+ 0000           ;           year -> X-5
+ 0000           _isLeapYear::
+ 0000                   .dbline -1
+ 0000 10                push X
+ 0001 4F                mov X,SP
+ 0002 3802              add SP,2
+ 0004                   .dbline 6
+ 0004           ; #include <m8c.h>        // part specific constants and macros
+ 0004           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0004           ; #include "dateUtil.h"
+ 0004           ; 
+ 0004           ; BOOL isLeapYear(unsigned short year)
+ 0004           ; {
+ 0004                   .dbline 7
+ 0004           ;       return (!(year%4) && (year%100) || !(year%400));
+ 0004 62D000            mov REG[0xd0],>__r0
+ 0007 52FC              mov A,[X-4]
+ 0009 2103              and A,3
+ 000B 5300              mov [__r1],A
+ 000D 52FB              mov A,[X-5]
+ 000F 2100              and A,0
+ 0011 3900              cmp A,0
+ 0013 B027              jnz L6
+ 0015 3C0000            cmp [__r1],0
+ 0018 B022              jnz L6
+ 001A           X0:
+ 001A 62D000            mov REG[0xd0],>__r0
+ 001D 5000              mov A,0
+ 001F 08                push A
+ 0020 5064              mov A,100
+ 0022 08                push A
+ 0023 52FB              mov A,[X-5]
+ 0025 08                push A
+ 0026 52FC              mov A,[X-4]
+ 0028 08                push A
+ 0029 7C0000            xcall __divmodu_16X16_16
+ 002C 38FE              add SP,-2
+ 002E 18                pop A
+ 002F 5300              mov [__r1],A
+ 0031 18                pop A
+ 0032 3900              cmp A,0
+ 0034 B027              jnz L5
+ 0036 3C0000            cmp [__r1],0
+ 0039 B022              jnz L5
+ 003B           X1:
+ 003B           L6:
+ 003B 62D000            mov REG[0xd0],>__r0
+ 003E 5001              mov A,1
+ 0040 08                push A
+ 0041 5090              mov A,-112
+ 0043 08                push A
+ 0044 52FB              mov A,[X-5]
+ 0046 08                push A
+ 0047 52FC              mov A,[X-4]
+ 0049 08                push A
+ 004A 7C0000            xcall __divmodu_16X16_16
+ 004D 38FE              add SP,-2
+ 004F 18                pop A
+ 0050 5300              mov [__r1],A
+ 0052 18                pop A
+ 0053 3900              cmp A,0
+ 0055 B00E              jnz L3
+ 0057 3C0000            cmp [__r1],0
+ 005A B009              jnz L3
+ 005C           X2:
+ 005C           L5:
+ 005C 560101            mov [X+1],1
+ 005F 560000            mov [X+0],0
+ 0062 8007              xjmp L4
+ 0064           L3:
+ 0064 560100            mov [X+1],0
+ 0067 560000            mov [X+0],0
+ 006A           L4:
+ 006A 62D000            mov REG[0xd0],>__r0
+ 006D 5201              mov A,[X+1]
+ 006F                   .dbline -2
+ 006F           L1:
+ 006F 38FE              add SP,-2
+ 0071 20                pop X
+ 0072                   .dbline 0 ; func end
+ 0072 7F                ret
+ 0073                   .dbsym l year -5 s
+ 0073                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0000           L8:
+ 0000 1F1C              .byte 31,28
+ 0002 1F1E              .byte 31,30
+ 0004 1F1E              .byte 31,30
+ 0006 1F1F              .byte 31,31
+ 0008 1E1F              .byte 30,31
+ 000A 1E1F              .byte 30,31
+                        .area text(rom, con, rel)
+ 0073                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\dateutil.c
+ 0073                   .dbfunc e isValidDate _isValidDate fc
+ 0073           ;       monthLen -> X+2
+ 0073           ;       fullYear -> X+0
+ 0073           ;           year -> X-6
+ 0073           ;          month -> X-5
+ 0073           ;            day -> X-4
+ 0073           _isValidDate::
+ 0073                   .dbline -1
+ 0073 10                push X
+ 0074 4F                mov X,SP
+ 0075 380E              add SP,14
+ 0077                   .dbline 11
+ 0077           ; }
+ 0077           ; 
+ 0077           ; BOOL isValidDate(BYTE day, BYTE month, BYTE year)
+ 0077           ; {
+ 0077                   .dbline 12
+ 0077           ;       unsigned short fullYear = 2000 + year;
+ 0077 62D000            mov REG[0xd0],>__r0
+ 007A 52FA              mov A,[X-6]
+ 007C 5300              mov [__r1],A
+ 007E 550000            mov [__r0],0
+ 0081 0600D0            add [__r1],-48
+ 0084 0E0007            adc [__r0],7
+ 0087 5100              mov A,[__r1]
+ 0089 5401              mov [X+1],A
+ 008B 5100              mov A,[__r0]
+ 008D 5400              mov [X+0],A
+ 008F                   .dbline 13
+ 008F           ;       BYTE monthLen[]={31,28,31,30,31,30,31,31,30,31,30,31};
+ 008F 550000            mov [__r1],<L8
+ 0092 550000            mov [__r0],>L8
+ 0095 5A00              mov [__r3],X
+ 0097 060002            add [__r3],2
+ 009A 62D507            mov REG[0xd5],7
+ 009D 10                push X
+ 009E 550000            mov [__rX],0
+ 00A1 5100              mov A,[__r0]
+ 00A3 5800              mov X,[__r1]
+ 00A5           X3:
+ 00A5 08                push A
+ 00A6 28                romx
+ 00A7 62D000            mov REG[0xd0],>__r0
+ 00AA 3F00              mvi [__r3],A
+ 00AC 18                pop A
+ 00AD 75                inc X
+ 00AE 0900              adc A,0
+ 00B0 7600              inc [__rX]
+ 00B2 3C000C            cmp [__rX],12
+ 00B5 BFEF              jnz X3
+ 00B7 20                pop X
+ 00B8                   .dbline 15
+ 00B8           ;       
+ 00B8           ;       if(year > 99) return FALSE;
+ 00B8 5063              mov A,99
+ 00BA 3BFA              cmp A,[X-6]
+ 00BC D008              jnc L9
+ 00BE           X4:
+ 00BE                   .dbline 15
+ 00BE 62D000            mov REG[0xd0],>__r0
+ 00C1 5000              mov A,0
+ 00C3 8063              xjmp L7
+ 00C5           L9:
+ 00C5                   .dbline 17
+ 00C5           ; 
+ 00C5           ;       if (!fullYear || !month || !day || month>12)
+ 00C5 3D0000            cmp [X+0],0
+ 00C8 B006              jnz X5
+ 00CA 3D0100            cmp [X+1],0
+ 00CD A011              jz L15
+ 00CF           X5:
+ 00CF 3DFB00            cmp [X-5],0
+ 00D2 A00C              jz L15
+ 00D4 3DFC00            cmp [X-4],0
+ 00D7 A007              jz L15
+ 00D9 500C              mov A,12
+ 00DB 3BFB              cmp A,[X-5]
+ 00DD D008              jnc L11
+ 00DF           X6:
+ 00DF           L15:
+ 00DF                   .dbline 18
+ 00DF           ;               return FALSE;
+ 00DF 62D000            mov REG[0xd0],>__r0
+ 00E2 5000              mov A,0
+ 00E4 8042              xjmp L7
+ 00E6           L11:
+ 00E6                   .dbline 19
+ 00E6           ;       if (isLeapYear(fullYear) && month==2)
+ 00E6 5200              mov A,[X+0]
+ 00E8 08                push A
+ 00E9 5201              mov A,[X+1]
+ 00EB 08                push A
+ 00EC 9F12              xcall _isLeapYear
+ 00EE 38FE              add SP,-2
+ 00F0 62D000            mov REG[0xd0],>__r0
+ 00F3 3900              cmp A,0
+ 00F5 A008              jz L16
+ 00F7 3DFB02            cmp [X-5],2
+ 00FA B003              jnz L16
+ 00FC                   .dbline 20
+ 00FC           ;               monthLen[1]++;
+ 00FC 7703              inc [X+3]
+ 00FE           L16:
+ 00FE                   .dbline 21
+ 00FE           ;       if (day > monthLen[month-1])
+ 00FE 62D000            mov REG[0xd0],>__r0
+ 0101 550007            mov [__r0],7
+ 0104 5A00              mov [__r1],X
+ 0106 060001            add [__r1],1
+ 0109 52FB              mov A,[X-5]
+ 010B 0200              add A,[__r1]
+ 010D 5300              mov [__r1],A
+ 010F 5000              mov A,0
+ 0111 0A00              adc A,[__r0]
+ 0113 60D4              mov REG[0xd4],A
+ 0115 3E00              mvi A,[__r1]
+ 0117 3BFC              cmp A,[X-4]
+ 0119 D008              jnc L19
+ 011B           X7:
+ 011B                   .dbline 22
+ 011B           ;               return FALSE;
+ 011B 62D000            mov REG[0xd0],>__r0
+ 011E 5000              mov A,0
+ 0120 8006              xjmp L7
+ 0122           L19:
+ 0122                   .dbline 23
+ 0122           ;       return TRUE;
+ 0122 62D000            mov REG[0xd0],>__r0
+ 0125 5001              mov A,1
+ 0127                   .dbline -2
+ 0127           L7:
+ 0127 38F2              add SP,-14
+ 0129 20                pop X
+ 012A                   .dbline 0 ; func end
+ 012A 7F                ret
+ 012B                   .dbsym l monthLen 2 A[12:12]c
+ 012B                   .dbsym l fullYear 0 s
+ 012B                   .dbsym l year -6 c
+ 012B                   .dbsym l month -5 c
+ 012B                   .dbsym l day -4 c
+ 012B                   .dbend

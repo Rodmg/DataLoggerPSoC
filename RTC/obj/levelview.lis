@@ -1,0 +1,522 @@
+ 0000                   cpu LMM
+                        .module levelview.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./levelview.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\levelview.c
+ 0000                   .dbfunc e LevelView_Start _LevelView_Start fV
+ 0000           _LevelView_Start::
+ 0000                   .dbline -1
+ 0000                   .dbline 14
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #include "mainView.h"
+ 0000           ; #include "menu.h"
+ 0000           ; #include "BcdUtil.h"
+ 0000           ; #include "viewManager.h"
+ 0000           ; #include "Keypad.h"
+ 0000           ; #include "levelView.h"
+ 0000           ; #include "Persist.h"
+ 0000           ; 
+ 0000           ; extern CurrentView currentView;
+ 0000           ; 
+ 0000           ; void LevelView_Start(void)
+ 0000           ; {
+ 0000                   .dbline -2
+ 0000           L10:
+ 0000                   .dbline 0 ; func end
+ 0000 7F                ret
+ 0001                   .dbend
+ 0001                   .dbfunc e LevelView_Callback _LevelView_Callback fV
+ 0001                   .dbstruct 0 1 .7
+ 0001                   .dbfield 0 registerEnabled F[0:1]
+ 0001                   .dbfield 0 alarmEnabled F[1:1]
+ 0001                   .dbend
+ 0001                   .dbstruct 0 2 .4
+ 0001                   .dbfield 0 hour c
+ 0001                   .dbfield 1 min c
+ 0001                   .dbend
+ 0001                   .dbstruct 0 11 .6
+ 0001                   .dbfield 0 flags S[.7]
+ 0001                   .dbfield 1 registerStart S[.4]
+ 0001                   .dbfield 3 registerEnd S[.4]
+ 0001                   .dbfield 5 maxTemp c
+ 0001                   .dbfield 6 minTemp c
+ 0001                   .dbfield 7 maxRegisteredTemp c
+ 0001                   .dbfield 8 minRegisteredTemp c
+ 0001                   .dbfield 9 nRecords s
+ 0001                   .dbend
+ 0001           ;         bcdmin -> X+14
+ 0001           ;       bcd10min -> X+13
+ 0001           ;         bcdmax -> X+12
+ 0001           ;       bcd10max -> X+11
+ 0001           ;           conf -> X+0
+ 0001           _LevelView_Callback::
+ 0001                   .dbline -1
+ 0001 10                push X
+ 0002 4F                mov X,SP
+ 0003 380F              add SP,15
+ 0005                   .dbline 19
+ 0005           ; 
+ 0005           ; }
+ 0005           ; 
+ 0005           ; void LevelView_Callback(void)
+ 0005           ; {
+ 0005                   .dbline 22
+ 0005           ;       BYTE bcd10max, bcdmax, bcd10min, bcdmin;
+ 0005           ;       Config conf;
+ 0005           ;       Persist_LoadConfig(&conf);
+ 0005 62D000            mov REG[0xd0],>__r0
+ 0008 5007              mov A,7
+ 000A 08                push A
+ 000B 10                push X
+ 000C 7C0000            xcall _Persist_LoadConfig
+ 000F 38FE              add SP,-2
+ 0011 62D000            mov REG[0xd0],>__r0
+ 0014                   .dbline 24
+ 0014           ; 
+ 0014           ;       decToBcd(&bcd10max, &bcdmax, conf.maxTemp);
+ 0014 5205              mov A,[X+5]
+ 0016 08                push A
+ 0017 5A00              mov [__r1],X
+ 0019 06000C            add [__r1],12
+ 001C 5007              mov A,7
+ 001E 08                push A
+ 001F 5100              mov A,[__r1]
+ 0021 08                push A
+ 0022 5A00              mov [__r1],X
+ 0024 06000B            add [__r1],11
+ 0027 5007              mov A,7
+ 0029 08                push A
+ 002A 5100              mov A,[__r1]
+ 002C 08                push A
+ 002D 7C0000            xcall _decToBcd
+ 0030                   .dbline 25
+ 0030           ;       decToBcd(&bcd10min, &bcdmin, conf.minTemp);
+ 0030 5206              mov A,[X+6]
+ 0032 08                push A
+ 0033 62D000            mov REG[0xd0],>__r0
+ 0036 5A00              mov [__r1],X
+ 0038 06000E            add [__r1],14
+ 003B 5007              mov A,7
+ 003D 08                push A
+ 003E 5100              mov A,[__r1]
+ 0040 08                push A
+ 0041 5A00              mov [__r1],X
+ 0043 06000D            add [__r1],13
+ 0046 5007              mov A,7
+ 0048 08                push A
+ 0049 5100              mov A,[__r1]
+ 004B 08                push A
+ 004C 7C0000            xcall _decToBcd
+ 004F 38F6              add SP,-10
+ 0051                   .dbline 27
+ 0051           ; 
+ 0051           ;       currentView = LEVEL_CONFIG;
+ 0051 62D000            mov REG[0xd0],>_currentView
+ 0054 550003            mov [_currentView],3
+ 0057                   .dbline 28
+ 0057           ;       Menu_Clear();
+ 0057 7C0000            xcall _Menu_Clear
+ 005A                   .dbline 29
+ 005A           ;       LCD_Position(0, 0);
+ 005A 10                push X
+ 005B 5000              mov A,0
+ 005D 5700              mov X,0
+ 005F 7C0000            xcall _LCD_Position
+ 0062                   .dbline 30
+ 0062           ;       LCD_PrCString("Max: ");
+ 0062 5006              mov A,>L14
+ 0064 08                push A
+ 0065 5006              mov A,<L14
+ 0067 5C                mov X,A
+ 0068 18                pop A
+ 0069 7C0000            xcall _LCD_PrCString
+ 006C 20                pop X
+ 006D                   .dbline 31
+ 006D           ;       LCD_PrHexByte( (bcd10max << 4)|bcdmax );
+ 006D 520B              mov A,[X+11]
+ 006F 62D000            mov REG[0xd0],>__r0
+ 0072 64                asl A
+ 0073 64                asl A
+ 0074 64                asl A
+ 0075 64                asl A
+ 0076 5300              mov [__r0],A
+ 0078 520C              mov A,[X+12]
+ 007A 2C00              or [__r0],A
+ 007C 10                push X
+ 007D 5100              mov A,[__r0]
+ 007F 7C0000            xcall _LCD_PrHexByte
+ 0082                   .dbline 32
+ 0082           ;       LCD_Position(1,0);
+ 0082 5700              mov X,0
+ 0084 5001              mov A,1
+ 0086 7C0000            xcall _LCD_Position
+ 0089                   .dbline 33
+ 0089           ;       LCD_PrCString("Min: ");
+ 0089 5000              mov A,>L15
+ 008B 08                push A
+ 008C 5000              mov A,<L15
+ 008E 5C                mov X,A
+ 008F 18                pop A
+ 0090 7C0000            xcall _LCD_PrCString
+ 0093 20                pop X
+ 0094                   .dbline 34
+ 0094           ;       LCD_PrHexByte( (bcd10min << 4)|bcdmin );
+ 0094 520D              mov A,[X+13]
+ 0096 62D000            mov REG[0xd0],>__r0
+ 0099 64                asl A
+ 009A 64                asl A
+ 009B 64                asl A
+ 009C 64                asl A
+ 009D 5300              mov [__r0],A
+ 009F 520E              mov A,[X+14]
+ 00A1 2C00              or [__r0],A
+ 00A3 10                push X
+ 00A4 5100              mov A,[__r0]
+ 00A6 7C0000            xcall _LCD_PrHexByte
+ 00A9 20                pop X
+ 00AA                   .dbline -2
+ 00AA           L11:
+ 00AA 38F1              add SP,-15
+ 00AC 20                pop X
+ 00AD                   .dbline 0 ; func end
+ 00AD 7F                ret
+ 00AE                   .dbsym l bcdmin 14 c
+ 00AE                   .dbsym l bcd10min 13 c
+ 00AE                   .dbsym l bcdmax 12 c
+ 00AE                   .dbsym l bcd10max 11 c
+ 00AE                   .dbsym l conf 0 S[.6]
+ 00AE                   .dbend
+ 00AE                   .dbfunc e LevelView_Update _LevelView_Update fV
+ 00AE           ;       bcd10min -> X+14
+ 00AE           ;       bcd10max -> X+13
+ 00AE           ;           conf -> X+2
+ 00AE           ;         bcdmin -> X+1
+ 00AE           ;         bcdmax -> X+0
+ 00AE           _LevelView_Update::
+ 00AE                   .dbline -1
+ 00AE 10                push X
+ 00AF 4F                mov X,SP
+ 00B0 3811              add SP,17
+ 00B2                   .dbline 38
+ 00B2           ; }
+ 00B2           ; 
+ 00B2           ; void LevelView_Update(void)
+ 00B2           ; {
+ 00B2                   .dbline 39
+ 00B2           ;       if(Keypad_IsKeyStored())
+ 00B2 7C0000            xcall _Keypad_IsKeyStored
+ 00B5 62D000            mov REG[0xd0],>__r0
+ 00B8 3900              cmp A,0
+ 00BA A181              jz L17
+ 00BC                   .dbline 41
+ 00BC           ;       {
+ 00BC           ;               BYTE bcd10max, bcdmax, bcd10min, bcdmin;
+ 00BC                   .dbline 43
+ 00BC           ;               Config conf;
+ 00BC           ;               Persist_LoadConfig(&conf);
+ 00BC 5A00              mov [__r1],X
+ 00BE 060002            add [__r1],2
+ 00C1 5007              mov A,7
+ 00C3 08                push A
+ 00C4 5100              mov A,[__r1]
+ 00C6 08                push A
+ 00C7 7C0000            xcall _Persist_LoadConfig
+ 00CA 38FE              add SP,-2
+ 00CC 62D000            mov REG[0xd0],>__r0
+ 00CF                   .dbline 45
+ 00CF           ; 
+ 00CF           ;               decToBcd(&bcd10max, &bcdmax, conf.maxTemp);
+ 00CF 5207              mov A,[X+7]
+ 00D1 08                push A
+ 00D2 5007              mov A,7
+ 00D4 08                push A
+ 00D5 10                push X
+ 00D6 5A00              mov [__r1],X
+ 00D8 06000D            add [__r1],13
+ 00DB 08                push A
+ 00DC 5100              mov A,[__r1]
+ 00DE 08                push A
+ 00DF 7C0000            xcall _decToBcd
+ 00E2                   .dbline 46
+ 00E2           ;               decToBcd(&bcd10min, &bcdmin, conf.minTemp);
+ 00E2 5208              mov A,[X+8]
+ 00E4 08                push A
+ 00E5 62D000            mov REG[0xd0],>__r0
+ 00E8 5A00              mov [__r1],X
+ 00EA 060001            add [__r1],1
+ 00ED 5007              mov A,7
+ 00EF 08                push A
+ 00F0 5100              mov A,[__r1]
+ 00F2 08                push A
+ 00F3 5A00              mov [__r1],X
+ 00F5 06000E            add [__r1],14
+ 00F8 5007              mov A,7
+ 00FA 08                push A
+ 00FB 5100              mov A,[__r1]
+ 00FD 08                push A
+ 00FE 7C0000            xcall _decToBcd
+ 0101 38F6              add SP,-10
+ 0103                   .dbline 48
+ 0103           ; 
+ 0103           ;               switch(Keypad_GetKey())
+ 0103 7C0000            xcall _Keypad_GetKey
+ 0106 62D000            mov REG[0xd0],>__r0
+ 0109 5410              mov [X+16],A
+ 010B 560F00            mov [X+15],0
+ 010E 5210              mov A,[X+16]
+ 0110 1128              sub A,40
+ 0112 5300              mov [__rY],A
+ 0114 520F              mov A,[X+15]
+ 0116 3180              xor A,-128
+ 0118 1980              sbb A,(0 ^ 0x80)
+ 011A 2A00              or A,[__rY]
+ 011C A088              jz L34
+ 011E D022              jnc L46
+ 0120           X0:
+ 0120           L45:
+ 0120 5210              mov A,[X+16]
+ 0122 1111              sub A,17
+ 0124 62D000            mov REG[0xd0],>__r0
+ 0127 5300              mov [__rY],A
+ 0129 520F              mov A,[X+15]
+ 012B 3180              xor A,-128
+ 012D 1980              sbb A,(0 ^ 0x80)
+ 012F C0BD              jc L21
+ 0131 2A00              or A,[__rY]
+ 0133 A0B4              jz L44
+ 0135           X1:
+ 0135           L47:
+ 0135 3D0F00            cmp [X+15],0
+ 0138 B006              jnz X2
+ 013A 3D1018            cmp [X+16],24
+ 013D A088              jz L39
+ 013F           X2:
+ 013F 80AD              xjmp L21
+ 0141           L46:
+ 0141 5210              mov A,[X+16]
+ 0143 1148              sub A,72
+ 0145 62D000            mov REG[0xd0],>__r0
+ 0148 5300              mov [__rY],A
+ 014A 520F              mov A,[X+15]
+ 014C 3180              xor A,-128
+ 014E 1980              sbb A,(0 ^ 0x80)
+ 0150 C09C              jc L21
+ 0152 2A00              or A,[__rY]
+ 0154 A02E              jz L29
+ 0156           X3:
+ 0156           L48:
+ 0156 3D0F00            cmp [X+15],0
+ 0159 B006              jnz X4
+ 015B 3D1088            cmp [X+16],-120
+ 015E A003              jz L24
+ 0160           X4:
+ 0160 808C              xjmp L21
+ 0162           L24:
+ 0162                   .dbline 52
+ 0162           ;               {
+ 0162           ;                       case 0x88:
+ 0162           ;                               // "1"
+ 0162           ;                               if(conf.maxTemp < 99) conf.maxTemp++;
+ 0162 3D0763            cmp [X+7],99
+ 0165 D003              jnc L25
+ 0167           X5:
+ 0167                   .dbline 52
+ 0167 7707              inc [X+7]
+ 0169           L25:
+ 0169                   .dbline 53
+ 0169           ;                               Persist_SaveConfig(&conf);
+ 0169 62D000            mov REG[0xd0],>__r0
+ 016C 5A00              mov [__r1],X
+ 016E 060002            add [__r1],2
+ 0171 5007              mov A,7
+ 0173 08                push A
+ 0174 5100              mov A,[__r1]
+ 0176 08                push A
+ 0177 7C0000            xcall _Persist_SaveConfig
+ 017A 38FE              add SP,-2
+ 017C 62D000            mov REG[0xd0],>__r0
+ 017F 5300              mov [__r0],A
+ 0181                   .dbline 54
+ 0181           ;                               break;
+ 0181 806B              xjmp L22
+ 0183           L29:
+ 0183                   .dbline 56
+ 0183           ;                       case 0x48:
+ 0183           ;                               if(conf.maxTemp > 0) conf.maxTemp--;
+ 0183 5000              mov A,0
+ 0185 3B07              cmp A,[X+7]
+ 0187 D003              jnc L30
+ 0189           X6:
+ 0189                   .dbline 56
+ 0189 7B07              dec [X+7]
+ 018B           L30:
+ 018B                   .dbline 57
+ 018B           ;                               Persist_SaveConfig(&conf);
+ 018B 62D000            mov REG[0xd0],>__r0
+ 018E 5A00              mov [__r1],X
+ 0190 060002            add [__r1],2
+ 0193 5007              mov A,7
+ 0195 08                push A
+ 0196 5100              mov A,[__r1]
+ 0198 08                push A
+ 0199 7C0000            xcall _Persist_SaveConfig
+ 019C 38FE              add SP,-2
+ 019E 62D000            mov REG[0xd0],>__r0
+ 01A1 5300              mov [__r0],A
+ 01A3                   .dbline 59
+ 01A3           ;                               // "4"
+ 01A3           ;                               break;
+ 01A3 8049              xjmp L22
+ 01A5           L34:
+ 01A5                   .dbline 62
+ 01A5           ;                       case 0x28:
+ 01A5           ;                               // "7"
+ 01A5           ;                               if(conf.maxTemp < 99) conf.minTemp++;
+ 01A5 3D0763            cmp [X+7],99
+ 01A8 D003              jnc L35
+ 01AA           X7:
+ 01AA                   .dbline 62
+ 01AA 7708              inc [X+8]
+ 01AC           L35:
+ 01AC                   .dbline 63
+ 01AC           ;                               Persist_SaveConfig(&conf);
+ 01AC 62D000            mov REG[0xd0],>__r0
+ 01AF 5A00              mov [__r1],X
+ 01B1 060002            add [__r1],2
+ 01B4 5007              mov A,7
+ 01B6 08                push A
+ 01B7 5100              mov A,[__r1]
+ 01B9 08                push A
+ 01BA 7C0000            xcall _Persist_SaveConfig
+ 01BD 38FE              add SP,-2
+ 01BF 62D000            mov REG[0xd0],>__r0
+ 01C2 5300              mov [__r0],A
+ 01C4                   .dbline 64
+ 01C4           ;                               break;
+ 01C4 8028              xjmp L22
+ 01C6           L39:
+ 01C6                   .dbline 67
+ 01C6           ;                       case 0x18:
+ 01C6           ;                               // "*"
+ 01C6           ;                               if(conf.maxTemp > 0) conf.minTemp--;
+ 01C6 5000              mov A,0
+ 01C8 3B07              cmp A,[X+7]
+ 01CA D003              jnc L40
+ 01CC           X8:
+ 01CC                   .dbline 67
+ 01CC 7B08              dec [X+8]
+ 01CE           L40:
+ 01CE                   .dbline 68
+ 01CE           ;                               Persist_SaveConfig(&conf);
+ 01CE 62D000            mov REG[0xd0],>__r0
+ 01D1 5A00              mov [__r1],X
+ 01D3 060002            add [__r1],2
+ 01D6 5007              mov A,7
+ 01D8 08                push A
+ 01D9 5100              mov A,[__r1]
+ 01DB 08                push A
+ 01DC 7C0000            xcall _Persist_SaveConfig
+ 01DF 38FE              add SP,-2
+ 01E1 62D000            mov REG[0xd0],>__r0
+ 01E4 5300              mov [__r0],A
+ 01E6                   .dbline 69
+ 01E6           ;                               break;
+ 01E6 8006              xjmp L22
+ 01E8           L44:
+ 01E8                   .dbline 72
+ 01E8           ;                       case 0x11:
+ 01E8           ;                               // "D"
+ 01E8           ;                               MainView_Callback();
+ 01E8 7C0000            xcall _MainView_Callback
+ 01EB                   .dbline 73
+ 01EB           ;                               return;
+ 01EB 8050              xjmp L16
+ 01ED           L21:
+ 01ED           L22:
+ 01ED                   .dbline 77
+ 01ED           ;                               break;
+ 01ED           ;               }
+ 01ED           ; 
+ 01ED           ;               Menu_Clear();
+ 01ED 7C0000            xcall _Menu_Clear
+ 01F0                   .dbline 78
+ 01F0           ;               LCD_Position(0, 0);
+ 01F0 10                push X
+ 01F1 5000              mov A,0
+ 01F3 5700              mov X,0
+ 01F5 7C0000            xcall _LCD_Position
+ 01F8                   .dbline 79
+ 01F8           ;               LCD_PrCString("Max: ");
+ 01F8 5006              mov A,>L14
+ 01FA 08                push A
+ 01FB 5006              mov A,<L14
+ 01FD 5C                mov X,A
+ 01FE 18                pop A
+ 01FF 7C0000            xcall _LCD_PrCString
+ 0202 20                pop X
+ 0203                   .dbline 80
+ 0203           ;               bcdmax = (bcd10max << 4) | bcdmax;
+ 0203 520D              mov A,[X+13]
+ 0205 62D000            mov REG[0xd0],>__r0
+ 0208 64                asl A
+ 0209 64                asl A
+ 020A 64                asl A
+ 020B 64                asl A
+ 020C 2B00              or A,[X+0]
+ 020E 5400              mov [X+0],A
+ 0210                   .dbline 81
+ 0210           ;               LCD_PrHexByte(bcdmax);
+ 0210 10                push X
+ 0211 5200              mov A,[X+0]
+ 0213 7C0000            xcall _LCD_PrHexByte
+ 0216                   .dbline 82
+ 0216           ;               LCD_Position(1,0);
+ 0216 5700              mov X,0
+ 0218 5001              mov A,1
+ 021A 7C0000            xcall _LCD_Position
+ 021D                   .dbline 83
+ 021D           ;               LCD_PrCString("Min: ");
+ 021D 5000              mov A,>L15
+ 021F 08                push A
+ 0220 5000              mov A,<L15
+ 0222 5C                mov X,A
+ 0223 18                pop A
+ 0224 7C0000            xcall _LCD_PrCString
+ 0227 20                pop X
+ 0228                   .dbline 84
+ 0228           ;               bcdmin = (bcd10min << 4) | bcdmin;
+ 0228 520E              mov A,[X+14]
+ 022A 62D000            mov REG[0xd0],>__r0
+ 022D 64                asl A
+ 022E 64                asl A
+ 022F 64                asl A
+ 0230 64                asl A
+ 0231 2B01              or A,[X+1]
+ 0233 5401              mov [X+1],A
+ 0235                   .dbline 85
+ 0235           ;               LCD_PrHexByte(bcdmin);
+ 0235 10                push X
+ 0236 5201              mov A,[X+1]
+ 0238 7C0000            xcall _LCD_PrHexByte
+ 023B 20                pop X
+ 023C                   .dbline 86
+ 023C           ;       }
+ 023C           L17:
+ 023C                   .dbline -2
+ 023C           L16:
+ 023C 38EF              add SP,-17
+ 023E 20                pop X
+ 023F                   .dbline 0 ; func end
+ 023F 7F                ret
+ 0240                   .dbsym l bcd10min 14 c
+ 0240                   .dbsym l bcd10max 13 c
+ 0240                   .dbsym l conf 2 S[.6]
+ 0240                   .dbsym l bcdmin 1 c
+ 0240                   .dbsym l bcdmax 0 c
+ 0240                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0000           L15:
+ 0000 4D696E3A2000      .byte 'M,'i,'n,58,32,0
+ 0006           L14:
+ 0006 4D61783A2000      .byte 'M,'a,'x,58,32,0

@@ -1,0 +1,216 @@
+ 0000                   cpu LMM
+                        .module main.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./main.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\main.c
+ 0000                   .dbfunc e putchar _putchar fI
+ 0000           ;              c -> X-4
+ 0000           _putchar::
+ 0000                   .dbline -1
+ 0000 10                push X
+ 0001 4F                mov X,SP
+ 0002                   .dbline 23
+ 0002           ; //----------------------------------------------------------------------------
+ 0002           ; // C main line
+ 0002           ; //----------------------------------------------------------------------------
+ 0002           ; 
+ 0002           ; #include <m8c.h>        // part specific constants and macros
+ 0002           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0002           ; #include "Time.h"
+ 0002           ; #include "Keypad.h"
+ 0002           ; #include "Persist.h"
+ 0002           ; #include "viewManager.h"
+ 0002           ; #include "MainView.h"
+ 0002           ; #include "dateTimeView.h"
+ 0002           ; #include "regTimeView.h"
+ 0002           ; #include "levelView.h"
+ 0002           ; #include "configView.h"
+ 0002           ; #include "TempSensor.h"
+ 0002           ; #include "TempView.h"
+ 0002           ; #include <string.h>
+ 0002           ; 
+ 0002           ; extern CurrentView currentView;
+ 0002           ; 
+ 0002           ; int putchar(char c)
+ 0002           ; {
+ 0002                   .dbline 24
+ 0002           ;       UART_PutChar(c);
+ 0002 10                push X
+ 0003 52FC              mov A,[X-4]
+ 0005 7C0000            xcall _UART_PutChar
+ 0008 20                pop X
+ 0009                   .dbline -2
+ 0009           L8:
+ 0009 20                pop X
+ 000A                   .dbline 0 ; func end
+ 000A 7F                ret
+ 000B                   .dbsym l c -4 c
+ 000B                   .dbend
+ 000B                   .dbfunc e main _main fV
+ 000B           _main::
+ 000B                   .dbline -1
+ 000B 10                push X
+ 000C 4F                mov X,SP
+ 000D 3802              add SP,2
+ 000F                   .dbline 28
+ 000F           ; }
+ 000F           ; 
+ 000F           ; void main(void)
+ 000F           ; {
+ 000F                   .dbline 29
+ 000F           ;       Time_Start();
+ 000F 7C0000            xcall _Time_Start
+ 0012                   .dbline 30
+ 0012           ;       Keypad_Start();
+ 0012 7C0000            xcall _Keypad_Start
+ 0015                   .dbline 31
+ 0015           ;       Persist_Start();
+ 0015 7C0000            xcall _Persist_Start
+ 0018                   .dbline 32
+ 0018           ;       LCD_Start();
+ 0018 10                push X
+ 0019 7C0000            xcall _LCD_Start
+ 001C 20                pop X
+ 001D                   .dbline 33
+ 001D           ;       MainView_Start();
+ 001D 7C0000            xcall _MainView_Start
+ 0020                   .dbline 34
+ 0020           ;       DateTimeView_Start();
+ 0020 7C0000            xcall _DateTimeView_Start
+ 0023                   .dbline 35
+ 0023           ;       RegTimeView_Start();
+ 0023 7C0000            xcall _RegTimeView_Start
+ 0026                   .dbline 36
+ 0026           ;       LevelView_Start();
+ 0026 7C0000            xcall _LevelView_Start
+ 0029                   .dbline 37
+ 0029           ;       ConfigView_Start();
+ 0029 7C0000            xcall _ConfigView_Start
+ 002C                   .dbline 38
+ 002C           ;       TempSensor_Start();
+ 002C 7C0000            xcall _TempSensor_Start
+ 002F                   .dbline 40
+ 002F           ; 
+ 002F           ;       UART_Start(UART_PARITY_NONE);
+ 002F 10                push X
+ 0030 5000              mov A,0
+ 0032 7C0000            xcall _UART_Start
+ 0035                   .dbline 41
+ 0035           ;       UART_IntCntl(UART_ENABLE_RX_INT);
+ 0035 5001              mov A,1
+ 0037 7C0000            xcall _UART_IntCntl
+ 003A 20                pop X
+ 003B                   .dbline 43
+ 003B           ; 
+ 003B           ;       M8C_EnableGInt;
+ 003B 7101                      or  F, 01h
+ 003D           
+ 003D                   .dbline 45
+ 003D           ; 
+ 003D           ;       MainView_Callback();
+ 003D 7C0000            xcall _MainView_Callback
+ 0040                   .dbline 47
+ 0040           ; 
+ 0040           ;       for(;;)
+ 0040           L10:
+ 0040                   .dbline 48
+ 0040           ;       {
+ 0040                   .dbline 49
+ 0040           ;               switch(currentView)
+ 0040 62D000            mov REG[0xd0],>_currentView
+ 0043 5100              mov A,[_currentView]
+ 0045 5401              mov [X+1],A
+ 0047 560000            mov [X+0],0
+ 004A 3D0000            cmp [X+0],0
+ 004D B006              jnz X1
+ 004F 3D0100            cmp [X+1],0
+ 0052 A035              jz L17
+ 0054           X1:
+ 0054 3D0000            cmp [X+0],0
+ 0057 B006              jnz X2
+ 0059 3D0101            cmp [X+1],1
+ 005C A030              jz L18
+ 005E           X2:
+ 005E 3D0000            cmp [X+0],0
+ 0061 B006              jnz X3
+ 0063 3D0102            cmp [X+1],2
+ 0066 A02B              jz L19
+ 0068           X3:
+ 0068 3D0000            cmp [X+0],0
+ 006B B006              jnz X4
+ 006D 3D0103            cmp [X+1],3
+ 0070 A026              jz L20
+ 0072           X4:
+ 0072 3D0000            cmp [X+0],0
+ 0075 B006              jnz X5
+ 0077 3D0104            cmp [X+1],4
+ 007A A021              jz L21
+ 007C           X5:
+ 007C 3D0000            cmp [X+0],0
+ 007F B006              jnz X6
+ 0081 3D0105            cmp [X+1],5
+ 0084 A01C              jz L22
+ 0086           X6:
+ 0086 8FB9              xjmp L10
+ 0088           L17:
+ 0088                   .dbline 52
+ 0088           ;               {
+ 0088           ;                       case MAIN:
+ 0088           ;                               MainView_Update();
+ 0088 7C0000            xcall _MainView_Update
+ 008B                   .dbline 53
+ 008B           ;                               break;
+ 008B 8FB4              xjmp L10
+ 008D           L18:
+ 008D                   .dbline 55
+ 008D           ;                       case DATETIME_CONFIG:
+ 008D           ;                               DateTimeView_Update();
+ 008D 7C0000            xcall _DateTimeView_Update
+ 0090                   .dbline 56
+ 0090           ;                               break;
+ 0090 8FAF              xjmp L10
+ 0092           L19:
+ 0092                   .dbline 58
+ 0092           ;                       case REGTIME_CONFIG:
+ 0092           ;                               RegTimeView_Update();
+ 0092 7C0000            xcall _RegTimeView_Update
+ 0095                   .dbline 59
+ 0095           ;                               break;
+ 0095 8FAA              xjmp L10
+ 0097           L20:
+ 0097                   .dbline 61
+ 0097           ;                       case LEVEL_CONFIG:
+ 0097           ;                               LevelView_Update();
+ 0097 7C0000            xcall _LevelView_Update
+ 009A                   .dbline 62
+ 009A           ;                               break;
+ 009A 8FA5              xjmp L10
+ 009C           L21:
+ 009C                   .dbline 64
+ 009C           ;                       case CONFIG:
+ 009C           ;                               ConfigView_Update();
+ 009C 7C0000            xcall _ConfigView_Update
+ 009F                   .dbline 65
+ 009F           ;                               break;
+ 009F 8FA0              xjmp L10
+ 00A1           L22:
+ 00A1                   .dbline 67
+ 00A1           ;                       case TEMP:
+ 00A1           ;                               TempView_Update();
+ 00A1 7C0000            xcall _TempView_Update
+ 00A4                   .dbline 68
+ 00A4           ;                               break;
+ 00A4                   .dbline 70
+ 00A4           ;               }
+ 00A4           ;       }
+ 00A4                   .dbline 47
+ 00A4                   .dbline 47
+ 00A4 8F9B              xjmp L10
+ 00A6           X0:
+ 00A6                   .dbline -2
+ 00A6           L9:
+ 00A6 38FE              add SP,-2
+ 00A8 20                pop X
+ 00A9                   .dbline 0 ; func end
+ 00A9 8FFF              jmp .
+ 00AB                   .dbend

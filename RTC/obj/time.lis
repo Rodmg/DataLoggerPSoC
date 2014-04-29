@@ -1,0 +1,2010 @@
+ 0000                   cpu LMM
+                        .module time.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./time.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\time.c
+ 0000                   .dbfunc e Time_Start _Time_Start fV
+ 0000           _Time_Start::
+ 0000                   .dbline -1
+ 0000                   .dbline 9
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #include "Rtc.h"
+ 0000           ; #include "Time.h"
+ 0000           ; #include "BcdUtil.h"
+ 0000           ; #include "dateUtil.h"
+ 0000           ; 
+ 0000           ; void Time_Start(void)
+ 0000           ; {
+ 0000                   .dbline 10
+ 0000           ;       datetime._00h.byte = 0x00;      // Hora: 00:00:00
+ 0000 62D000            mov REG[0xd0],>_datetime
+ 0003 550000            mov [_datetime],0
+ 0006                   .dbline 11
+ 0006           ;       datetime._01h.byte = 0x00;       
+ 0006 550100            mov [_datetime+1],0
+ 0009                   .dbline 12
+ 0009           ;       datetime._02h.byte = 0x00;
+ 0009 550200            mov [_datetime+2],0
+ 000C                   .dbline 13
+ 000C           ;       datetime._03h.byte = 0x04;      // Dia: Miércoles
+ 000C 550304            mov [_datetime+3],4
+ 000F                   .dbline 14
+ 000F           ;       datetime._04h.byte = 0x01;      // Fecha: 01/Enero/2014
+ 000F 550401            mov [_datetime+4],1
+ 0012                   .dbline 15
+ 0012           ;       datetime._05h.byte = 0x01;
+ 0012 550501            mov [_datetime+5],1
+ 0015                   .dbline 16
+ 0015           ;       datetime._06h.byte = 0x14;
+ 0015 550614            mov [_datetime+6],20
+ 0018                   .dbline 17
+ 0018           ;       Rtc_Start();
+ 0018 7C0000            xcall _Rtc_Start
+ 001B                   .dbline -2
+ 001B           L27:
+ 001B                   .dbline 0 ; func end
+ 001B 7F                ret
+ 001C                   .dbend
+ 001C                   .dbfunc e Time_Stop _Time_Stop fV
+ 001C           _Time_Stop::
+ 001C                   .dbline -1
+ 001C                   .dbline 21
+ 001C           ; }
+ 001C           ; 
+ 001C           ; void Time_Stop(void)
+ 001C           ; {
+ 001C                   .dbline 22
+ 001C           ;       Rtc_Stop();
+ 001C 7C0000            xcall _Rtc_Stop
+ 001F                   .dbline -2
+ 001F           L34:
+ 001F                   .dbline 0 ; func end
+ 001F 7F                ret
+ 0020                   .dbend
+ 0020                   .dbfunc e Time_Pause _Time_Pause fV
+ 0020           ;       isPaused -> X-4
+ 0020           _Time_Pause::
+ 0020                   .dbline -1
+ 0020 10                push X
+ 0021 4F                mov X,SP
+ 0022                   .dbline 26
+ 0022           ; }
+ 0022           ; 
+ 0022           ; void Time_Pause(BOOL isPaused)
+ 0022           ; {
+ 0022                   .dbline 28
+ 0022           ;       // Starts or Stops RTC clock
+ 0022           ;       Rtc_ReadFromRtc();
+ 0022 7C0000            xcall _Rtc_ReadFromRtc
+ 0025 62D000            mov REG[0xd0],>__r0
+ 0028                   .dbline 29
+ 0028           ;       datetime._00h.bits.CH = isPaused;
+ 0028 52FC              mov A,[X-4]
+ 002A 2101              and A,1
+ 002C 64                asl A
+ 002D 64                asl A
+ 002E 64                asl A
+ 002F 64                asl A
+ 0030 64                asl A
+ 0031 64                asl A
+ 0032 64                asl A
+ 0033 5300              mov [__r0],A
+ 0035 260080            and [__r0],-128
+ 0038 62D000            mov REG[0xd0],>_datetime
+ 003B 5100              mov A,[_datetime]
+ 003D 217F              and A,127
+ 003F 62D000            mov REG[0xd0],>__r0
+ 0042 2A00              or A,[__r0]
+ 0044 62D000            mov REG[0xd0],>_datetime
+ 0047 5300              mov [_datetime],A
+ 0049                   .dbline 30
+ 0049           ;       Rtc_WriteToRtc();
+ 0049 7C0000            xcall _Rtc_WriteToRtc
+ 004C 62D000            mov REG[0xd0],>__r0
+ 004F                   .dbline -2
+ 004F           L35:
+ 004F 20                pop X
+ 0050                   .dbline 0 ; func end
+ 0050 7F                ret
+ 0051                   .dbsym l isPaused -4 c
+ 0051                   .dbend
+ 0051                   .dbfunc e Time_Adj_1224hrs _Time_Adj_1224hrs fV
+ 0051           ;            bcd -> X+2
+ 0051           ;          bcd10 -> X+1
+ 0051           ;          hours -> X+0
+ 0051           ;            h12 -> X-4
+ 0051           _Time_Adj_1224hrs::
+ 0051                   .dbline -1
+ 0051 10                push X
+ 0052 4F                mov X,SP
+ 0053 3803              add SP,3
+ 0055                   .dbline 34
+ 0055           ; }
+ 0055           ; 
+ 0055           ; void Time_Adj_1224hrs(BOOL h12)
+ 0055           ; {
+ 0055                   .dbline 37
+ 0055           ;       BYTE hours, bcd10, bcd;
+ 0055           ; 
+ 0055           ;       Time_Pause(TRUE);
+ 0055 5001              mov A,1
+ 0057 08                push A
+ 0058 9FC6              xcall _Time_Pause
+ 005A 38FF              add SP,-1
+ 005C                   .dbline 38
+ 005C           ;       Rtc_ReadFromRtc();
+ 005C 7C0000            xcall _Rtc_ReadFromRtc
+ 005F                   .dbline 40
+ 005F           ; 
+ 005F           ;       if(datetime._02h.bits_24hrs._1224hr != h12)
+ 005F 62D000            mov REG[0xd0],>_datetime
+ 0062 5102              mov A,[_datetime+2]
+ 0064 62D000            mov REG[0xd0],>__r0
+ 0067 67                asr A
+ 0068 67                asr A
+ 0069 67                asr A
+ 006A 67                asr A
+ 006B 67                asr A
+ 006C 67                asr A
+ 006D 2103              and A,3
+ 006F 5300              mov [__r0],A
+ 0071 260001            and [__r0],1
+ 0074 5100              mov A,[__r0]
+ 0076 3BFC              cmp A,[X-4]
+ 0078 A17F              jz L37
+ 007A                   .dbline 42
+ 007A           ;       {
+ 007A           ;               if(h12)
+ 007A                   .dbline 42
+ 007A 3DFC00            cmp [X-4],0
+ 007D A0B6              jz L40
+ 007F                   .dbline 45
+ 007F           ;               {
+ 007F           ;                       // Convert from 24h to 12h
+ 007F           ;                       bcdToDec(datetime._02h.bits_24hrs.hours10, datetime._02h.bits_24hrs.hours, &hours);
+ 007F                   .dbline 45
+ 007F 5007              mov A,7
+ 0081 08                push A
+ 0082 10                push X
+ 0083 62D000            mov REG[0xd0],>_datetime
+ 0086 5102              mov A,[_datetime+2]
+ 0088 210F              and A,15
+ 008A 08                push A
+ 008B 5102              mov A,[_datetime+2]
+ 008D 62D000            mov REG[0xd0],>__r0
+ 0090 67                asr A
+ 0091 67                asr A
+ 0092 67                asr A
+ 0093 67                asr A
+ 0094 210F              and A,15
+ 0096 5300              mov [__r0],A
+ 0098 260003            and [__r0],3
+ 009B 5100              mov A,[__r0]
+ 009D 08                push A
+ 009E 7C0000            xcall _bcdToDec
+ 00A1 38FC              add SP,-4
+ 00A3                   .dbline 46
+ 00A3           ;                       if(hours >= 12)
+ 00A3 3D000C            cmp [X+0],12
+ 00A6 C01B              jc L44
+ 00A8           X0:
+ 00A8                   .dbline 48
+ 00A8           ;                       {
+ 00A8           ;                               datetime._02h.bits_ampm.ampm = 1;
+ 00A8                   .dbline 48
+ 00A8 62D000            mov REG[0xd0],>_datetime
+ 00AB 5102              mov A,[_datetime+2]
+ 00AD 2920              or A,32
+ 00AF 5302              mov [_datetime+2],A
+ 00B1                   .dbline 49
+ 00B1           ;                               if(hours > 12) hours -= 12;
+ 00B1 500C              mov A,12
+ 00B3 3B00              cmp A,[X+0]
+ 00B5 D01D              jnc L45
+ 00B7           X1:
+ 00B7                   .dbline 49
+ 00B7 62D000            mov REG[0xd0],>__r0
+ 00BA 5200              mov A,[X+0]
+ 00BC 110C              sub A,12
+ 00BE 5400              mov [X+0],A
+ 00C0                   .dbline 50
+ 00C0           ;                       }
+ 00C0 8012              xjmp L45
+ 00C2           L44:
+ 00C2                   .dbline 52
+ 00C2           ;                       else
+ 00C2           ;                       {
+ 00C2                   .dbline 53
+ 00C2           ;                               datetime._02h.bits_ampm.ampm = 0;
+ 00C2 62D000            mov REG[0xd0],>_datetime
+ 00C5 5102              mov A,[_datetime+2]
+ 00C7 21DF              and A,-33
+ 00C9 5302              mov [_datetime+2],A
+ 00CB                   .dbline 54
+ 00CB           ;                               if(hours == 0) hours = 12;
+ 00CB 3D0000            cmp [X+0],0
+ 00CE B004              jnz L50
+ 00D0                   .dbline 54
+ 00D0 56000C            mov [X+0],12
+ 00D3           L50:
+ 00D3                   .dbline 55
+ 00D3           ;                       }
+ 00D3           L45:
+ 00D3                   .dbline 56
+ 00D3           ;                       decToBcd(&bcd10 , &bcd, hours);
+ 00D3 5200              mov A,[X+0]
+ 00D5 08                push A
+ 00D6 62D000            mov REG[0xd0],>__r0
+ 00D9 5A00              mov [__r1],X
+ 00DB 060002            add [__r1],2
+ 00DE 5007              mov A,7
+ 00E0 08                push A
+ 00E1 5100              mov A,[__r1]
+ 00E3 08                push A
+ 00E4 5A00              mov [__r1],X
+ 00E6 060001            add [__r1],1
+ 00E9 5007              mov A,7
+ 00EB 08                push A
+ 00EC 5100              mov A,[__r1]
+ 00EE 08                push A
+ 00EF 7C0000            xcall _decToBcd
+ 00F2 38FB              add SP,-5
+ 00F4                   .dbline 57
+ 00F4           ;                       datetime._02h.bits_ampm.hours10 = bcd10;
+ 00F4 62D000            mov REG[0xd0],>__r0
+ 00F7 5201              mov A,[X+1]
+ 00F9 2101              and A,1
+ 00FB 64                asl A
+ 00FC 64                asl A
+ 00FD 64                asl A
+ 00FE 64                asl A
+ 00FF 5300              mov [__r0],A
+ 0101 260010            and [__r0],16
+ 0104 62D000            mov REG[0xd0],>_datetime
+ 0107 5102              mov A,[_datetime+2]
+ 0109 21EF              and A,-17
+ 010B 62D000            mov REG[0xd0],>__r0
+ 010E 2A00              or A,[__r0]
+ 0110 62D000            mov REG[0xd0],>_datetime
+ 0113 5302              mov [_datetime+2],A
+ 0115                   .dbline 58
+ 0115           ;                       datetime._02h.bits_ampm.hours = bcd;
+ 0115 62D000            mov REG[0xd0],>__r0
+ 0118 5202              mov A,[X+2]
+ 011A 210F              and A,15
+ 011C 5300              mov [__r0],A
+ 011E 26000F            and [__r0],15
+ 0121 62D000            mov REG[0xd0],>_datetime
+ 0124 5102              mov A,[_datetime+2]
+ 0126 21F0              and A,-16
+ 0128 62D000            mov REG[0xd0],>__r0
+ 012B 2A00              or A,[__r0]
+ 012D 62D000            mov REG[0xd0],>_datetime
+ 0130 5302              mov [_datetime+2],A
+ 0132                   .dbline 59
+ 0132           ;               }
+ 0132 80C5              xjmp L41
+ 0134           L40:
+ 0134                   .dbline 61
+ 0134           ;               else
+ 0134           ;               {
+ 0134                   .dbline 63
+ 0134           ;                       // Convert from 12h to 24h
+ 0134           ;                       bcdToDec(datetime._02h.bits_ampm.hours10, datetime._02h.bits_ampm.hours, &hours);
+ 0134 5007              mov A,7
+ 0136 08                push A
+ 0137 10                push X
+ 0138 62D000            mov REG[0xd0],>_datetime
+ 013B 5102              mov A,[_datetime+2]
+ 013D 210F              and A,15
+ 013F 08                push A
+ 0140 5102              mov A,[_datetime+2]
+ 0142 62D000            mov REG[0xd0],>__r0
+ 0145 67                asr A
+ 0146 67                asr A
+ 0147 67                asr A
+ 0148 67                asr A
+ 0149 210F              and A,15
+ 014B 5300              mov [__r0],A
+ 014D 260001            and [__r0],1
+ 0150 5100              mov A,[__r0]
+ 0152 08                push A
+ 0153 7C0000            xcall _bcdToDec
+ 0156 38FC              add SP,-4
+ 0158                   .dbline 64
+ 0158           ;                       if(datetime._02h.bits_ampm.ampm == 1 && hours != 12)
+ 0158 62D000            mov REG[0xd0],>_datetime
+ 015B 5102              mov A,[_datetime+2]
+ 015D 62D000            mov REG[0xd0],>__r0
+ 0160 67                asr A
+ 0161 67                asr A
+ 0162 67                asr A
+ 0163 67                asr A
+ 0164 67                asr A
+ 0165 2107              and A,7
+ 0167 5300              mov [__r0],A
+ 0169 260001            and [__r0],1
+ 016C 3C0001            cmp [__r0],1
+ 016F B00B              jnz L56
+ 0171 3D000C            cmp [X+0],12
+ 0174 A006              jz L56
+ 0176                   .dbline 66
+ 0176           ;                       {
+ 0176           ;                               hours += 12;
+ 0176                   .dbline 66
+ 0176 07000C            add [X+0],12
+ 0179                   .dbline 67
+ 0179           ;                       }
+ 0179 801F              xjmp L57
+ 017B           L56:
+ 017B                   .dbline 68
+ 017B           ;                       else if(datetime._02h.bits_ampm.ampm == 0 && hours == 12)
+ 017B 62D000            mov REG[0xd0],>_datetime
+ 017E 5102              mov A,[_datetime+2]
+ 0180 62D000            mov REG[0xd0],>__r0
+ 0183 67                asr A
+ 0184 67                asr A
+ 0185 67                asr A
+ 0186 67                asr A
+ 0187 67                asr A
+ 0188 2107              and A,7
+ 018A 5300              mov [__r0],A
+ 018C 260001            and [__r0],1
+ 018F B009              jnz L59
+ 0191 3D000C            cmp [X+0],12
+ 0194 B004              jnz L59
+ 0196                   .dbline 70
+ 0196           ;                       {
+ 0196           ;                               hours = 0;
+ 0196                   .dbline 70
+ 0196 560000            mov [X+0],0
+ 0199                   .dbline 71
+ 0199           ;                       }
+ 0199           L59:
+ 0199           L57:
+ 0199                   .dbline 72
+ 0199           ;                       decToBcd(&bcd10 , &bcd, hours);
+ 0199 5200              mov A,[X+0]
+ 019B 08                push A
+ 019C 62D000            mov REG[0xd0],>__r0
+ 019F 5A00              mov [__r1],X
+ 01A1 060002            add [__r1],2
+ 01A4 5007              mov A,7
+ 01A6 08                push A
+ 01A7 5100              mov A,[__r1]
+ 01A9 08                push A
+ 01AA 5A00              mov [__r1],X
+ 01AC 060001            add [__r1],1
+ 01AF 5007              mov A,7
+ 01B1 08                push A
+ 01B2 5100              mov A,[__r1]
+ 01B4 08                push A
+ 01B5 7C0000            xcall _decToBcd
+ 01B8 38FB              add SP,-5
+ 01BA                   .dbline 73
+ 01BA           ;                       datetime._02h.bits_24hrs.hours10 = bcd10;
+ 01BA 62D000            mov REG[0xd0],>__r0
+ 01BD 5201              mov A,[X+1]
+ 01BF 2103              and A,3
+ 01C1 64                asl A
+ 01C2 64                asl A
+ 01C3 64                asl A
+ 01C4 64                asl A
+ 01C5 5300              mov [__r0],A
+ 01C7 260030            and [__r0],48
+ 01CA 62D000            mov REG[0xd0],>_datetime
+ 01CD 5102              mov A,[_datetime+2]
+ 01CF 21CF              and A,-49
+ 01D1 62D000            mov REG[0xd0],>__r0
+ 01D4 2A00              or A,[__r0]
+ 01D6 62D000            mov REG[0xd0],>_datetime
+ 01D9 5302              mov [_datetime+2],A
+ 01DB                   .dbline 74
+ 01DB           ;                       datetime._02h.bits_24hrs.hours = bcd;
+ 01DB 62D000            mov REG[0xd0],>__r0
+ 01DE 5202              mov A,[X+2]
+ 01E0 210F              and A,15
+ 01E2 5300              mov [__r0],A
+ 01E4 26000F            and [__r0],15
+ 01E7 62D000            mov REG[0xd0],>_datetime
+ 01EA 5102              mov A,[_datetime+2]
+ 01EC 21F0              and A,-16
+ 01EE 62D000            mov REG[0xd0],>__r0
+ 01F1 2A00              or A,[__r0]
+ 01F3 62D000            mov REG[0xd0],>_datetime
+ 01F6 5302              mov [_datetime+2],A
+ 01F8                   .dbline 75
+ 01F8           ;               }
+ 01F8           L41:
+ 01F8                   .dbline 76
+ 01F8           ;       }
+ 01F8           L37:
+ 01F8                   .dbline 78
+ 01F8           ; 
+ 01F8           ;       datetime._02h.bits_24hrs._1224hr = h12;
+ 01F8 62D000            mov REG[0xd0],>__r0
+ 01FB 52FC              mov A,[X-4]
+ 01FD 2101              and A,1
+ 01FF 64                asl A
+ 0200 64                asl A
+ 0201 64                asl A
+ 0202 64                asl A
+ 0203 64                asl A
+ 0204 64                asl A
+ 0205 5300              mov [__r0],A
+ 0207 260040            and [__r0],64
+ 020A 62D000            mov REG[0xd0],>_datetime
+ 020D 5102              mov A,[_datetime+2]
+ 020F 21BF              and A,-65
+ 0211 62D000            mov REG[0xd0],>__r0
+ 0214 2A00              or A,[__r0]
+ 0216 62D000            mov REG[0xd0],>_datetime
+ 0219 5302              mov [_datetime+2],A
+ 021B                   .dbline 80
+ 021B           ; 
+ 021B           ;       Rtc_WriteToRtc();
+ 021B 7C0000            xcall _Rtc_WriteToRtc
+ 021E 62D000            mov REG[0xd0],>__r0
+ 0221                   .dbline 81
+ 0221           ;       Time_Pause(FALSE);
+ 0221 5000              mov A,0
+ 0223 08                push A
+ 0224 9DFA              xcall _Time_Pause
+ 0226 38FF              add SP,-1
+ 0228                   .dbline -2
+ 0228           L36:
+ 0228 38FD              add SP,-3
+ 022A 20                pop X
+ 022B                   .dbline 0 ; func end
+ 022B 7F                ret
+ 022C                   .dbsym l bcd 2 c
+ 022C                   .dbsym l bcd10 1 c
+ 022C                   .dbsym l hours 0 c
+ 022C                   .dbsym l h12 -4 c
+ 022C                   .dbend
+ 022C                   .dbfunc e Time_Adj_S _Time_Adj_S fV
+ 022C           ;            bcd -> X+2
+ 022C           ;          bcd10 -> X+1
+ 022C           ;        seconds -> X+0
+ 022C           ;      direction -> X-4
+ 022C           _Time_Adj_S::
+ 022C                   .dbline -1
+ 022C 10                push X
+ 022D 4F                mov X,SP
+ 022E 3803              add SP,3
+ 0230                   .dbline 85
+ 0230           ; }
+ 0230           ; 
+ 0230           ; void Time_Adj_S(BOOL direction)
+ 0230           ; {
+ 0230                   .dbline 88
+ 0230           ;       BYTE seconds, bcd10, bcd;
+ 0230           ;       
+ 0230           ;       Time_Pause(TRUE);
+ 0230 5001              mov A,1
+ 0232 08                push A
+ 0233 9DEB              xcall _Time_Pause
+ 0235                   .dbline 89
+ 0235           ;       Rtc_ReadFromRtc();
+ 0235 7C0000            xcall _Rtc_ReadFromRtc
+ 0238                   .dbline 91
+ 0238           ; 
+ 0238           ;       bcdToDec(datetime._00h.bits.seconds10, datetime._00h.bits.seconds, &seconds);
+ 0238 5007              mov A,7
+ 023A 08                push A
+ 023B 10                push X
+ 023C 62D000            mov REG[0xd0],>_datetime
+ 023F 5100              mov A,[_datetime]
+ 0241 210F              and A,15
+ 0243 08                push A
+ 0244 5100              mov A,[_datetime]
+ 0246 62D000            mov REG[0xd0],>__r0
+ 0249 67                asr A
+ 024A 67                asr A
+ 024B 67                asr A
+ 024C 67                asr A
+ 024D 210F              and A,15
+ 024F 5300              mov [__r0],A
+ 0251 260007            and [__r0],7
+ 0254 5100              mov A,[__r0]
+ 0256 08                push A
+ 0257 7C0000            xcall _bcdToDec
+ 025A 38FB              add SP,-5
+ 025C                   .dbline 93
+ 025C           ; 
+ 025C           ;       if(direction == TIME_UP)
+ 025C 3DFC01            cmp [X-4],1
+ 025F B00F              jnz L66
+ 0261                   .dbline 95
+ 0261           ;       {
+ 0261           ;               if(seconds < 59) seconds++;
+ 0261                   .dbline 95
+ 0261 3D003B            cmp [X+0],59
+ 0264 D005              jnc L68
+ 0266           X2:
+ 0266                   .dbline 95
+ 0266 7700              inc [X+0]
+ 0268 8013              xjmp L67
+ 026A           L68:
+ 026A                   .dbline 96
+ 026A           ;               else seconds = 0;
+ 026A 560000            mov [X+0],0
+ 026D                   .dbline 97
+ 026D           ;       }
+ 026D 800E              xjmp L67
+ 026F           L66:
+ 026F                   .dbline 99
+ 026F           ;       else
+ 026F           ;       {
+ 026F                   .dbline 100
+ 026F           ;               if(seconds > 0) seconds--;
+ 026F 5000              mov A,0
+ 0271 3B00              cmp A,[X+0]
+ 0273 D005              jnc L70
+ 0275           X3:
+ 0275                   .dbline 100
+ 0275 7B00              dec [X+0]
+ 0277 8004              xjmp L71
+ 0279           L70:
+ 0279                   .dbline 101
+ 0279           ;               else seconds = 59;
+ 0279 56003B            mov [X+0],59
+ 027C           L71:
+ 027C                   .dbline 102
+ 027C           ;       }
+ 027C           L67:
+ 027C                   .dbline 104
+ 027C           ; 
+ 027C           ;       decToBcd(&bcd10, &bcd, seconds);
+ 027C 5200              mov A,[X+0]
+ 027E 08                push A
+ 027F 62D000            mov REG[0xd0],>__r0
+ 0282 5A00              mov [__r1],X
+ 0284 060002            add [__r1],2
+ 0287 5007              mov A,7
+ 0289 08                push A
+ 028A 5100              mov A,[__r1]
+ 028C 08                push A
+ 028D 5A00              mov [__r1],X
+ 028F 060001            add [__r1],1
+ 0292 5007              mov A,7
+ 0294 08                push A
+ 0295 5100              mov A,[__r1]
+ 0297 08                push A
+ 0298 7C0000            xcall _decToBcd
+ 029B                   .dbline 106
+ 029B           ; 
+ 029B           ;       datetime._00h.bits.seconds = bcd;
+ 029B 62D000            mov REG[0xd0],>__r0
+ 029E 5202              mov A,[X+2]
+ 02A0 210F              and A,15
+ 02A2 5300              mov [__r0],A
+ 02A4 26000F            and [__r0],15
+ 02A7 62D000            mov REG[0xd0],>_datetime
+ 02AA 5100              mov A,[_datetime]
+ 02AC 21F0              and A,-16
+ 02AE 62D000            mov REG[0xd0],>__r0
+ 02B1 2A00              or A,[__r0]
+ 02B3 62D000            mov REG[0xd0],>_datetime
+ 02B6 5300              mov [_datetime],A
+ 02B8                   .dbline 107
+ 02B8           ;       datetime._00h.bits.seconds10 = bcd10;
+ 02B8 62D000            mov REG[0xd0],>__r0
+ 02BB 5201              mov A,[X+1]
+ 02BD 2107              and A,7
+ 02BF 64                asl A
+ 02C0 64                asl A
+ 02C1 64                asl A
+ 02C2 64                asl A
+ 02C3 5300              mov [__r0],A
+ 02C5 260070            and [__r0],112
+ 02C8 62D000            mov REG[0xd0],>_datetime
+ 02CB 5100              mov A,[_datetime]
+ 02CD 218F              and A,-113
+ 02CF 62D000            mov REG[0xd0],>__r0
+ 02D2 2A00              or A,[__r0]
+ 02D4 62D000            mov REG[0xd0],>_datetime
+ 02D7 5300              mov [_datetime],A
+ 02D9                   .dbline 109
+ 02D9           ; 
+ 02D9           ;       Rtc_WriteToRtc();
+ 02D9 7C0000            xcall _Rtc_WriteToRtc
+ 02DC 62D000            mov REG[0xd0],>__r0
+ 02DF                   .dbline 110
+ 02DF           ;       Time_Pause(FALSE);
+ 02DF 5000              mov A,0
+ 02E1 08                push A
+ 02E2 9D3C              xcall _Time_Pause
+ 02E4 38FA              add SP,-6
+ 02E6                   .dbline -2
+ 02E6           L65:
+ 02E6 38FD              add SP,-3
+ 02E8 20                pop X
+ 02E9                   .dbline 0 ; func end
+ 02E9 7F                ret
+ 02EA                   .dbsym l bcd 2 c
+ 02EA                   .dbsym l bcd10 1 c
+ 02EA                   .dbsym l seconds 0 c
+ 02EA                   .dbsym l direction -4 c
+ 02EA                   .dbend
+ 02EA                   .dbfunc e Time_Adj_Mi _Time_Adj_Mi fV
+ 02EA           ;            bcd -> X+2
+ 02EA           ;          bcd10 -> X+1
+ 02EA           ;        minutes -> X+0
+ 02EA           ;      direction -> X-4
+ 02EA           _Time_Adj_Mi::
+ 02EA                   .dbline -1
+ 02EA 10                push X
+ 02EB 4F                mov X,SP
+ 02EC 3803              add SP,3
+ 02EE                   .dbline 114
+ 02EE           ; }
+ 02EE           ; 
+ 02EE           ; void Time_Adj_Mi(BOOL direction)
+ 02EE           ; {
+ 02EE                   .dbline 117
+ 02EE           ;       BYTE minutes, bcd10, bcd;
+ 02EE           ; 
+ 02EE           ;       Time_Pause(TRUE);
+ 02EE 5001              mov A,1
+ 02F0 08                push A
+ 02F1 9D2D              xcall _Time_Pause
+ 02F3                   .dbline 118
+ 02F3           ;       Rtc_ReadFromRtc();
+ 02F3 7C0000            xcall _Rtc_ReadFromRtc
+ 02F6                   .dbline 120
+ 02F6           ; 
+ 02F6           ;       bcdToDec(datetime._01h.bits.minutes10, datetime._01h.bits.minutes, &minutes);
+ 02F6 5007              mov A,7
+ 02F8 08                push A
+ 02F9 10                push X
+ 02FA 62D000            mov REG[0xd0],>_datetime
+ 02FD 5101              mov A,[_datetime+1]
+ 02FF 210F              and A,15
+ 0301 08                push A
+ 0302 5101              mov A,[_datetime+1]
+ 0304 62D000            mov REG[0xd0],>__r0
+ 0307 67                asr A
+ 0308 67                asr A
+ 0309 67                asr A
+ 030A 67                asr A
+ 030B 210F              and A,15
+ 030D 5300              mov [__r0],A
+ 030F 260007            and [__r0],7
+ 0312 5100              mov A,[__r0]
+ 0314 08                push A
+ 0315 7C0000            xcall _bcdToDec
+ 0318 38FB              add SP,-5
+ 031A                   .dbline 122
+ 031A           ; 
+ 031A           ;       if(direction == TIME_UP)
+ 031A 3DFC01            cmp [X-4],1
+ 031D B00F              jnz L75
+ 031F                   .dbline 124
+ 031F           ;       {
+ 031F           ;               if(minutes < 59) minutes++;
+ 031F                   .dbline 124
+ 031F 3D003B            cmp [X+0],59
+ 0322 D005              jnc L77
+ 0324           X4:
+ 0324                   .dbline 124
+ 0324 7700              inc [X+0]
+ 0326 8013              xjmp L76
+ 0328           L77:
+ 0328                   .dbline 125
+ 0328           ;               else minutes = 0;
+ 0328 560000            mov [X+0],0
+ 032B                   .dbline 126
+ 032B           ;       }
+ 032B 800E              xjmp L76
+ 032D           L75:
+ 032D                   .dbline 128
+ 032D           ;       else
+ 032D           ;       {
+ 032D                   .dbline 129
+ 032D           ;               if(minutes > 0) minutes--;
+ 032D 5000              mov A,0
+ 032F 3B00              cmp A,[X+0]
+ 0331 D005              jnc L79
+ 0333           X5:
+ 0333                   .dbline 129
+ 0333 7B00              dec [X+0]
+ 0335 8004              xjmp L80
+ 0337           L79:
+ 0337                   .dbline 130
+ 0337           ;               else minutes = 59;
+ 0337 56003B            mov [X+0],59
+ 033A           L80:
+ 033A                   .dbline 131
+ 033A           ;       }
+ 033A           L76:
+ 033A                   .dbline 133
+ 033A           ; 
+ 033A           ;       decToBcd(&bcd10, &bcd, minutes);
+ 033A 5200              mov A,[X+0]
+ 033C 08                push A
+ 033D 62D000            mov REG[0xd0],>__r0
+ 0340 5A00              mov [__r1],X
+ 0342 060002            add [__r1],2
+ 0345 5007              mov A,7
+ 0347 08                push A
+ 0348 5100              mov A,[__r1]
+ 034A 08                push A
+ 034B 5A00              mov [__r1],X
+ 034D 060001            add [__r1],1
+ 0350 5007              mov A,7
+ 0352 08                push A
+ 0353 5100              mov A,[__r1]
+ 0355 08                push A
+ 0356 7C0000            xcall _decToBcd
+ 0359                   .dbline 135
+ 0359           ; 
+ 0359           ;       datetime._01h.bits.minutes = bcd;
+ 0359 62D000            mov REG[0xd0],>__r0
+ 035C 5202              mov A,[X+2]
+ 035E 210F              and A,15
+ 0360 5300              mov [__r0],A
+ 0362 26000F            and [__r0],15
+ 0365 62D000            mov REG[0xd0],>_datetime
+ 0368 5101              mov A,[_datetime+1]
+ 036A 21F0              and A,-16
+ 036C 62D000            mov REG[0xd0],>__r0
+ 036F 2A00              or A,[__r0]
+ 0371 62D000            mov REG[0xd0],>_datetime
+ 0374 5301              mov [_datetime+1],A
+ 0376                   .dbline 136
+ 0376           ;       datetime._01h.bits.minutes10 = bcd10;
+ 0376 62D000            mov REG[0xd0],>__r0
+ 0379 5201              mov A,[X+1]
+ 037B 2107              and A,7
+ 037D 64                asl A
+ 037E 64                asl A
+ 037F 64                asl A
+ 0380 64                asl A
+ 0381 5300              mov [__r0],A
+ 0383 260070            and [__r0],112
+ 0386 62D000            mov REG[0xd0],>_datetime
+ 0389 5101              mov A,[_datetime+1]
+ 038B 218F              and A,-113
+ 038D 62D000            mov REG[0xd0],>__r0
+ 0390 2A00              or A,[__r0]
+ 0392 62D000            mov REG[0xd0],>_datetime
+ 0395 5301              mov [_datetime+1],A
+ 0397                   .dbline 138
+ 0397           ; 
+ 0397           ;       Rtc_WriteToRtc();
+ 0397 7C0000            xcall _Rtc_WriteToRtc
+ 039A 62D000            mov REG[0xd0],>__r0
+ 039D                   .dbline 139
+ 039D           ;       Time_Pause(FALSE);
+ 039D 5000              mov A,0
+ 039F 08                push A
+ 03A0 9C7E              xcall _Time_Pause
+ 03A2 38FA              add SP,-6
+ 03A4                   .dbline -2
+ 03A4           L72:
+ 03A4 38FD              add SP,-3
+ 03A6 20                pop X
+ 03A7                   .dbline 0 ; func end
+ 03A7 7F                ret
+ 03A8                   .dbsym l bcd 2 c
+ 03A8                   .dbsym l bcd10 1 c
+ 03A8                   .dbsym l minutes 0 c
+ 03A8                   .dbsym l direction -4 c
+ 03A8                   .dbend
+ 03A8                   .dbfunc e Time_Adj_H _Time_Adj_H fV
+ 03A8           ;         maxVal -> X+5
+ 03A8           ;         minVal -> X+4
+ 03A8           ;            bcd -> X+3
+ 03A8           ;          bcd10 -> X+2
+ 03A8           ;            h12 -> X+1
+ 03A8           ;          hours -> X+0
+ 03A8           ;      direction -> X-4
+ 03A8           _Time_Adj_H::
+ 03A8                   .dbline -1
+ 03A8 10                push X
+ 03A9 4F                mov X,SP
+ 03AA 3808              add SP,8
+ 03AC                   .dbline 143
+ 03AC           ; }
+ 03AC           ; 
+ 03AC           ; void Time_Adj_H(BOOL direction)
+ 03AC           ; {
+ 03AC                   .dbline 147
+ 03AC           ;       BYTE hours, bcd10, bcd, minVal, maxVal;
+ 03AC           ;       BOOL h12;
+ 03AC           ; 
+ 03AC           ;       Time_Pause(TRUE);
+ 03AC 5001              mov A,1
+ 03AE 08                push A
+ 03AF 9C6F              xcall _Time_Pause
+ 03B1 38FF              add SP,-1
+ 03B3                   .dbline 148
+ 03B3           ;       Rtc_ReadFromRtc();
+ 03B3 7C0000            xcall _Rtc_ReadFromRtc
+ 03B6                   .dbline 150
+ 03B6           ; 
+ 03B6           ;       h12 = datetime._02h.bits_24hrs._1224hr;
+ 03B6 62D000            mov REG[0xd0],>_datetime
+ 03B9 5102              mov A,[_datetime+2]
+ 03BB 62D000            mov REG[0xd0],>__r0
+ 03BE 67                asr A
+ 03BF 67                asr A
+ 03C0 67                asr A
+ 03C1 67                asr A
+ 03C2 67                asr A
+ 03C3 67                asr A
+ 03C4 2103              and A,3
+ 03C6 5300              mov [__r0],A
+ 03C8 260001            and [__r0],1
+ 03CB 5100              mov A,[__r0]
+ 03CD 5401              mov [X+1],A
+ 03CF                   .dbline 153
+ 03CF           ; 
+ 03CF           ;       // Check if ampm or 24h
+ 03CF           ;       if(h12)
+ 03CF 3D0100            cmp [X+1],0
+ 03D2 A02D              jz L85
+ 03D4                   .dbline 156
+ 03D4           ;       {
+ 03D4           ;               //12 hrs
+ 03D4           ;               bcdToDec(datetime._02h.bits_ampm.hours10, datetime._02h.bits_ampm.hours, &hours);
+ 03D4                   .dbline 156
+ 03D4 5007              mov A,7
+ 03D6 08                push A
+ 03D7 10                push X
+ 03D8 62D000            mov REG[0xd0],>_datetime
+ 03DB 5102              mov A,[_datetime+2]
+ 03DD 210F              and A,15
+ 03DF 08                push A
+ 03E0 5102              mov A,[_datetime+2]
+ 03E2 62D000            mov REG[0xd0],>__r0
+ 03E5 67                asr A
+ 03E6 67                asr A
+ 03E7 67                asr A
+ 03E8 67                asr A
+ 03E9 210F              and A,15
+ 03EB 5300              mov [__r0],A
+ 03ED 260001            and [__r0],1
+ 03F0 5100              mov A,[__r0]
+ 03F2 08                push A
+ 03F3 7C0000            xcall _bcdToDec
+ 03F6 38FC              add SP,-4
+ 03F8                   .dbline 157
+ 03F8           ;               maxVal = 12;
+ 03F8 56050C            mov [X+5],12
+ 03FB                   .dbline 158
+ 03FB           ;               minVal = 1;
+ 03FB 560401            mov [X+4],1
+ 03FE                   .dbline 159
+ 03FE           ;       }
+ 03FE 802B              xjmp L86
+ 0400           L85:
+ 0400                   .dbline 161
+ 0400           ;       else
+ 0400           ;       {
+ 0400                   .dbline 163
+ 0400           ;               //24 hrs
+ 0400           ;               bcdToDec(datetime._02h.bits_24hrs.hours10, datetime._02h.bits_24hrs.hours, &hours);
+ 0400 5007              mov A,7
+ 0402 08                push A
+ 0403 10                push X
+ 0404 62D000            mov REG[0xd0],>_datetime
+ 0407 5102              mov A,[_datetime+2]
+ 0409 210F              and A,15
+ 040B 08                push A
+ 040C 5102              mov A,[_datetime+2]
+ 040E 62D000            mov REG[0xd0],>__r0
+ 0411 67                asr A
+ 0412 67                asr A
+ 0413 67                asr A
+ 0414 67                asr A
+ 0415 210F              and A,15
+ 0417 5300              mov [__r0],A
+ 0419 260003            and [__r0],3
+ 041C 5100              mov A,[__r0]
+ 041E 08                push A
+ 041F 7C0000            xcall _bcdToDec
+ 0422 38FC              add SP,-4
+ 0424                   .dbline 164
+ 0424           ;               maxVal = 23;
+ 0424 560517            mov [X+5],23
+ 0427                   .dbline 165
+ 0427           ;               minVal = 0;
+ 0427 560400            mov [X+4],0
+ 042A                   .dbline 166
+ 042A           ;       }
+ 042A           L86:
+ 042A                   .dbline 169
+ 042A           ; 
+ 042A           ; 
+ 042A           ;       if(direction == TIME_UP)
+ 042A 3DFC01            cmp [X-4],1
+ 042D B061              jnz L91
+ 042F                   .dbline 171
+ 042F           ;       {
+ 042F           ;               if(hours < maxVal) hours++;
+ 042F                   .dbline 171
+ 042F 5200              mov A,[X+0]
+ 0431 3B05              cmp A,[X+5]
+ 0433 D005              jnc L93
+ 0435           X6:
+ 0435                   .dbline 171
+ 0435 7700              inc [X+0]
+ 0437 80B5              xjmp L92
+ 0439           L93:
+ 0439                   .dbline 173
+ 0439           ;               else 
+ 0439           ;               {
+ 0439                   .dbline 174
+ 0439           ;                       hours = minVal;
+ 0439 5204              mov A,[X+4]
+ 043B 5400              mov [X+0],A
+ 043D                   .dbline 175
+ 043D           ;                       if(h12) datetime._02h.bits_ampm.ampm = !datetime._02h.bits_ampm.ampm;
+ 043D 3D0100            cmp [X+1],0
+ 0440 A0AC              jz L92
+ 0442                   .dbline 175
+ 0442 62D000            mov REG[0xd0],>_datetime
+ 0445 5102              mov A,[_datetime+2]
+ 0447 62D000            mov REG[0xd0],>__r0
+ 044A 67                asr A
+ 044B 67                asr A
+ 044C 67                asr A
+ 044D 67                asr A
+ 044E 67                asr A
+ 044F 2107              and A,7
+ 0451 5300              mov [__r0],A
+ 0453 260001            and [__r0],1
+ 0456 B009              jnz L100
+ 0458 560701            mov [X+7],1
+ 045B 560600            mov [X+6],0
+ 045E 8007              xjmp L101
+ 0460           L100:
+ 0460 560700            mov [X+7],0
+ 0463 560600            mov [X+6],0
+ 0466           L101:
+ 0466 62D000            mov REG[0xd0],>__r0
+ 0469 5207              mov A,[X+7]
+ 046B 5300              mov [__r0],A
+ 046D 260001            and [__r0],1
+ 0470 5100              mov A,[__r0]
+ 0472 64                asl A
+ 0473 64                asl A
+ 0474 64                asl A
+ 0475 64                asl A
+ 0476 64                asl A
+ 0477 5300              mov [__r0],A
+ 0479 260020            and [__r0],32
+ 047C 62D000            mov REG[0xd0],>_datetime
+ 047F 5102              mov A,[_datetime+2]
+ 0481 21DF              and A,-33
+ 0483 62D000            mov REG[0xd0],>__r0
+ 0486 2A00              or A,[__r0]
+ 0488 62D000            mov REG[0xd0],>_datetime
+ 048B 5302              mov [_datetime+2],A
+ 048D                   .dbline 176
+ 048D           ;               }
+ 048D                   .dbline 177
+ 048D           ;       }
+ 048D 805F              xjmp L92
+ 048F           L91:
+ 048F                   .dbline 179
+ 048F           ;       else
+ 048F           ;       {
+ 048F                   .dbline 180
+ 048F           ;               if(hours > minVal) hours--;
+ 048F 5204              mov A,[X+4]
+ 0491 3B00              cmp A,[X+0]
+ 0493 D005              jnc L102
+ 0495           X7:
+ 0495                   .dbline 180
+ 0495 7B00              dec [X+0]
+ 0497 8055              xjmp L103
+ 0499           L102:
+ 0499                   .dbline 182
+ 0499           ;               else 
+ 0499           ;               {
+ 0499                   .dbline 183
+ 0499           ;                       hours = maxVal;
+ 0499 5205              mov A,[X+5]
+ 049B 5400              mov [X+0],A
+ 049D                   .dbline 184
+ 049D           ;                       if(h12) datetime._02h.bits_ampm.ampm = !datetime._02h.bits_ampm.ampm;
+ 049D 3D0100            cmp [X+1],0
+ 04A0 A04C              jz L104
+ 04A2                   .dbline 184
+ 04A2 62D000            mov REG[0xd0],>_datetime
+ 04A5 5102              mov A,[_datetime+2]
+ 04A7 62D000            mov REG[0xd0],>__r0
+ 04AA 67                asr A
+ 04AB 67                asr A
+ 04AC 67                asr A
+ 04AD 67                asr A
+ 04AE 67                asr A
+ 04AF 2107              and A,7
+ 04B1 5300              mov [__r0],A
+ 04B3 260001            and [__r0],1
+ 04B6 B009              jnz L109
+ 04B8 560701            mov [X+7],1
+ 04BB 560600            mov [X+6],0
+ 04BE 8007              xjmp L110
+ 04C0           L109:
+ 04C0 560700            mov [X+7],0
+ 04C3 560600            mov [X+6],0
+ 04C6           L110:
+ 04C6 62D000            mov REG[0xd0],>__r0
+ 04C9 5207              mov A,[X+7]
+ 04CB 5300              mov [__r0],A
+ 04CD 260001            and [__r0],1
+ 04D0 5100              mov A,[__r0]
+ 04D2 64                asl A
+ 04D3 64                asl A
+ 04D4 64                asl A
+ 04D5 64                asl A
+ 04D6 64                asl A
+ 04D7 5300              mov [__r0],A
+ 04D9 260020            and [__r0],32
+ 04DC 62D000            mov REG[0xd0],>_datetime
+ 04DF 5102              mov A,[_datetime+2]
+ 04E1 21DF              and A,-33
+ 04E3 62D000            mov REG[0xd0],>__r0
+ 04E6 2A00              or A,[__r0]
+ 04E8 62D000            mov REG[0xd0],>_datetime
+ 04EB 5302              mov [_datetime+2],A
+ 04ED           L104:
+ 04ED                   .dbline 185
+ 04ED           ;               }
+ 04ED           L103:
+ 04ED                   .dbline 186
+ 04ED           ;       }
+ 04ED           L92:
+ 04ED                   .dbline 188
+ 04ED           ; 
+ 04ED           ;       decToBcd(&bcd10, &bcd, hours);
+ 04ED 5200              mov A,[X+0]
+ 04EF 08                push A
+ 04F0 62D000            mov REG[0xd0],>__r0
+ 04F3 5A00              mov [__r1],X
+ 04F5 060003            add [__r1],3
+ 04F8 5007              mov A,7
+ 04FA 08                push A
+ 04FB 5100              mov A,[__r1]
+ 04FD 08                push A
+ 04FE 5A00              mov [__r1],X
+ 0500 060002            add [__r1],2
+ 0503 5007              mov A,7
+ 0505 08                push A
+ 0506 5100              mov A,[__r1]
+ 0508 08                push A
+ 0509 7C0000            xcall _decToBcd
+ 050C 38FB              add SP,-5
+ 050E                   .dbline 190
+ 050E           ; 
+ 050E           ;       if(h12)
+ 050E 3D0100            cmp [X+1],0
+ 0511 A041              jz L111
+ 0513                   .dbline 192
+ 0513           ;       {
+ 0513           ;               datetime._02h.bits_ampm.hours = bcd;
+ 0513                   .dbline 192
+ 0513 62D000            mov REG[0xd0],>__r0
+ 0516 5203              mov A,[X+3]
+ 0518 210F              and A,15
+ 051A 5300              mov [__r0],A
+ 051C 26000F            and [__r0],15
+ 051F 62D000            mov REG[0xd0],>_datetime
+ 0522 5102              mov A,[_datetime+2]
+ 0524 21F0              and A,-16
+ 0526 62D000            mov REG[0xd0],>__r0
+ 0529 2A00              or A,[__r0]
+ 052B 62D000            mov REG[0xd0],>_datetime
+ 052E 5302              mov [_datetime+2],A
+ 0530                   .dbline 193
+ 0530           ;               datetime._02h.bits_ampm.hours10 = bcd10;
+ 0530 62D000            mov REG[0xd0],>__r0
+ 0533 5202              mov A,[X+2]
+ 0535 2101              and A,1
+ 0537 64                asl A
+ 0538 64                asl A
+ 0539 64                asl A
+ 053A 64                asl A
+ 053B 5300              mov [__r0],A
+ 053D 260010            and [__r0],16
+ 0540 62D000            mov REG[0xd0],>_datetime
+ 0543 5102              mov A,[_datetime+2]
+ 0545 21EF              and A,-17
+ 0547 62D000            mov REG[0xd0],>__r0
+ 054A 2A00              or A,[__r0]
+ 054C 62D000            mov REG[0xd0],>_datetime
+ 054F 5302              mov [_datetime+2],A
+ 0551                   .dbline 194
+ 0551           ;       }
+ 0551 803F              xjmp L112
+ 0553           L111:
+ 0553                   .dbline 196
+ 0553           ;       else
+ 0553           ;       {
+ 0553                   .dbline 197
+ 0553           ;               datetime._02h.bits_24hrs.hours = bcd;
+ 0553 62D000            mov REG[0xd0],>__r0
+ 0556 5203              mov A,[X+3]
+ 0558 210F              and A,15
+ 055A 5300              mov [__r0],A
+ 055C 26000F            and [__r0],15
+ 055F 62D000            mov REG[0xd0],>_datetime
+ 0562 5102              mov A,[_datetime+2]
+ 0564 21F0              and A,-16
+ 0566 62D000            mov REG[0xd0],>__r0
+ 0569 2A00              or A,[__r0]
+ 056B 62D000            mov REG[0xd0],>_datetime
+ 056E 5302              mov [_datetime+2],A
+ 0570                   .dbline 198
+ 0570           ;               datetime._02h.bits_24hrs.hours10 = bcd10;
+ 0570 62D000            mov REG[0xd0],>__r0
+ 0573 5202              mov A,[X+2]
+ 0575 2103              and A,3
+ 0577 64                asl A
+ 0578 64                asl A
+ 0579 64                asl A
+ 057A 64                asl A
+ 057B 5300              mov [__r0],A
+ 057D 260030            and [__r0],48
+ 0580 62D000            mov REG[0xd0],>_datetime
+ 0583 5102              mov A,[_datetime+2]
+ 0585 21CF              and A,-49
+ 0587 62D000            mov REG[0xd0],>__r0
+ 058A 2A00              or A,[__r0]
+ 058C 62D000            mov REG[0xd0],>_datetime
+ 058F 5302              mov [_datetime+2],A
+ 0591                   .dbline 199
+ 0591           ;       }
+ 0591           L112:
+ 0591                   .dbline 201
+ 0591           ;       
+ 0591           ;       Rtc_WriteToRtc();
+ 0591 7C0000            xcall _Rtc_WriteToRtc
+ 0594 62D000            mov REG[0xd0],>__r0
+ 0597                   .dbline 202
+ 0597           ;       Time_Pause(FALSE);
+ 0597 5000              mov A,0
+ 0599 08                push A
+ 059A 9A84              xcall _Time_Pause
+ 059C 38FF              add SP,-1
+ 059E                   .dbline -2
+ 059E           L83:
+ 059E 38F8              add SP,-8
+ 05A0 20                pop X
+ 05A1                   .dbline 0 ; func end
+ 05A1 7F                ret
+ 05A2                   .dbsym l maxVal 5 c
+ 05A2                   .dbsym l minVal 4 c
+ 05A2                   .dbsym l bcd 3 c
+ 05A2                   .dbsym l bcd10 2 c
+ 05A2                   .dbsym l h12 1 c
+ 05A2                   .dbsym l hours 0 c
+ 05A2                   .dbsym l direction -4 c
+ 05A2                   .dbend
+ 05A2                   .dbfunc e Time_Adj_D _Time_Adj_D fV
+ 05A2           ;           year -> X+4
+ 05A2           ;          month -> X+3
+ 05A2           ;            bcd -> X+2
+ 05A2           ;          bcd10 -> X+1
+ 05A2           ;           date -> X+0
+ 05A2           ;      direction -> X-4
+ 05A2           _Time_Adj_D::
+ 05A2                   .dbline -1
+ 05A2 10                push X
+ 05A3 4F                mov X,SP
+ 05A4 3805              add SP,5
+ 05A6                   .dbline 206
+ 05A6           ; }
+ 05A6           ; 
+ 05A6           ; void Time_Adj_D(BOOL direction)
+ 05A6           ; {
+ 05A6                   .dbline 209
+ 05A6           ;       BYTE date, month, year, bcd10, bcd;
+ 05A6           ; 
+ 05A6           ;       Time_Pause(TRUE);
+ 05A6 5001              mov A,1
+ 05A8 08                push A
+ 05A9 9A75              xcall _Time_Pause
+ 05AB                   .dbline 210
+ 05AB           ;       Rtc_ReadFromRtc();
+ 05AB 7C0000            xcall _Rtc_ReadFromRtc
+ 05AE                   .dbline 212
+ 05AE           ; 
+ 05AE           ;       bcdToDec(datetime._04h.bits.date10, datetime._04h.bits.date, &date);
+ 05AE 5007              mov A,7
+ 05B0 08                push A
+ 05B1 10                push X
+ 05B2 62D000            mov REG[0xd0],>_datetime
+ 05B5 5104              mov A,[_datetime+4]
+ 05B7 210F              and A,15
+ 05B9 08                push A
+ 05BA 5104              mov A,[_datetime+4]
+ 05BC 62D000            mov REG[0xd0],>__r0
+ 05BF 67                asr A
+ 05C0 67                asr A
+ 05C1 67                asr A
+ 05C2 67                asr A
+ 05C3 210F              and A,15
+ 05C5 5300              mov [__r0],A
+ 05C7 260003            and [__r0],3
+ 05CA 5100              mov A,[__r0]
+ 05CC 08                push A
+ 05CD 7C0000            xcall _bcdToDec
+ 05D0 38FB              add SP,-5
+ 05D2                   .dbline 213
+ 05D2           ;       bcdToDec(datetime._05h.bits.month10, datetime._05h.bits.month, &month);
+ 05D2 62D000            mov REG[0xd0],>__r0
+ 05D5 5A00              mov [__r1],X
+ 05D7 060003            add [__r1],3
+ 05DA 5007              mov A,7
+ 05DC 08                push A
+ 05DD 5100              mov A,[__r1]
+ 05DF 08                push A
+ 05E0 62D000            mov REG[0xd0],>_datetime
+ 05E3 5105              mov A,[_datetime+5]
+ 05E5 210F              and A,15
+ 05E7 08                push A
+ 05E8 5105              mov A,[_datetime+5]
+ 05EA 62D000            mov REG[0xd0],>__r0
+ 05ED 67                asr A
+ 05EE 67                asr A
+ 05EF 67                asr A
+ 05F0 67                asr A
+ 05F1 210F              and A,15
+ 05F3 5300              mov [__r0],A
+ 05F5 260001            and [__r0],1
+ 05F8 5100              mov A,[__r0]
+ 05FA 08                push A
+ 05FB 7C0000            xcall _bcdToDec
+ 05FE                   .dbline 214
+ 05FE           ;       bcdToDec(datetime._06h.bits.year10, datetime._06h.bits.year, &year);
+ 05FE 62D000            mov REG[0xd0],>__r0
+ 0601 5A00              mov [__r1],X
+ 0603 060004            add [__r1],4
+ 0606 5007              mov A,7
+ 0608 08                push A
+ 0609 5100              mov A,[__r1]
+ 060B 08                push A
+ 060C 62D000            mov REG[0xd0],>_datetime
+ 060F 5106              mov A,[_datetime+6]
+ 0611 210F              and A,15
+ 0613 08                push A
+ 0614 5106              mov A,[_datetime+6]
+ 0616 62D000            mov REG[0xd0],>__r0
+ 0619 67                asr A
+ 061A 67                asr A
+ 061B 67                asr A
+ 061C 67                asr A
+ 061D 210F              and A,15
+ 061F 5300              mov [__r0],A
+ 0621 26000F            and [__r0],15
+ 0624 5100              mov A,[__r0]
+ 0626 08                push A
+ 0627 7C0000            xcall _bcdToDec
+ 062A 38F8              add SP,-8
+ 062C                   .dbline 216
+ 062C           ; 
+ 062C           ;       bcd10 = datetime._04h.bits.date10;
+ 062C 62D000            mov REG[0xd0],>_datetime
+ 062F 5104              mov A,[_datetime+4]
+ 0631 62D000            mov REG[0xd0],>__r0
+ 0634 67                asr A
+ 0635 67                asr A
+ 0636 67                asr A
+ 0637 67                asr A
+ 0638 210F              and A,15
+ 063A 5300              mov [__r0],A
+ 063C 260003            and [__r0],3
+ 063F 5100              mov A,[__r0]
+ 0641 5401              mov [X+1],A
+ 0643                   .dbline 217
+ 0643           ;       bcd = datetime._04h.bits.date;
+ 0643 62D000            mov REG[0xd0],>_datetime
+ 0646 5104              mov A,[_datetime+4]
+ 0648 210F              and A,15
+ 064A 62D000            mov REG[0xd0],>__r0
+ 064D 5402              mov [X+2],A
+ 064F                   .dbline 219
+ 064F           ; 
+ 064F           ;       if(direction == TIME_UP)
+ 064F 3DFC01            cmp [X-4],1
+ 0652 B038              jnz L126
+ 0654                   .dbline 221
+ 0654           ;       {
+ 0654           ;               date++;
+ 0654                   .dbline 221
+ 0654 7700              inc [X+0]
+ 0656                   .dbline 222
+ 0656           ;               if(isValidDate(date, month, year))
+ 0656 5204              mov A,[X+4]
+ 0658 08                push A
+ 0659 5203              mov A,[X+3]
+ 065B 08                push A
+ 065C 5200              mov A,[X+0]
+ 065E 08                push A
+ 065F 7C0000            xcall _isValidDate
+ 0662 38FD              add SP,-3
+ 0664 62D000            mov REG[0xd0],>__r0
+ 0667 3900              cmp A,0
+ 0669 A056              jz L127
+ 066B                   .dbline 224
+ 066B           ;               {
+ 066B           ;                       decToBcd(&bcd10, &bcd, date);
+ 066B                   .dbline 224
+ 066B 5200              mov A,[X+0]
+ 066D 08                push A
+ 066E 5A00              mov [__r1],X
+ 0670 060002            add [__r1],2
+ 0673 5007              mov A,7
+ 0675 08                push A
+ 0676 5100              mov A,[__r1]
+ 0678 08                push A
+ 0679 5A00              mov [__r1],X
+ 067B 060001            add [__r1],1
+ 067E 5007              mov A,7
+ 0680 08                push A
+ 0681 5100              mov A,[__r1]
+ 0683 08                push A
+ 0684 7C0000            xcall _decToBcd
+ 0687 38FB              add SP,-5
+ 0689                   .dbline 225
+ 0689           ;               }
+ 0689                   .dbline 226
+ 0689           ;       }
+ 0689 8036              xjmp L127
+ 068B           L126:
+ 068B                   .dbline 228
+ 068B           ;       else
+ 068B           ;       {
+ 068B                   .dbline 229
+ 068B           ;               date--;
+ 068B 7B00              dec [X+0]
+ 068D                   .dbline 230
+ 068D           ;               if(isValidDate(date, month, year))
+ 068D 5204              mov A,[X+4]
+ 068F 08                push A
+ 0690 5203              mov A,[X+3]
+ 0692 08                push A
+ 0693 5200              mov A,[X+0]
+ 0695 08                push A
+ 0696 7C0000            xcall _isValidDate
+ 0699 38FD              add SP,-3
+ 069B 62D000            mov REG[0xd0],>__r0
+ 069E 3900              cmp A,0
+ 06A0 A01F              jz L130
+ 06A2                   .dbline 232
+ 06A2           ;               {
+ 06A2           ;                       decToBcd(&bcd10, &bcd, date);
+ 06A2                   .dbline 232
+ 06A2 5200              mov A,[X+0]
+ 06A4 08                push A
+ 06A5 5A00              mov [__r1],X
+ 06A7 060002            add [__r1],2
+ 06AA 5007              mov A,7
+ 06AC 08                push A
+ 06AD 5100              mov A,[__r1]
+ 06AF 08                push A
+ 06B0 5A00              mov [__r1],X
+ 06B2 060001            add [__r1],1
+ 06B5 5007              mov A,7
+ 06B7 08                push A
+ 06B8 5100              mov A,[__r1]
+ 06BA 08                push A
+ 06BB 7C0000            xcall _decToBcd
+ 06BE 38FB              add SP,-5
+ 06C0                   .dbline 233
+ 06C0           ;               }
+ 06C0           L130:
+ 06C0                   .dbline 234
+ 06C0           ;       }
+ 06C0           L127:
+ 06C0                   .dbline 236
+ 06C0           ; 
+ 06C0           ;       datetime._04h.bits.date10 = bcd10;
+ 06C0 62D000            mov REG[0xd0],>__r0
+ 06C3 5201              mov A,[X+1]
+ 06C5 2103              and A,3
+ 06C7 64                asl A
+ 06C8 64                asl A
+ 06C9 64                asl A
+ 06CA 64                asl A
+ 06CB 5300              mov [__r0],A
+ 06CD 260030            and [__r0],48
+ 06D0 62D000            mov REG[0xd0],>_datetime
+ 06D3 5104              mov A,[_datetime+4]
+ 06D5 21CF              and A,-49
+ 06D7 62D000            mov REG[0xd0],>__r0
+ 06DA 2A00              or A,[__r0]
+ 06DC 62D000            mov REG[0xd0],>_datetime
+ 06DF 5304              mov [_datetime+4],A
+ 06E1                   .dbline 237
+ 06E1           ;       datetime._04h.bits.date = bcd;
+ 06E1 62D000            mov REG[0xd0],>__r0
+ 06E4 5202              mov A,[X+2]
+ 06E6 210F              and A,15
+ 06E8 5300              mov [__r0],A
+ 06EA 26000F            and [__r0],15
+ 06ED 62D000            mov REG[0xd0],>_datetime
+ 06F0 5104              mov A,[_datetime+4]
+ 06F2 21F0              and A,-16
+ 06F4 62D000            mov REG[0xd0],>__r0
+ 06F7 2A00              or A,[__r0]
+ 06F9 62D000            mov REG[0xd0],>_datetime
+ 06FC 5304              mov [_datetime+4],A
+ 06FE                   .dbline 239
+ 06FE           ; 
+ 06FE           ;       Rtc_WriteToRtc();
+ 06FE 7C0000            xcall _Rtc_WriteToRtc
+ 0701 62D000            mov REG[0xd0],>__r0
+ 0704                   .dbline 240
+ 0704           ;       Time_Pause(FALSE);
+ 0704 5000              mov A,0
+ 0706 08                push A
+ 0707 9917              xcall _Time_Pause
+ 0709 38FF              add SP,-1
+ 070B                   .dbline -2
+ 070B           L117:
+ 070B 38FB              add SP,-5
+ 070D 20                pop X
+ 070E                   .dbline 0 ; func end
+ 070E 7F                ret
+ 070F                   .dbsym l year 4 c
+ 070F                   .dbsym l month 3 c
+ 070F                   .dbsym l bcd 2 c
+ 070F                   .dbsym l bcd10 1 c
+ 070F                   .dbsym l date 0 c
+ 070F                   .dbsym l direction -4 c
+ 070F                   .dbend
+ 070F                   .dbfunc e Time_Adj_Mo _Time_Adj_Mo fV
+ 070F           ;           year -> X+4
+ 070F           ;           date -> X+3
+ 070F           ;            bcd -> X+2
+ 070F           ;          bcd10 -> X+1
+ 070F           ;          month -> X+0
+ 070F           ;      direction -> X-4
+ 070F           _Time_Adj_Mo::
+ 070F                   .dbline -1
+ 070F 10                push X
+ 0710 4F                mov X,SP
+ 0711 3805              add SP,5
+ 0713                   .dbline 244
+ 0713           ; }
+ 0713           ; 
+ 0713           ; void Time_Adj_Mo(BOOL direction)
+ 0713           ; {
+ 0713                   .dbline 247
+ 0713           ;       BYTE date, month, year, bcd10, bcd;
+ 0713           ; 
+ 0713           ;       Time_Pause(TRUE);
+ 0713 5001              mov A,1
+ 0715 08                push A
+ 0716 9908              xcall _Time_Pause
+ 0718                   .dbline 248
+ 0718           ;       Rtc_ReadFromRtc();
+ 0718 7C0000            xcall _Rtc_ReadFromRtc
+ 071B 62D000            mov REG[0xd0],>__r0
+ 071E                   .dbline 250
+ 071E           ; 
+ 071E           ;       bcdToDec(datetime._04h.bits.date10, datetime._04h.bits.date, &date);
+ 071E 5A00              mov [__r1],X
+ 0720 060003            add [__r1],3
+ 0723 5007              mov A,7
+ 0725 08                push A
+ 0726 5100              mov A,[__r1]
+ 0728 08                push A
+ 0729 62D000            mov REG[0xd0],>_datetime
+ 072C 5104              mov A,[_datetime+4]
+ 072E 210F              and A,15
+ 0730 08                push A
+ 0731 5104              mov A,[_datetime+4]
+ 0733 62D000            mov REG[0xd0],>__r0
+ 0736 67                asr A
+ 0737 67                asr A
+ 0738 67                asr A
+ 0739 67                asr A
+ 073A 210F              and A,15
+ 073C 5300              mov [__r0],A
+ 073E 260003            and [__r0],3
+ 0741 5100              mov A,[__r0]
+ 0743 08                push A
+ 0744 7C0000            xcall _bcdToDec
+ 0747 38FB              add SP,-5
+ 0749                   .dbline 251
+ 0749           ;       bcdToDec(datetime._05h.bits.month10, datetime._05h.bits.month, &month);
+ 0749 5007              mov A,7
+ 074B 08                push A
+ 074C 10                push X
+ 074D 62D000            mov REG[0xd0],>_datetime
+ 0750 5105              mov A,[_datetime+5]
+ 0752 210F              and A,15
+ 0754 08                push A
+ 0755 5105              mov A,[_datetime+5]
+ 0757 62D000            mov REG[0xd0],>__r0
+ 075A 67                asr A
+ 075B 67                asr A
+ 075C 67                asr A
+ 075D 67                asr A
+ 075E 210F              and A,15
+ 0760 5300              mov [__r0],A
+ 0762 260001            and [__r0],1
+ 0765 5100              mov A,[__r0]
+ 0767 08                push A
+ 0768 7C0000            xcall _bcdToDec
+ 076B                   .dbline 252
+ 076B           ;       bcdToDec(datetime._06h.bits.year10, datetime._06h.bits.year, &year);
+ 076B 62D000            mov REG[0xd0],>__r0
+ 076E 5A00              mov [__r1],X
+ 0770 060004            add [__r1],4
+ 0773 5007              mov A,7
+ 0775 08                push A
+ 0776 5100              mov A,[__r1]
+ 0778 08                push A
+ 0779 62D000            mov REG[0xd0],>_datetime
+ 077C 5106              mov A,[_datetime+6]
+ 077E 210F              and A,15
+ 0780 08                push A
+ 0781 5106              mov A,[_datetime+6]
+ 0783 62D000            mov REG[0xd0],>__r0
+ 0786 67                asr A
+ 0787 67                asr A
+ 0788 67                asr A
+ 0789 67                asr A
+ 078A 210F              and A,15
+ 078C 5300              mov [__r0],A
+ 078E 26000F            and [__r0],15
+ 0791 5100              mov A,[__r0]
+ 0793 08                push A
+ 0794 7C0000            xcall _bcdToDec
+ 0797 38F8              add SP,-8
+ 0799                   .dbline 254
+ 0799           ; 
+ 0799           ;       bcd10 = datetime._05h.bits.month10;
+ 0799 62D000            mov REG[0xd0],>_datetime
+ 079C 5105              mov A,[_datetime+5]
+ 079E 62D000            mov REG[0xd0],>__r0
+ 07A1 67                asr A
+ 07A2 67                asr A
+ 07A3 67                asr A
+ 07A4 67                asr A
+ 07A5 210F              and A,15
+ 07A7 5300              mov [__r0],A
+ 07A9 260001            and [__r0],1
+ 07AC 5100              mov A,[__r0]
+ 07AE 5401              mov [X+1],A
+ 07B0                   .dbline 255
+ 07B0           ;       bcd = datetime._05h.bits.month;
+ 07B0 62D000            mov REG[0xd0],>_datetime
+ 07B3 5105              mov A,[_datetime+5]
+ 07B5 210F              and A,15
+ 07B7 62D000            mov REG[0xd0],>__r0
+ 07BA 5402              mov [X+2],A
+ 07BC                   .dbline 257
+ 07BC           ; 
+ 07BC           ;       if(direction == TIME_UP)
+ 07BC 3DFC01            cmp [X-4],1
+ 07BF B038              jnz L143
+ 07C1                   .dbline 259
+ 07C1           ;       {
+ 07C1           ;               month++;
+ 07C1                   .dbline 259
+ 07C1 7700              inc [X+0]
+ 07C3                   .dbline 260
+ 07C3           ;               if(isValidDate(date, month, year))
+ 07C3 5204              mov A,[X+4]
+ 07C5 08                push A
+ 07C6 5200              mov A,[X+0]
+ 07C8 08                push A
+ 07C9 5203              mov A,[X+3]
+ 07CB 08                push A
+ 07CC 7C0000            xcall _isValidDate
+ 07CF 38FD              add SP,-3
+ 07D1 62D000            mov REG[0xd0],>__r0
+ 07D4 3900              cmp A,0
+ 07D6 A056              jz L144
+ 07D8                   .dbline 262
+ 07D8           ;               {
+ 07D8           ;                       decToBcd(&bcd10, &bcd, month);
+ 07D8                   .dbline 262
+ 07D8 5200              mov A,[X+0]
+ 07DA 08                push A
+ 07DB 5A00              mov [__r1],X
+ 07DD 060002            add [__r1],2
+ 07E0 5007              mov A,7
+ 07E2 08                push A
+ 07E3 5100              mov A,[__r1]
+ 07E5 08                push A
+ 07E6 5A00              mov [__r1],X
+ 07E8 060001            add [__r1],1
+ 07EB 5007              mov A,7
+ 07ED 08                push A
+ 07EE 5100              mov A,[__r1]
+ 07F0 08                push A
+ 07F1 7C0000            xcall _decToBcd
+ 07F4 38FB              add SP,-5
+ 07F6                   .dbline 263
+ 07F6           ;               }
+ 07F6                   .dbline 264
+ 07F6           ;       }
+ 07F6 8036              xjmp L144
+ 07F8           L143:
+ 07F8                   .dbline 266
+ 07F8           ;       else
+ 07F8           ;       {
+ 07F8                   .dbline 267
+ 07F8           ;               month--;
+ 07F8 7B00              dec [X+0]
+ 07FA                   .dbline 268
+ 07FA           ;               if(isValidDate(date, month, year))
+ 07FA 5204              mov A,[X+4]
+ 07FC 08                push A
+ 07FD 5200              mov A,[X+0]
+ 07FF 08                push A
+ 0800 5203              mov A,[X+3]
+ 0802 08                push A
+ 0803 7C0000            xcall _isValidDate
+ 0806 38FD              add SP,-3
+ 0808 62D000            mov REG[0xd0],>__r0
+ 080B 3900              cmp A,0
+ 080D A01F              jz L147
+ 080F                   .dbline 270
+ 080F           ;               {
+ 080F           ;                       decToBcd(&bcd10, &bcd, month);
+ 080F                   .dbline 270
+ 080F 5200              mov A,[X+0]
+ 0811 08                push A
+ 0812 5A00              mov [__r1],X
+ 0814 060002            add [__r1],2
+ 0817 5007              mov A,7
+ 0819 08                push A
+ 081A 5100              mov A,[__r1]
+ 081C 08                push A
+ 081D 5A00              mov [__r1],X
+ 081F 060001            add [__r1],1
+ 0822 5007              mov A,7
+ 0824 08                push A
+ 0825 5100              mov A,[__r1]
+ 0827 08                push A
+ 0828 7C0000            xcall _decToBcd
+ 082B 38FB              add SP,-5
+ 082D                   .dbline 271
+ 082D           ;               }
+ 082D           L147:
+ 082D                   .dbline 272
+ 082D           ;       }
+ 082D           L144:
+ 082D                   .dbline 274
+ 082D           ; 
+ 082D           ;       datetime._05h.bits.month10 = bcd10;
+ 082D 62D000            mov REG[0xd0],>__r0
+ 0830 5201              mov A,[X+1]
+ 0832 2101              and A,1
+ 0834 64                asl A
+ 0835 64                asl A
+ 0836 64                asl A
+ 0837 64                asl A
+ 0838 5300              mov [__r0],A
+ 083A 260010            and [__r0],16
+ 083D 62D000            mov REG[0xd0],>_datetime
+ 0840 5105              mov A,[_datetime+5]
+ 0842 21EF              and A,-17
+ 0844 62D000            mov REG[0xd0],>__r0
+ 0847 2A00              or A,[__r0]
+ 0849 62D000            mov REG[0xd0],>_datetime
+ 084C 5305              mov [_datetime+5],A
+ 084E                   .dbline 275
+ 084E           ;       datetime._05h.bits.month = bcd;
+ 084E 62D000            mov REG[0xd0],>__r0
+ 0851 5202              mov A,[X+2]
+ 0853 210F              and A,15
+ 0855 5300              mov [__r0],A
+ 0857 26000F            and [__r0],15
+ 085A 62D000            mov REG[0xd0],>_datetime
+ 085D 5105              mov A,[_datetime+5]
+ 085F 21F0              and A,-16
+ 0861 62D000            mov REG[0xd0],>__r0
+ 0864 2A00              or A,[__r0]
+ 0866 62D000            mov REG[0xd0],>_datetime
+ 0869 5305              mov [_datetime+5],A
+ 086B                   .dbline 277
+ 086B           ; 
+ 086B           ;       Rtc_WriteToRtc();
+ 086B 7C0000            xcall _Rtc_WriteToRtc
+ 086E 62D000            mov REG[0xd0],>__r0
+ 0871                   .dbline 278
+ 0871           ;       Time_Pause(FALSE);
+ 0871 5000              mov A,0
+ 0873 08                push A
+ 0874 7C0020            xcall _Time_Pause
+ 0877 38FF              add SP,-1
+ 0879                   .dbline -2
+ 0879           L134:
+ 0879 38FB              add SP,-5
+ 087B 20                pop X
+ 087C                   .dbline 0 ; func end
+ 087C 7F                ret
+ 087D                   .dbsym l year 4 c
+ 087D                   .dbsym l date 3 c
+ 087D                   .dbsym l bcd 2 c
+ 087D                   .dbsym l bcd10 1 c
+ 087D                   .dbsym l month 0 c
+ 087D                   .dbsym l direction -4 c
+ 087D                   .dbend
+ 087D                   .dbfunc e Time_Adj_Y _Time_Adj_Y fV
+ 087D           ;          month -> X+4
+ 087D           ;           date -> X+3
+ 087D           ;            bcd -> X+2
+ 087D           ;          bcd10 -> X+1
+ 087D           ;           year -> X+0
+ 087D           ;      direction -> X-4
+ 087D           _Time_Adj_Y::
+ 087D                   .dbline -1
+ 087D 10                push X
+ 087E 4F                mov X,SP
+ 087F 3805              add SP,5
+ 0881                   .dbline 282
+ 0881           ; }
+ 0881           ; 
+ 0881           ; void Time_Adj_Y(BOOL direction)
+ 0881           ; {
+ 0881                   .dbline 285
+ 0881           ;       BYTE date, month, year, bcd10, bcd;
+ 0881           ; 
+ 0881           ;       Time_Pause(TRUE);
+ 0881 5001              mov A,1
+ 0883 08                push A
+ 0884 7C0020            xcall _Time_Pause
+ 0887                   .dbline 286
+ 0887           ;       Rtc_ReadFromRtc();
+ 0887 7C0000            xcall _Rtc_ReadFromRtc
+ 088A 62D000            mov REG[0xd0],>__r0
+ 088D                   .dbline 288
+ 088D           ; 
+ 088D           ;       bcdToDec(datetime._04h.bits.date10, datetime._04h.bits.date, &date);
+ 088D 5A00              mov [__r1],X
+ 088F 060003            add [__r1],3
+ 0892 5007              mov A,7
+ 0894 08                push A
+ 0895 5100              mov A,[__r1]
+ 0897 08                push A
+ 0898 62D000            mov REG[0xd0],>_datetime
+ 089B 5104              mov A,[_datetime+4]
+ 089D 210F              and A,15
+ 089F 08                push A
+ 08A0 5104              mov A,[_datetime+4]
+ 08A2 62D000            mov REG[0xd0],>__r0
+ 08A5 67                asr A
+ 08A6 67                asr A
+ 08A7 67                asr A
+ 08A8 67                asr A
+ 08A9 210F              and A,15
+ 08AB 5300              mov [__r0],A
+ 08AD 260003            and [__r0],3
+ 08B0 5100              mov A,[__r0]
+ 08B2 08                push A
+ 08B3 7C0000            xcall _bcdToDec
+ 08B6 38FB              add SP,-5
+ 08B8                   .dbline 289
+ 08B8           ;       bcdToDec(datetime._05h.bits.month10, datetime._05h.bits.month, &month);
+ 08B8 62D000            mov REG[0xd0],>__r0
+ 08BB 5A00              mov [__r1],X
+ 08BD 060004            add [__r1],4
+ 08C0 5007              mov A,7
+ 08C2 08                push A
+ 08C3 5100              mov A,[__r1]
+ 08C5 08                push A
+ 08C6 62D000            mov REG[0xd0],>_datetime
+ 08C9 5105              mov A,[_datetime+5]
+ 08CB 210F              and A,15
+ 08CD 08                push A
+ 08CE 5105              mov A,[_datetime+5]
+ 08D0 62D000            mov REG[0xd0],>__r0
+ 08D3 67                asr A
+ 08D4 67                asr A
+ 08D5 67                asr A
+ 08D6 67                asr A
+ 08D7 210F              and A,15
+ 08D9 5300              mov [__r0],A
+ 08DB 260001            and [__r0],1
+ 08DE 5100              mov A,[__r0]
+ 08E0 08                push A
+ 08E1 7C0000            xcall _bcdToDec
+ 08E4                   .dbline 290
+ 08E4           ;       bcdToDec(datetime._06h.bits.year10, datetime._06h.bits.year, &year);
+ 08E4 5007              mov A,7
+ 08E6 08                push A
+ 08E7 10                push X
+ 08E8 62D000            mov REG[0xd0],>_datetime
+ 08EB 5106              mov A,[_datetime+6]
+ 08ED 210F              and A,15
+ 08EF 08                push A
+ 08F0 5106              mov A,[_datetime+6]
+ 08F2 62D000            mov REG[0xd0],>__r0
+ 08F5 67                asr A
+ 08F6 67                asr A
+ 08F7 67                asr A
+ 08F8 67                asr A
+ 08F9 210F              and A,15
+ 08FB 5300              mov [__r0],A
+ 08FD 26000F            and [__r0],15
+ 0900 5100              mov A,[__r0]
+ 0902 08                push A
+ 0903 7C0000            xcall _bcdToDec
+ 0906 38F8              add SP,-8
+ 0908                   .dbline 292
+ 0908           ; 
+ 0908           ;       bcd10 = datetime._06h.bits.year10;
+ 0908 62D000            mov REG[0xd0],>_datetime
+ 090B 5106              mov A,[_datetime+6]
+ 090D 62D000            mov REG[0xd0],>__r0
+ 0910 67                asr A
+ 0911 67                asr A
+ 0912 67                asr A
+ 0913 67                asr A
+ 0914 210F              and A,15
+ 0916 5300              mov [__r0],A
+ 0918 26000F            and [__r0],15
+ 091B 5100              mov A,[__r0]
+ 091D 5401              mov [X+1],A
+ 091F                   .dbline 293
+ 091F           ;       bcd = datetime._06h.bits.year;
+ 091F 62D000            mov REG[0xd0],>_datetime
+ 0922 5106              mov A,[_datetime+6]
+ 0924 210F              and A,15
+ 0926 62D000            mov REG[0xd0],>__r0
+ 0929 5402              mov [X+2],A
+ 092B                   .dbline 295
+ 092B           ; 
+ 092B           ;       if(direction == TIME_UP)
+ 092B 3DFC01            cmp [X-4],1
+ 092E B038              jnz L160
+ 0930                   .dbline 297
+ 0930           ;       {
+ 0930           ;               year++;
+ 0930                   .dbline 297
+ 0930 7700              inc [X+0]
+ 0932                   .dbline 298
+ 0932           ;               if(isValidDate(date, month, year))
+ 0932 5200              mov A,[X+0]
+ 0934 08                push A
+ 0935 5204              mov A,[X+4]
+ 0937 08                push A
+ 0938 5203              mov A,[X+3]
+ 093A 08                push A
+ 093B 7C0000            xcall _isValidDate
+ 093E 38FD              add SP,-3
+ 0940 62D000            mov REG[0xd0],>__r0
+ 0943 3900              cmp A,0
+ 0945 A056              jz L161
+ 0947                   .dbline 300
+ 0947           ;               {
+ 0947           ;                       decToBcd(&bcd10, &bcd, year);
+ 0947                   .dbline 300
+ 0947 5200              mov A,[X+0]
+ 0949 08                push A
+ 094A 5A00              mov [__r1],X
+ 094C 060002            add [__r1],2
+ 094F 5007              mov A,7
+ 0951 08                push A
+ 0952 5100              mov A,[__r1]
+ 0954 08                push A
+ 0955 5A00              mov [__r1],X
+ 0957 060001            add [__r1],1
+ 095A 5007              mov A,7
+ 095C 08                push A
+ 095D 5100              mov A,[__r1]
+ 095F 08                push A
+ 0960 7C0000            xcall _decToBcd
+ 0963 38FB              add SP,-5
+ 0965                   .dbline 301
+ 0965           ;               }
+ 0965                   .dbline 302
+ 0965           ;       }
+ 0965 8036              xjmp L161
+ 0967           L160:
+ 0967                   .dbline 304
+ 0967           ;       else
+ 0967           ;       {
+ 0967                   .dbline 305
+ 0967           ;               year--;
+ 0967 7B00              dec [X+0]
+ 0969                   .dbline 306
+ 0969           ;               if(isValidDate(date, month, year))
+ 0969 5200              mov A,[X+0]
+ 096B 08                push A
+ 096C 5204              mov A,[X+4]
+ 096E 08                push A
+ 096F 5203              mov A,[X+3]
+ 0971 08                push A
+ 0972 7C0000            xcall _isValidDate
+ 0975 38FD              add SP,-3
+ 0977 62D000            mov REG[0xd0],>__r0
+ 097A 3900              cmp A,0
+ 097C A01F              jz L164
+ 097E                   .dbline 308
+ 097E           ;               {
+ 097E           ;                       decToBcd(&bcd10, &bcd, year);
+ 097E                   .dbline 308
+ 097E 5200              mov A,[X+0]
+ 0980 08                push A
+ 0981 5A00              mov [__r1],X
+ 0983 060002            add [__r1],2
+ 0986 5007              mov A,7
+ 0988 08                push A
+ 0989 5100              mov A,[__r1]
+ 098B 08                push A
+ 098C 5A00              mov [__r1],X
+ 098E 060001            add [__r1],1
+ 0991 5007              mov A,7
+ 0993 08                push A
+ 0994 5100              mov A,[__r1]
+ 0996 08                push A
+ 0997 7C0000            xcall _decToBcd
+ 099A 38FB              add SP,-5
+ 099C                   .dbline 309
+ 099C           ;               }
+ 099C           L164:
+ 099C                   .dbline 310
+ 099C           ;       }
+ 099C           L161:
+ 099C                   .dbline 312
+ 099C           ; 
+ 099C           ;       datetime._06h.bits.year10 = bcd10;
+ 099C 62D000            mov REG[0xd0],>__r0
+ 099F 5201              mov A,[X+1]
+ 09A1 210F              and A,15
+ 09A3 64                asl A
+ 09A4 64                asl A
+ 09A5 64                asl A
+ 09A6 64                asl A
+ 09A7 5300              mov [__r0],A
+ 09A9 2600F0            and [__r0],-16
+ 09AC 62D000            mov REG[0xd0],>_datetime
+ 09AF 5106              mov A,[_datetime+6]
+ 09B1 210F              and A,15
+ 09B3 62D000            mov REG[0xd0],>__r0
+ 09B6 2A00              or A,[__r0]
+ 09B8 62D000            mov REG[0xd0],>_datetime
+ 09BB 5306              mov [_datetime+6],A
+ 09BD                   .dbline 313
+ 09BD           ;       datetime._06h.bits.year = bcd;
+ 09BD 62D000            mov REG[0xd0],>__r0
+ 09C0 5202              mov A,[X+2]
+ 09C2 210F              and A,15
+ 09C4 5300              mov [__r0],A
+ 09C6 26000F            and [__r0],15
+ 09C9 62D000            mov REG[0xd0],>_datetime
+ 09CC 5106              mov A,[_datetime+6]
+ 09CE 21F0              and A,-16
+ 09D0 62D000            mov REG[0xd0],>__r0
+ 09D3 2A00              or A,[__r0]
+ 09D5 62D000            mov REG[0xd0],>_datetime
+ 09D8 5306              mov [_datetime+6],A
+ 09DA                   .dbline 315
+ 09DA           ; 
+ 09DA           ;       Rtc_WriteToRtc();
+ 09DA 7C0000            xcall _Rtc_WriteToRtc
+ 09DD 62D000            mov REG[0xd0],>__r0
+ 09E0                   .dbline 316
+ 09E0           ;       Time_Pause(FALSE);
+ 09E0 5000              mov A,0
+ 09E2 08                push A
+ 09E3 7C0020            xcall _Time_Pause
+ 09E6 38FF              add SP,-1
+ 09E8                   .dbline -2
+ 09E8           L151:
+ 09E8 38FB              add SP,-5
+ 09EA 20                pop X
+ 09EB                   .dbline 0 ; func end
+ 09EB 7F                ret
+ 09EC                   .dbsym l month 4 c
+ 09EC                   .dbsym l date 3 c
+ 09EC                   .dbsym l bcd 2 c
+ 09EC                   .dbsym l bcd10 1 c
+ 09EC                   .dbsym l year 0 c
+ 09EC                   .dbsym l direction -4 c
+ 09EC                   .dbend

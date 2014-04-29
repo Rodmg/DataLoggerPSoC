@@ -1,0 +1,520 @@
+ 0000                   cpu LMM
+                        .module menu.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./menu.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\menu.c
+ 0000                   .dbfunc e Menu_Start _Menu_Start fV
+ 0000           _Menu_Start::
+ 0000                   .dbline -1
+ 0000                   .dbline 6
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #include "menu.h"
+ 0000           ; 
+ 0000           ; void Menu_Start(void)
+ 0000           ; {
+ 0000                   .dbline -2
+ 0000           L3:
+ 0000                   .dbline 0 ; func end
+ 0000 7F                ret
+ 0001                   .dbend
+ 0001                   .dbfunc e Menu_Stop _Menu_Stop fV
+ 0001           _Menu_Stop::
+ 0001                   .dbline -1
+ 0001                   .dbline 11
+ 0001           ;       //LCD_Start();
+ 0001           ; }
+ 0001           ; 
+ 0001           ; void Menu_Stop(void)
+ 0001           ; {
+ 0001                   .dbline -2
+ 0001           L4:
+ 0001                   .dbline 0 ; func end
+ 0001 7F                ret
+ 0002                   .dbend
+ 0002                   .dbfunc e Menu_Update _Menu_Update fV
+ 0002                   .dbstruct 0 18 .1
+ 0002                   .dbfield 0 text A[16:16]c
+ 0002                   .dbfield 16 callback pfV
+ 0002                   .dbend
+ 0002                   .dbstruct 0 4 .2
+ 0002                   .dbfield 0 entries pS[.1]
+ 0002                   .dbfield 2 nOptions c
+ 0002                   .dbfield 3 currentIndex c
+ 0002                   .dbend
+ 0002           ;           menu -> X-5
+ 0002           _Menu_Update::
+ 0002                   .dbline -1
+ 0002 10                push X
+ 0003 4F                mov X,SP
+ 0004                   .dbline 16
+ 0004           ;       //LCD_Stop();
+ 0004           ; }
+ 0004           ; 
+ 0004           ; void Menu_Update(Menu *menu)
+ 0004           ; {
+ 0004                   .dbline 17
+ 0004           ;       Menu_Clear();
+ 0004 925B              xcall _Menu_Clear
+ 0006                   .dbline 18
+ 0006           ;       LCD_Position(0, 0);
+ 0006 10                push X
+ 0007 5000              mov A,0
+ 0009 5700              mov X,0
+ 000B 7C0000            xcall _LCD_Position
+ 000E                   .dbline 19
+ 000E           ;       LCD_PrCString(">");
+ 000E 5013              mov A,>L6
+ 0010 08                push A
+ 0011 5013              mov A,<L6
+ 0013 5C                mov X,A
+ 0014 18                pop A
+ 0015 7C0000            xcall _LCD_PrCString
+ 0018 20                pop X
+ 0019                   .dbline 20
+ 0019           ;       LCD_PrString(menu->entries[menu->currentIndex].text);
+ 0019 62D000            mov REG[0xd0],>__r0
+ 001C 52FC              mov A,[X-4]
+ 001E 5300              mov [__r1],A
+ 0020 52FB              mov A,[X-5]
+ 0022 60D4              mov REG[0xd4],A
+ 0024 3E00              mvi A,[__r1]
+ 0026 5300              mov [__r0],A
+ 0028 3E00              mvi A,[__r1]
+ 002A 5300              mov [__r1],A
+ 002C 52FC              mov A,[X-4]
+ 002E 0103              add A,3
+ 0030 5300              mov [__r3],A
+ 0032 52FB              mov A,[X-5]
+ 0034 0900              adc A,0
+ 0036 60D4              mov REG[0xd4],A
+ 0038 3E00              mvi A,[__r3]
+ 003A 5300              mov [__r3],A
+ 003C 5000              mov A,0
+ 003E 08                push A
+ 003F 5100              mov A,[__r3]
+ 0041 08                push A
+ 0042 5000              mov A,0
+ 0044 08                push A
+ 0045 5012              mov A,18
+ 0047 08                push A
+ 0048 7C0000            xcall __mul16
+ 004B 38FC              add SP,-4
+ 004D 5100              mov A,[__rX]
+ 004F 5300              mov [__r3],A
+ 0051 5100              mov A,[__rY]
+ 0053 5300              mov [__r2],A
+ 0055 5100              mov A,[__r3]
+ 0057 0200              add A,[__r1]
+ 0059 5300              mov [__r1],A
+ 005B 5100              mov A,[__r2]
+ 005D 0A00              adc A,[__r0]
+ 005F 10                push X
+ 0060 08                push A
+ 0061 5100              mov A,[__r1]
+ 0063 5C                mov X,A
+ 0064 18                pop A
+ 0065 7C0000            xcall _LCD_PrString
+ 0068                   .dbline 21
+ 0068           ;       LCD_Position(1, 0);
+ 0068 5700              mov X,0
+ 006A 5001              mov A,1
+ 006C 7C0000            xcall _LCD_Position
+ 006F                   .dbline 22
+ 006F           ;       LCD_PrCString(" ");
+ 006F 5011              mov A,>L7
+ 0071 08                push A
+ 0072 5011              mov A,<L7
+ 0074 5C                mov X,A
+ 0075 18                pop A
+ 0076 7C0000            xcall _LCD_PrCString
+ 0079 20                pop X
+ 007A                   .dbline 23
+ 007A           ;       if(menu->currentIndex < menu->nOptions - 1)
+ 007A 62D000            mov REG[0xd0],>__r0
+ 007D 52FC              mov A,[X-4]
+ 007F 0102              add A,2
+ 0081 5300              mov [__r1],A
+ 0083 52FB              mov A,[X-5]
+ 0085 0900              adc A,0
+ 0087 60D4              mov REG[0xd4],A
+ 0089 3E00              mvi A,[__r1]
+ 008B 5300              mov [__r0],A
+ 008D 160001            sub [__r0],1
+ 0090 52FC              mov A,[X-4]
+ 0092 0103              add A,3
+ 0094 5300              mov [__r3],A
+ 0096 52FB              mov A,[X-5]
+ 0098 0900              adc A,0
+ 009A 60D4              mov REG[0xd4],A
+ 009C 3E00              mvi A,[__r3]
+ 009E 3A00              cmp A,[__r0]
+ 00A0 D05B              jnc L8
+ 00A2           X0:
+ 00A2                   .dbline 25
+ 00A2           ;       {
+ 00A2           ;               LCD_PrString(menu->entries[menu->currentIndex + 1].text);
+ 00A2                   .dbline 25
+ 00A2 62D000            mov REG[0xd0],>__r0
+ 00A5 52FC              mov A,[X-4]
+ 00A7 5300              mov [__r1],A
+ 00A9 52FB              mov A,[X-5]
+ 00AB 60D4              mov REG[0xd4],A
+ 00AD 3E00              mvi A,[__r1]
+ 00AF 5300              mov [__r0],A
+ 00B1 3E00              mvi A,[__r1]
+ 00B3 5300              mov [__r1],A
+ 00B5 52FC              mov A,[X-4]
+ 00B7 0103              add A,3
+ 00B9 5300              mov [__r3],A
+ 00BB 52FB              mov A,[X-5]
+ 00BD 0900              adc A,0
+ 00BF 60D4              mov REG[0xd4],A
+ 00C1 3E00              mvi A,[__r3]
+ 00C3 5300              mov [__r3],A
+ 00C5 5000              mov A,0
+ 00C7 08                push A
+ 00C8 5100              mov A,[__r3]
+ 00CA 08                push A
+ 00CB 5000              mov A,0
+ 00CD 08                push A
+ 00CE 5012              mov A,18
+ 00D0 08                push A
+ 00D1 7C0000            xcall __mul16
+ 00D4 38FC              add SP,-4
+ 00D6 5100              mov A,[__rX]
+ 00D8 5300              mov [__r3],A
+ 00DA 5100              mov A,[__rY]
+ 00DC 5300              mov [__r2],A
+ 00DE 5100              mov A,[__r3]
+ 00E0 0200              add A,[__r1]
+ 00E2 5300              mov [__r1],A
+ 00E4 5100              mov A,[__r2]
+ 00E6 0A00              adc A,[__r0]
+ 00E8 5300              mov [__r0],A
+ 00EA 060012            add [__r1],18
+ 00ED 0E0000            adc [__r0],0
+ 00F0 10                push X
+ 00F1 5100              mov A,[__r0]
+ 00F3 08                push A
+ 00F4 5100              mov A,[__r1]
+ 00F6 5C                mov X,A
+ 00F7 18                pop A
+ 00F8 7C0000            xcall _LCD_PrString
+ 00FB 20                pop X
+ 00FC                   .dbline 26
+ 00FC           ;       }
+ 00FC           L8:
+ 00FC                   .dbline -2
+ 00FC           L5:
+ 00FC 20                pop X
+ 00FD                   .dbline 0 ; func end
+ 00FD 7F                ret
+ 00FE                   .dbsym l menu -5 pS[.2]
+ 00FE                   .dbend
+ 00FE                   .dbfunc e Menu_Up _Menu_Up fV
+ 00FE           ;           menu -> X-5
+ 00FE           _Menu_Up::
+ 00FE                   .dbline -1
+ 00FE 10                push X
+ 00FF 4F                mov X,SP
+ 0100                   .dbline 31
+ 0100           ; 
+ 0100           ; }
+ 0100           ; 
+ 0100           ; void Menu_Up(Menu *menu)
+ 0100           ; {
+ 0100                   .dbline 32
+ 0100           ;       if(menu->currentIndex > 0)
+ 0100 62D000            mov REG[0xd0],>__r0
+ 0103 52FC              mov A,[X-4]
+ 0105 0103              add A,3
+ 0107 5300              mov [__r1],A
+ 0109 52FB              mov A,[X-5]
+ 010B 0900              adc A,0
+ 010D 60D4              mov REG[0xd4],A
+ 010F 3E00              mvi A,[__r1]
+ 0111 5300              mov [__r0],A
+ 0113 5000              mov A,0
+ 0115 3A00              cmp A,[__r0]
+ 0117 D023              jnc L11
+ 0119           X1:
+ 0119                   .dbline 34
+ 0119           ;       {
+ 0119           ;               menu->currentIndex--;
+ 0119                   .dbline 34
+ 0119 62D000            mov REG[0xd0],>__r0
+ 011C 52FC              mov A,[X-4]
+ 011E 0103              add A,3
+ 0120 5300              mov [__r1],A
+ 0122 52FB              mov A,[X-5]
+ 0124 0900              adc A,0
+ 0126 5300              mov [__r0],A
+ 0128 60D4              mov REG[0xd4],A
+ 012A 3E00              mvi A,[__r1]
+ 012C 7A00              dec [__r1]
+ 012E 5300              mov [__r2],A
+ 0130 160001            sub [__r2],1
+ 0133 5100              mov A,[__r0]
+ 0135 60D5              mov REG[0xd5],A
+ 0137 5100              mov A,[__r2]
+ 0139 3F00              mvi [__r1],A
+ 013B                   .dbline 35
+ 013B           ;       }
+ 013B           L11:
+ 013B                   .dbline -2
+ 013B           L10:
+ 013B 20                pop X
+ 013C                   .dbline 0 ; func end
+ 013C 7F                ret
+ 013D                   .dbsym l menu -5 pS[.2]
+ 013D                   .dbend
+ 013D                   .dbfunc e Menu_Down _Menu_Down fV
+ 013D           ;           menu -> X-5
+ 013D           _Menu_Down::
+ 013D                   .dbline -1
+ 013D 10                push X
+ 013E 4F                mov X,SP
+ 013F                   .dbline 39
+ 013F           ; }
+ 013F           ; 
+ 013F           ; void Menu_Down(Menu *menu)
+ 013F           ; {
+ 013F                   .dbline 40
+ 013F           ;       if(menu->currentIndex < menu->nOptions - 1)
+ 013F 62D000            mov REG[0xd0],>__r0
+ 0142 52FC              mov A,[X-4]
+ 0144 0102              add A,2
+ 0146 5300              mov [__r1],A
+ 0148 52FB              mov A,[X-5]
+ 014A 0900              adc A,0
+ 014C 60D4              mov REG[0xd4],A
+ 014E 3E00              mvi A,[__r1]
+ 0150 5300              mov [__r0],A
+ 0152 160001            sub [__r0],1
+ 0155 52FC              mov A,[X-4]
+ 0157 0103              add A,3
+ 0159 5300              mov [__r3],A
+ 015B 52FB              mov A,[X-5]
+ 015D 0900              adc A,0
+ 015F 60D4              mov REG[0xd4],A
+ 0161 3E00              mvi A,[__r3]
+ 0163 3A00              cmp A,[__r0]
+ 0165 D023              jnc L14
+ 0167           X2:
+ 0167                   .dbline 42
+ 0167           ;       {
+ 0167           ;               menu->currentIndex++;
+ 0167                   .dbline 42
+ 0167 62D000            mov REG[0xd0],>__r0
+ 016A 52FC              mov A,[X-4]
+ 016C 0103              add A,3
+ 016E 5300              mov [__r1],A
+ 0170 52FB              mov A,[X-5]
+ 0172 0900              adc A,0
+ 0174 5300              mov [__r0],A
+ 0176 60D4              mov REG[0xd4],A
+ 0178 3E00              mvi A,[__r1]
+ 017A 7A00              dec [__r1]
+ 017C 5300              mov [__r2],A
+ 017E 060001            add [__r2],1
+ 0181 5100              mov A,[__r0]
+ 0183 60D5              mov REG[0xd5],A
+ 0185 5100              mov A,[__r2]
+ 0187 3F00              mvi [__r1],A
+ 0189                   .dbline 43
+ 0189           ;       }
+ 0189           L14:
+ 0189                   .dbline -2
+ 0189           L13:
+ 0189 20                pop X
+ 018A                   .dbline 0 ; func end
+ 018A 7F                ret
+ 018B                   .dbsym l menu -5 pS[.2]
+ 018B                   .dbend
+ 018B                   .dbfunc e Menu_Select _Menu_Select fV
+ 018B           ;           menu -> X-5
+ 018B           _Menu_Select::
+ 018B                   .dbline -1
+ 018B 10                push X
+ 018C 4F                mov X,SP
+ 018D                   .dbline 47
+ 018D           ; }
+ 018D           ; 
+ 018D           ; void Menu_Select(Menu *menu)
+ 018D           ; {
+ 018D                   .dbline 48
+ 018D           ;       if(menu->entries[menu->currentIndex].callback != 0)
+ 018D 62D000            mov REG[0xd0],>__r0
+ 0190 52FC              mov A,[X-4]
+ 0192 5300              mov [__r1],A
+ 0194 52FB              mov A,[X-5]
+ 0196 60D4              mov REG[0xd4],A
+ 0198 3E00              mvi A,[__r1]
+ 019A 5300              mov [__r0],A
+ 019C 3E00              mvi A,[__r1]
+ 019E 5300              mov [__r1],A
+ 01A0 52FC              mov A,[X-4]
+ 01A2 0103              add A,3
+ 01A4 5300              mov [__r3],A
+ 01A6 52FB              mov A,[X-5]
+ 01A8 0900              adc A,0
+ 01AA 60D4              mov REG[0xd4],A
+ 01AC 3E00              mvi A,[__r3]
+ 01AE 5300              mov [__r3],A
+ 01B0 5000              mov A,0
+ 01B2 08                push A
+ 01B3 5100              mov A,[__r3]
+ 01B5 08                push A
+ 01B6 5000              mov A,0
+ 01B8 08                push A
+ 01B9 5012              mov A,18
+ 01BB 08                push A
+ 01BC 7C0000            xcall __mul16
+ 01BF 38FC              add SP,-4
+ 01C1 5100              mov A,[__rX]
+ 01C3 5300              mov [__r3],A
+ 01C5 5100              mov A,[__rY]
+ 01C7 5300              mov [__r2],A
+ 01C9 5100              mov A,[__r3]
+ 01CB 0200              add A,[__r1]
+ 01CD 5300              mov [__r1],A
+ 01CF 5100              mov A,[__r2]
+ 01D1 0A00              adc A,[__r0]
+ 01D3 5300              mov [__r0],A
+ 01D5 060010            add [__r1],16
+ 01D8 0E0000            adc [__r0],0
+ 01DB 5100              mov A,[__r0]
+ 01DD 60D4              mov REG[0xd4],A
+ 01DF 3E00              mvi A,[__r1]
+ 01E1 5300              mov [__r0],A
+ 01E3 3E00              mvi A,[__r1]
+ 01E5 5300              mov [__r1],A
+ 01E7 5100              mov A,[__r0]
+ 01E9 10                push X
+ 01EA 5800              mov X,[__r1]
+ 01EC 08                push A
+ 01ED 28                romx
+ 01EE 5300              mov [__r0],A
+ 01F0 18                pop A
+ 01F1 75                inc X
+ 01F2 0900              adc A,0
+ 01F4 28                romx
+ 01F5 20                pop X
+ 01F6 3C0000            cmp [__r0],0
+ 01F9 B005              jnz X3
+ 01FB 3900              cmp A,0
+ 01FD A061              jz L17
+ 01FF           X3:
+ 01FF                   .dbline 50
+ 01FF           ;       {
+ 01FF           ;               menu->entries[menu->currentIndex].callback();
+ 01FF                   .dbline 50
+ 01FF 62D000            mov REG[0xd0],>__r0
+ 0202 52FC              mov A,[X-4]
+ 0204 5300              mov [__r1],A
+ 0206 52FB              mov A,[X-5]
+ 0208 60D4              mov REG[0xd4],A
+ 020A 3E00              mvi A,[__r1]
+ 020C 5300              mov [__r0],A
+ 020E 3E00              mvi A,[__r1]
+ 0210 5300              mov [__r1],A
+ 0212 52FC              mov A,[X-4]
+ 0214 0103              add A,3
+ 0216 5300              mov [__r3],A
+ 0218 52FB              mov A,[X-5]
+ 021A 0900              adc A,0
+ 021C 60D4              mov REG[0xd4],A
+ 021E 3E00              mvi A,[__r3]
+ 0220 5300              mov [__r3],A
+ 0222 5000              mov A,0
+ 0224 08                push A
+ 0225 5100              mov A,[__r3]
+ 0227 08                push A
+ 0228 5000              mov A,0
+ 022A 08                push A
+ 022B 5012              mov A,18
+ 022D 08                push A
+ 022E 7C0000            xcall __mul16
+ 0231 38FC              add SP,-4
+ 0233 5100              mov A,[__rX]
+ 0235 5300              mov [__r3],A
+ 0237 5100              mov A,[__rY]
+ 0239 5300              mov [__r2],A
+ 023B 5100              mov A,[__r3]
+ 023D 0200              add A,[__r1]
+ 023F 5300              mov [__r1],A
+ 0241 5100              mov A,[__r2]
+ 0243 0A00              adc A,[__r0]
+ 0245 5300              mov [__r0],A
+ 0247 060010            add [__r1],16
+ 024A 0E0000            adc [__r0],0
+ 024D 5100              mov A,[__r0]
+ 024F 60D4              mov REG[0xd4],A
+ 0251 3E00              mvi A,[__r1]
+ 0253 5300              mov [__r0],A
+ 0255 3E00              mvi A,[__r1]
+ 0257 10                push X
+ 0258 5C                mov X,A
+ 0259 5100              mov A,[__r0]
+ 025B 7C0000            xcall __plcall
+ 025E 20                pop X
+ 025F                   .dbline 51
+ 025F           ;       }
+ 025F           L17:
+ 025F                   .dbline -2
+ 025F           L16:
+ 025F 20                pop X
+ 0260                   .dbline 0 ; func end
+ 0260 7F                ret
+ 0261                   .dbsym l menu -5 pS[.2]
+ 0261                   .dbend
+ 0261                   .dbfunc e Menu_Clear _Menu_Clear fV
+ 0261           _Menu_Clear::
+ 0261                   .dbline -1
+ 0261                   .dbline 55
+ 0261           ; }
+ 0261           ; 
+ 0261           ; void Menu_Clear(void)
+ 0261           ; {
+ 0261                   .dbline 56
+ 0261           ;       LCD_Position(0, 0);
+ 0261 10                push X
+ 0262 5000              mov A,0
+ 0264 5700              mov X,0
+ 0266 7C0000            xcall _LCD_Position
+ 0269                   .dbline 57
+ 0269           ;       LCD_PrCString("                ");
+ 0269 5000              mov A,>L20
+ 026B 08                push A
+ 026C 5000              mov A,<L20
+ 026E 5C                mov X,A
+ 026F 18                pop A
+ 0270 7C0000            xcall _LCD_PrCString
+ 0273                   .dbline 58
+ 0273           ;       LCD_Position(1, 0);
+ 0273 5700              mov X,0
+ 0275 5001              mov A,1
+ 0277 7C0000            xcall _LCD_Position
+ 027A                   .dbline 59
+ 027A           ;       LCD_PrCString("                ");
+ 027A 5000              mov A,>L20
+ 027C 08                push A
+ 027D 5000              mov A,<L20
+ 027F 5C                mov X,A
+ 0280 18                pop A
+ 0281 7C0000            xcall _LCD_PrCString
+ 0284 20                pop X
+ 0285                   .dbline -2
+ 0285           L19:
+ 0285                   .dbline 0 ; func end
+ 0285 7F                ret
+ 0286                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0000           L20:
+ 0000 20202020202020202020202020202020  .byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
+ 0010 00                .byte 0
+ 0011           L7:
+ 0011 2000              .byte 32,0
+ 0013           L6:
+ 0013 3E00              .byte 62,0

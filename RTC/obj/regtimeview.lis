@@ -1,0 +1,135 @@
+ 0000                   cpu LMM
+                        .module regtimeview.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./regtimeview.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\regtimeview.c
+ 0000                   .dbfunc e RegTimeView_Start _RegTimeView_Start fV
+ 0000           _RegTimeView_Start::
+ 0000                   .dbline -1
+ 0000                   .dbline 13
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #include "regTimeView.h"
+ 0000           ; #include "mainView.h"
+ 0000           ; #include "menu.h"
+ 0000           ; #include "BcdUtil.h"
+ 0000           ; #include "viewManager.h"
+ 0000           ; #include "Keypad.h"
+ 0000           ; 
+ 0000           ; extern CurrentView currentView;
+ 0000           ; 
+ 0000           ; void RegTimeView_Start(void)
+ 0000           ; {
+ 0000                   .dbline -2
+ 0000           L4:
+ 0000                   .dbline 0 ; func end
+ 0000 7F                ret
+ 0001                   .dbend
+ 0001                   .dbfunc e RegTimeView_Callback _RegTimeView_Callback fV
+ 0001           _RegTimeView_Callback::
+ 0001                   .dbline -1
+ 0001                   .dbline 18
+ 0001           ; 
+ 0001           ; }
+ 0001           ; 
+ 0001           ; void RegTimeView_Callback(void)
+ 0001           ; {
+ 0001                   .dbline 19
+ 0001           ;       currentView = REGTIME_CONFIG;
+ 0001 62D000            mov REG[0xd0],>_currentView
+ 0004 550002            mov [_currentView],2
+ 0007                   .dbline 20
+ 0007           ;       Menu_Clear();
+ 0007 7C0000            xcall _Menu_Clear
+ 000A                   .dbline 21
+ 000A           ;       LCD_Position(0, 0);
+ 000A 10                push X
+ 000B 5000              mov A,0
+ 000D 5700              mov X,0
+ 000F 7C0000            xcall _LCD_Position
+ 0012                   .dbline 22
+ 0012           ;       LCD_PrCString("Inicio: 00:00");
+ 0012 500E              mov A,>L6
+ 0014 08                push A
+ 0015 500E              mov A,<L6
+ 0017 5C                mov X,A
+ 0018 18                pop A
+ 0019 7C0000            xcall _LCD_PrCString
+ 001C                   .dbline 23
+ 001C           ;       LCD_Position(1,0);
+ 001C 5700              mov X,0
+ 001E 5001              mov A,1
+ 0020 7C0000            xcall _LCD_Position
+ 0023                   .dbline 24
+ 0023           ;       LCD_PrCString("Fin:    00:00");
+ 0023 5000              mov A,>L7
+ 0025 08                push A
+ 0026 5000              mov A,<L7
+ 0028 5C                mov X,A
+ 0029 18                pop A
+ 002A 7C0000            xcall _LCD_PrCString
+ 002D 20                pop X
+ 002E                   .dbline -2
+ 002E           L5:
+ 002E                   .dbline 0 ; func end
+ 002E 7F                ret
+ 002F                   .dbend
+ 002F                   .dbfunc e RegTimeView_Update _RegTimeView_Update fV
+ 002F           _RegTimeView_Update::
+ 002F                   .dbline -1
+ 002F 10                push X
+ 0030 4F                mov X,SP
+ 0031 3802              add SP,2
+ 0033                   .dbline 28
+ 0033           ; }
+ 0033           ; 
+ 0033           ; void RegTimeView_Update(void)
+ 0033           ; {
+ 0033                   .dbline 29
+ 0033           ;       if(Keypad_IsKeyStored())
+ 0033 7C0000            xcall _Keypad_IsKeyStored
+ 0036 62D000            mov REG[0xd0],>__r0
+ 0039 3900              cmp A,0
+ 003B A01B              jz L9
+ 003D                   .dbline 31
+ 003D           ;       {
+ 003D           ;               switch(Keypad_GetKey())
+ 003D                   .dbline 31
+ 003D 7C0000            xcall _Keypad_GetKey
+ 0040 62D000            mov REG[0xd0],>__r0
+ 0043 5401              mov [X+1],A
+ 0045 560000            mov [X+0],0
+ 0048 3D0000            cmp [X+0],0
+ 004B B006              jnz X0
+ 004D 3D0111            cmp [X+1],17
+ 0050 A003              jz L14
+ 0052           X0:
+ 0052 8004              xjmp L11
+ 0054           L14:
+ 0054                   .dbline 35
+ 0054           ;               {
+ 0054           ;                       case 0x11:
+ 0054           ;                               // "D"
+ 0054           ;                               MainView_Callback();
+ 0054 7C0000            xcall _MainView_Callback
+ 0057                   .dbline 36
+ 0057           ;                               return;
+ 0057                   .dbline 37
+ 0057           ;                               break;
+ 0057           L11:
+ 0057                   .dbline 39
+ 0057           ;               }
+ 0057           ;       }
+ 0057           L9:
+ 0057                   .dbline -2
+ 0057           L8:
+ 0057 38FE              add SP,-2
+ 0059 20                pop X
+ 005A                   .dbline 0 ; func end
+ 005A 7F                ret
+ 005B                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0000           L7:
+ 0000 46696E3A2020202030303A303000      .byte 'F,'i,'n,58,32,32,32,32,48,48,58,48,48,0
+ 000E           L6:
+ 000E 496E6963696F3A2030303A303000      .byte 'I,'n,'i,'c,'i,'o,58,32,48,48,58,48,48,0

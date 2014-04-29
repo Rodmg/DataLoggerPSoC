@@ -1,0 +1,307 @@
+ 0000                   cpu LMM
+                        .module mainview.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./mainview.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\mainview.c
+ 0000                   .dbfunc e MainView_Start _MainView_Start fV
+ 0000           _MainView_Start::
+ 0000                   .dbline -1
+ 0000                   .dbline 20
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #include "mainView.h"
+ 0000           ; #include "Menu.h"
+ 0000           ; #include "Keypad.h"
+ 0000           ; #include "dateTimeView.h"
+ 0000           ; #include "viewManager.h"
+ 0000           ; #include "regTimeView.h"
+ 0000           ; #include "levelView.h"
+ 0000           ; #include "configView.h"
+ 0000           ; #include "TempView.h"
+ 0000           ; #include <string.h>
+ 0000           ; 
+ 0000           ; extern CurrentView currentView;
+ 0000           ; 
+ 0000           ; MenuEntry entries[5];
+ 0000           ; Menu menu;
+ 0000           ; 
+ 0000           ; void MainView_Start(void)
+ 0000           ; {
+ 0000                   .dbline 21
+ 0000           ;       Menu_Start();
+ 0000 7C0000            xcall _Menu_Start
+ 0003                   .dbline 23
+ 0003           ; 
+ 0003           ;       cstrcpy(entries[0].text, "Ajustar Hora");
+ 0003 5038              mov A,>L5
+ 0005 08                push A
+ 0006 5038              mov A,<L5
+ 0008 08                push A
+ 0009 5000              mov A,>_entries
+ 000B 08                push A
+ 000C 5000              mov A,<_entries
+ 000E 08                push A
+ 000F 7C0000            xcall _cstrcpyLMM
+ 0012 38FC              add SP,-4
+ 0014                   .dbline 24
+ 0014           ;       cstrcpy(entries[1].text, "Ajustar Captura");
+ 0014 5028              mov A,>L7
+ 0016 08                push A
+ 0017 5028              mov A,<L7
+ 0019 08                push A
+ 001A 5012              mov A,>_entries+18
+ 001C 08                push A
+ 001D 5012              mov A,<_entries+18
+ 001F 08                push A
+ 0020 7C0000            xcall _cstrcpyLMM
+ 0023                   .dbline 25
+ 0023           ;       cstrcpy(entries[2].text, "Ajustar Nivel");
+ 0023 501A              mov A,>L9
+ 0025 08                push A
+ 0026 501A              mov A,<L9
+ 0028 08                push A
+ 0029 5024              mov A,>_entries+36
+ 002B 08                push A
+ 002C 5024              mov A,<_entries+36
+ 002E 08                push A
+ 002F 7C0000            xcall _cstrcpyLMM
+ 0032 38F8              add SP,-8
+ 0034                   .dbline 26
+ 0034           ;       cstrcpy(entries[3].text, "Configuracion");
+ 0034 500C              mov A,>L11
+ 0036 08                push A
+ 0037 500C              mov A,<L11
+ 0039 08                push A
+ 003A 5036              mov A,>_entries+54
+ 003C 08                push A
+ 003D 5036              mov A,<_entries+54
+ 003F 08                push A
+ 0040 7C0000            xcall _cstrcpyLMM
+ 0043                   .dbline 27
+ 0043           ;       cstrcpy(entries[4].text, "Temp Actual");
+ 0043 5000              mov A,>L13
+ 0045 08                push A
+ 0046 5000              mov A,<L13
+ 0048 08                push A
+ 0049 5048              mov A,>_entries+72
+ 004B 08                push A
+ 004C 5048              mov A,<_entries+72
+ 004E 08                push A
+ 004F 7C0000            xcall _cstrcpyLMM
+ 0052 38F8              add SP,-8
+ 0054                   .dbline 29
+ 0054           ; 
+ 0054           ;       entries[0].callback = &DateTimeView_Callback;
+ 0054 62D000            mov REG[0xd0],>_entries
+ 0057 551108            mov [_entries+16+1],<PL_DateTimeView_Callback
+ 005A 551008            mov [_entries+16],>PL_DateTimeView_Callback
+ 005D                   .dbline 30
+ 005D           ;       entries[1].callback = &RegTimeView_Callback;
+ 005D 552306            mov [_entries+18+16+1],<PL_RegTimeView_Callback
+ 0060 552206            mov [_entries+18+16],>PL_RegTimeView_Callback
+ 0063                   .dbline 31
+ 0063           ;       entries[2].callback = &LevelView_Callback;
+ 0063 553504            mov [_entries+36+16+1],<PL_LevelView_Callback
+ 0066 553404            mov [_entries+36+16],>PL_LevelView_Callback
+ 0069                   .dbline 32
+ 0069           ;       entries[3].callback = &ConfigView_Callback;
+ 0069 554702            mov [_entries+54+16+1],<PL_ConfigView_Callback
+ 006C 554602            mov [_entries+54+16],>PL_ConfigView_Callback
+ 006F                   .dbline 33
+ 006F           ;       entries[4].callback = &TempView_Callback;
+ 006F 555900            mov [_entries+72+16+1],<PL_TempView_Callback
+ 0072 555800            mov [_entries+72+16],>PL_TempView_Callback
+ 0075                   .dbline 35
+ 0075           ; 
+ 0075           ;       menu.currentIndex = 0;
+ 0075 62D000            mov REG[0xd0],>_menu
+ 0078 550300            mov [_menu+3],0
+ 007B                   .dbline 36
+ 007B           ;       menu.nOptions = 5;
+ 007B 550205            mov [_menu+2],5
+ 007E                   .dbline 37
+ 007E           ;       menu.entries = entries;
+ 007E 550100            mov [_menu+1],<_entries
+ 0081 550000            mov [_menu],>_entries
+ 0084                   .dbline -2
+ 0084           L4:
+ 0084                   .dbline 0 ; func end
+ 0084 7F                ret
+ 0085                   .dbend
+ 0085                   .dbfunc e MainView_Callback _MainView_Callback fV
+ 0085           _MainView_Callback::
+ 0085                   .dbline -1
+ 0085                   .dbline 41
+ 0085           ; }
+ 0085           ; 
+ 0085           ; void MainView_Callback(void)
+ 0085           ; {
+ 0085                   .dbline 42
+ 0085           ;       currentView = MAIN;
+ 0085 62D000            mov REG[0xd0],>_currentView
+ 0088 550000            mov [_currentView],0
+ 008B                   .dbline 43
+ 008B           ;       Menu_Update(&menu);
+ 008B 5000              mov A,>_menu
+ 008D 08                push A
+ 008E 5000              mov A,<_menu
+ 0090 08                push A
+ 0091 7C0000            xcall _Menu_Update
+ 0094 38FE              add SP,-2
+ 0096                   .dbline -2
+ 0096           L25:
+ 0096                   .dbline 0 ; func end
+ 0096 7F                ret
+ 0097                   .dbend
+ 0097                   .dbfunc e MainView_Update _MainView_Update fV
+ 0097           _MainView_Update::
+ 0097                   .dbline -1
+ 0097 10                push X
+ 0098 4F                mov X,SP
+ 0099 3802              add SP,2
+ 009B                   .dbline 47
+ 009B           ; }
+ 009B           ; 
+ 009B           ; void MainView_Update(void)
+ 009B           ; {
+ 009B                   .dbline 48
+ 009B           ;       if(Keypad_IsKeyStored())
+ 009B 7C0000            xcall _Keypad_IsKeyStored
+ 009E 62D000            mov REG[0xd0],>__r0
+ 00A1 3900              cmp A,0
+ 00A3 A066              jz L27
+ 00A5                   .dbline 50
+ 00A5           ;       {
+ 00A5           ;               switch(Keypad_GetKey())
+ 00A5                   .dbline 50
+ 00A5 7C0000            xcall _Keypad_GetKey
+ 00A8 62D000            mov REG[0xd0],>__r0
+ 00AB 5401              mov [X+1],A
+ 00AD 560000            mov [X+0],0
+ 00B0 5201              mov A,[X+1]
+ 00B2 1144              sub A,68
+ 00B4 5300              mov [__rY],A
+ 00B6 5200              mov A,[X+0]
+ 00B8 3180              xor A,-128
+ 00BA 1980              sbb A,(0 ^ 0x80)
+ 00BC 2A00              or A,[__rY]
+ 00BE A028              jz L33
+ 00C0 D00D              jnc L36
+ 00C2           X0:
+ 00C2           L35:
+ 00C2 3D0000            cmp [X+0],0
+ 00C5 B006              jnz X1
+ 00C7 3D0124            cmp [X+1],36
+ 00CA A00F              jz L32
+ 00CC           X1:
+ 00CC 8032              xjmp L29
+ 00CE           L36:
+ 00CE 3D0000            cmp [X+0],0
+ 00D1 B006              jnz X2
+ 00D3 3D0184            cmp [X+1],-124
+ 00D6 A01D              jz L34
+ 00D8           X2:
+ 00D8 8026              xjmp L29
+ 00DA           L32:
+ 00DA                   .dbline 54
+ 00DA           ;               {
+ 00DA           ;                       case 0x24:
+ 00DA           ;                               // "8"
+ 00DA           ;                               Menu_Down(&menu);
+ 00DA 5000              mov A,>_menu
+ 00DC 08                push A
+ 00DD 5000              mov A,<_menu
+ 00DF 08                push A
+ 00E0 7C0000            xcall _Menu_Down
+ 00E3 38FE              add SP,-2
+ 00E5                   .dbline 55
+ 00E5           ;                               break;
+ 00E5 8019              xjmp L30
+ 00E7           L33:
+ 00E7                   .dbline 58
+ 00E7           ;                       case 0x44:
+ 00E7           ;                               // "5"
+ 00E7           ;                               Menu_Select(&menu);
+ 00E7 5000              mov A,>_menu
+ 00E9 08                push A
+ 00EA 5000              mov A,<_menu
+ 00EC 08                push A
+ 00ED 7C0000            xcall _Menu_Select
+ 00F0 38FE              add SP,-2
+ 00F2                   .dbline 59
+ 00F2           ;                               return;
+ 00F2 8017              xjmp L26
+ 00F4           L34:
+ 00F4                   .dbline 63
+ 00F4           ;                               break;
+ 00F4           ;                       case 0x84:
+ 00F4           ;                               // "2"
+ 00F4           ;                               Menu_Up(&menu);
+ 00F4 5000              mov A,>_menu
+ 00F6 08                push A
+ 00F7 5000              mov A,<_menu
+ 00F9 08                push A
+ 00FA 7C0000            xcall _Menu_Up
+ 00FD 38FE              add SP,-2
+ 00FF                   .dbline 64
+ 00FF           ;                               break;
+ 00FF           L29:
+ 00FF           L30:
+ 00FF                   .dbline 66
+ 00FF           ;               }
+ 00FF           ;               Menu_Update(&menu);
+ 00FF 5000              mov A,>_menu
+ 0101 08                push A
+ 0102 5000              mov A,<_menu
+ 0104 08                push A
+ 0105 7C0000            xcall _Menu_Update
+ 0108 38FE              add SP,-2
+ 010A                   .dbline 67
+ 010A           ;       }
+ 010A           L27:
+ 010A                   .dbline -2
+ 010A           L26:
+ 010A 38FE              add SP,-2
+ 010C 20                pop X
+ 010D                   .dbline 0 ; func end
+ 010D 7F                ret
+ 010E                   .dbend
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\mainview.c
+ 0000           _menu::
+ 0000 00000000          .byte 0,0,0,0
+ 0004                   .dbstruct 0 18 .1
+ 0004                   .dbfield 0 text A[16:16]c
+ 0004                   .dbfield 16 callback pfV
+ 0004                   .dbend
+ 0004                   .dbstruct 0 4 .2
+ 0004                   .dbfield 0 entries pS[.1]
+ 0004                   .dbfield 2 nOptions c
+ 0004                   .dbfield 3 currentIndex c
+ 0004                   .dbend
+ 0004                   .dbsym e menu _menu S[.2]
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\mainview.c
+ 0000           _entries::
+ 0000 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ 003C 00000000000000000000      .word 0,0,0,0,0
+ 0046 00000000000000000000      .word 0,0,0,0,0
+ 0050 00000000000000000000      .byte 0,0,0,0,0,0,0,0,0,0
+ 005A                   .dbsym e entries _entries A[90:5]S[.1]
+                        .area lit(rom, con, rel, lit)
+ 0000           L13:
+ 0000 54656D702041637475616C00  .byte 'T,'e,'m,'p,32,'A,'c,'t,'u,'a,'l,0
+ 000C           L11:
+ 000C 436F6E66696775726163696F6E00      .byte 'C,'o,'n,'f,'i,'g,'u,'r,'a,'c,'i,'o,'n,0
+ 001A           L9:
+ 001A 416A7573746172204E6976656C00      .byte 'A,'j,'u,'s,'t,'a,'r,32,'N,'i,'v,'e,'l,0
+ 0028           L7:
+ 0028 416A7573746172204361707475726100  .byte 'A,'j,'u,'s,'t,'a,'r,32,'C,'a,'p,'t,'u,'r,'a,0
+ 0038           L5:
+ 0038 416A757374617220486F726100        .byte 'A,'j,'u,'s,'t,'a,'r,32,'H,'o,'r,'a,0
+                        .area func_lit(rom, con, rel, proclab)
+ 0000 0000      PL_TempView_Callback:   .word _TempView_Callback
+ 0002 0000      PL_ConfigView_Callback: .word _ConfigView_Callback
+ 0004 0000      PL_LevelView_Callback:  .word _LevelView_Callback
+ 0006 0000      PL_RegTimeView_Callback:        .word _RegTimeView_Callback
+ 0008 0000      PL_DateTimeView_Callback:       .word _DateTimeView_Callback

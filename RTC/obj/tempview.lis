@@ -1,0 +1,274 @@
+ 0000                   cpu LMM
+                        .module tempview.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./tempview.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\tempview.c
+ 0000                   .dbfunc e TempView_Start _TempView_Start fV
+ 0000           _TempView_Start::
+ 0000                   .dbline -1
+ 0000                   .dbline 16
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #include "TempView.h"
+ 0000           ; #include "mainView.h"
+ 0000           ; #include "menu.h"
+ 0000           ; #include "BcdUtil.h"
+ 0000           ; #include "viewManager.h"
+ 0000           ; #include "Keypad.h"
+ 0000           ; #include "TempSensor.h"
+ 0000           ; #include "BcdUtil.h"
+ 0000           ; #include <stdio.h>
+ 0000           ; 
+ 0000           ; extern CurrentView currentView;
+ 0000           ; 
+ 0000           ; void TempView_Start(void)
+ 0000           ; {
+ 0000                   .dbline -2
+ 0000           L4:
+ 0000                   .dbline 0 ; func end
+ 0000 7F                ret
+ 0001                   .dbend
+ 0001                   .dbfunc e TempView_Callback _TempView_Callback fV
+ 0001           ;            num -> X+4
+ 0001           ;            bcd -> X+3
+ 0001           ;          bcd10 -> X+2
+ 0001           ;           temp -> X+0
+ 0001           _TempView_Callback::
+ 0001                   .dbline -1
+ 0001 10                push X
+ 0002 4F                mov X,SP
+ 0003 3805              add SP,5
+ 0005                   .dbline 21
+ 0005           ; 
+ 0005           ; }
+ 0005           ; 
+ 0005           ; void TempView_Callback(void)
+ 0005           ; {
+ 0005                   .dbline 25
+ 0005           ;       int temp;
+ 0005           ;       BYTE bcd10,bcd,num;
+ 0005           ;       
+ 0005           ;       currentView = TEMP;
+ 0005 62D000            mov REG[0xd0],>_currentView
+ 0008 550005            mov [_currentView],5
+ 000B                   .dbline 26
+ 000B           ;       Menu_Clear();
+ 000B 7C0000            xcall _Menu_Clear
+ 000E                   .dbline 27
+ 000E           ;       LCD_Position(0, 0);
+ 000E 10                push X
+ 000F 5000              mov A,0
+ 0011 5700              mov X,0
+ 0013 7C0000            xcall _LCD_Position
+ 0016                   .dbline 28
+ 0016           ;       LCD_PrCString("Temp Actual");
+ 0016 5011              mov A,>L6
+ 0018 08                push A
+ 0019 5011              mov A,<L6
+ 001B 5C                mov X,A
+ 001C 18                pop A
+ 001D 7C0000            xcall _LCD_PrCString
+ 0020 20                pop X
+ 0021                   .dbline 30
+ 0021           ;               
+ 0021           ;       temp = TempSensor_GetTemp();
+ 0021 7C0000            xcall _TempSensor_GetTemp
+ 0024 62D000            mov REG[0xd0],>__r0
+ 0027 5100              mov A,[__r1]
+ 0029 5401              mov [X+1],A
+ 002B 5100              mov A,[__r0]
+ 002D 5400              mov [X+0],A
+ 002F                   .dbline 32
+ 002F           ;       
+ 002F           ;       cprintf("Temperatura: %d\n", temp);
+ 002F 5200              mov A,[X+0]
+ 0031 08                push A
+ 0032 5201              mov A,[X+1]
+ 0034 08                push A
+ 0035 5000              mov A,>L7
+ 0037 08                push A
+ 0038 5000              mov A,<L7
+ 003A 08                push A
+ 003B 7C0000            xcall _cprintf
+ 003E                   .dbline 34
+ 003E           ;               
+ 003E           ;       decToBcd(&bcd10,&bcd,temp);
+ 003E 62D000            mov REG[0xd0],>__r0
+ 0041 5201              mov A,[X+1]
+ 0043 08                push A
+ 0044 5A00              mov [__r1],X
+ 0046 060003            add [__r1],3
+ 0049 5007              mov A,7
+ 004B 08                push A
+ 004C 5100              mov A,[__r1]
+ 004E 08                push A
+ 004F 5A00              mov [__r1],X
+ 0051 060002            add [__r1],2
+ 0054 5007              mov A,7
+ 0056 08                push A
+ 0057 5100              mov A,[__r1]
+ 0059 08                push A
+ 005A 7C0000            xcall _decToBcd
+ 005D 38F7              add SP,-9
+ 005F                   .dbline 38
+ 005F           ;       
+ 005F           ;       //LCD_Position(0,14);
+ 005F           ;       //LCD_PrHexByte(bcd);
+ 005F           ;       LCD_Position(0,13);
+ 005F 10                push X
+ 0060 570D              mov X,13
+ 0062 5000              mov A,0
+ 0064 7C0000            xcall _LCD_Position
+ 0067 20                pop X
+ 0068                   .dbline 39
+ 0068           ;       LCD_PrHexByte((bcd10<<4)|bcd);
+ 0068 5202              mov A,[X+2]
+ 006A 62D000            mov REG[0xd0],>__r0
+ 006D 64                asl A
+ 006E 64                asl A
+ 006F 64                asl A
+ 0070 64                asl A
+ 0071 5300              mov [__r0],A
+ 0073 5203              mov A,[X+3]
+ 0075 2C00              or [__r0],A
+ 0077 10                push X
+ 0078 5100              mov A,[__r0]
+ 007A 7C0000            xcall _LCD_PrHexByte
+ 007D 20                pop X
+ 007E                   .dbline -2
+ 007E           L5:
+ 007E 38FB              add SP,-5
+ 0080 20                pop X
+ 0081                   .dbline 0 ; func end
+ 0081 7F                ret
+ 0082                   .dbsym l num 4 c
+ 0082                   .dbsym l bcd 3 c
+ 0082                   .dbsym l bcd10 2 c
+ 0082                   .dbsym l temp 0 I
+ 0082                   .dbend
+ 0082                   .dbfunc e TempView_Update _TempView_Update fV
+ 0082           ;            num -> X+4
+ 0082           ;            bcd -> X+3
+ 0082           ;          bcd10 -> X+2
+ 0082           ;           temp -> X+0
+ 0082           _TempView_Update::
+ 0082                   .dbline -1
+ 0082 10                push X
+ 0083 4F                mov X,SP
+ 0084 3807              add SP,7
+ 0086                   .dbline 49
+ 0086           ;       //LCD_Position(0,13);
+ 0086           ;       //LCD_PrCString(" ");
+ 0086           ;       
+ 0086           ;       
+ 0086           ; 
+ 0086           ;       
+ 0086           ; }
+ 0086           ; 
+ 0086           ; void TempView_Update(void)
+ 0086           ; {
+ 0086                   .dbline 53
+ 0086           ;       int temp;
+ 0086           ;       BYTE bcd10,bcd,num;
+ 0086           ;       
+ 0086           ;       if(Keypad_IsKeyStored())
+ 0086 7C0000            xcall _Keypad_IsKeyStored
+ 0089 62D000            mov REG[0xd0],>__r0
+ 008C 3900              cmp A,0
+ 008E A01D              jz L9
+ 0090                   .dbline 55
+ 0090           ;       {
+ 0090           ;               switch(Keypad_GetKey())
+ 0090                   .dbline 55
+ 0090 7C0000            xcall _Keypad_GetKey
+ 0093 62D000            mov REG[0xd0],>__r0
+ 0096 5406              mov [X+6],A
+ 0098 560500            mov [X+5],0
+ 009B 3D0500            cmp [X+5],0
+ 009E B006              jnz X0
+ 00A0 3D0611            cmp [X+6],17
+ 00A3 A003              jz L14
+ 00A5           X0:
+ 00A5 8006              xjmp L11
+ 00A7           L14:
+ 00A7                   .dbline 59
+ 00A7           ;               {
+ 00A7           ;                       case 0x11:
+ 00A7           ;                               // "B"
+ 00A7           ;                               MainView_Callback();
+ 00A7 7C0000            xcall _MainView_Callback
+ 00AA                   .dbline 60
+ 00AA           ;                               return;
+ 00AA 804C              xjmp L8
+ 00AC           L11:
+ 00AC                   .dbline 63
+ 00AC           ;                               break;
+ 00AC           ;               }
+ 00AC           ;       }
+ 00AC           L9:
+ 00AC                   .dbline 65
+ 00AC           ;       
+ 00AC           ;       temp = TempSensor_GetTemp();
+ 00AC 7C0000            xcall _TempSensor_GetTemp
+ 00AF 62D000            mov REG[0xd0],>__r0
+ 00B2 5100              mov A,[__r1]
+ 00B4 5401              mov [X+1],A
+ 00B6 5100              mov A,[__r0]
+ 00B8 5400              mov [X+0],A
+ 00BA                   .dbline 66
+ 00BA           ;       decToBcd(&bcd10,&bcd,temp);
+ 00BA 5201              mov A,[X+1]
+ 00BC 08                push A
+ 00BD 5A00              mov [__r1],X
+ 00BF 060003            add [__r1],3
+ 00C2 5007              mov A,7
+ 00C4 08                push A
+ 00C5 5100              mov A,[__r1]
+ 00C7 08                push A
+ 00C8 5A00              mov [__r1],X
+ 00CA 060002            add [__r1],2
+ 00CD 5007              mov A,7
+ 00CF 08                push A
+ 00D0 5100              mov A,[__r1]
+ 00D2 08                push A
+ 00D3 7C0000            xcall _decToBcd
+ 00D6 38FB              add SP,-5
+ 00D8                   .dbline 67
+ 00D8           ;       LCD_Position(0,13);
+ 00D8 10                push X
+ 00D9 570D              mov X,13
+ 00DB 5000              mov A,0
+ 00DD 7C0000            xcall _LCD_Position
+ 00E0 20                pop X
+ 00E1                   .dbline 68
+ 00E1           ;       LCD_PrHexByte((bcd10<<4)|bcd);
+ 00E1 5202              mov A,[X+2]
+ 00E3 62D000            mov REG[0xd0],>__r0
+ 00E6 64                asl A
+ 00E7 64                asl A
+ 00E8 64                asl A
+ 00E9 64                asl A
+ 00EA 5300              mov [__r0],A
+ 00EC 5203              mov A,[X+3]
+ 00EE 2C00              or [__r0],A
+ 00F0 10                push X
+ 00F1 5100              mov A,[__r0]
+ 00F3 7C0000            xcall _LCD_PrHexByte
+ 00F6 20                pop X
+ 00F7                   .dbline -2
+ 00F7           L8:
+ 00F7 38F9              add SP,-7
+ 00F9 20                pop X
+ 00FA                   .dbline 0 ; func end
+ 00FA 7F                ret
+ 00FB                   .dbsym l num 4 c
+ 00FB                   .dbsym l bcd 3 c
+ 00FB                   .dbsym l bcd10 2 c
+ 00FB                   .dbsym l temp 0 I
+ 00FB                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0000           L7:
+ 0000 54656D70657261747572613A2025640A  .byte 'T,'e,'m,'p,'e,'r,'a,'t,'u,'r,'a,58,32,37,'d,10
+ 0010 00                .byte 0
+ 0011           L6:
+ 0011 54656D702041637475616C00  .byte 'T,'e,'m,'p,32,'A,'c,'t,'u,'a,'l,0

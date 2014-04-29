@@ -1,0 +1,443 @@
+ 0000                   cpu LMM
+                        .module datetimeview.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./datetimeview.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\datetimeview.c
+ 0000                   .dbfunc e DateTimeView_Start _DateTimeView_Start fV
+ 0000           _DateTimeView_Start::
+ 0000                   .dbline -1
+ 0000                   .dbline 14
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #include "dateTimeView.h"
+ 0000           ; #include "mainView.h"
+ 0000           ; #include "menu.h"
+ 0000           ; #include "Time.h"
+ 0000           ; #include "Rtc.h"
+ 0000           ; #include "viewManager.h"
+ 0000           ; #include "Keypad.h"
+ 0000           ; 
+ 0000           ; extern CurrentView currentView;
+ 0000           ; 
+ 0000           ; void DateTimeView_Start(void)
+ 0000           ; {
+ 0000                   .dbline -2
+ 0000           L30:
+ 0000                   .dbline 0 ; func end
+ 0000 7F                ret
+ 0001                   .dbend
+ 0001                   .dbfunc e DateTimeView_Callback _DateTimeView_Callback fV
+ 0001           _DateTimeView_Callback::
+ 0001                   .dbline -1
+ 0001                   .dbline 19
+ 0001           ; 
+ 0001           ; }
+ 0001           ; 
+ 0001           ; void DateTimeView_Callback(void)
+ 0001           ; {
+ 0001                   .dbline 20
+ 0001           ;       currentView = DATETIME_CONFIG;
+ 0001 62D000            mov REG[0xd0],>_currentView
+ 0004 550001            mov [_currentView],1
+ 0007                   .dbline 21
+ 0007           ;       Menu_Clear();
+ 0007 7C0000            xcall _Menu_Clear
+ 000A                   .dbline 22
+ 000A           ;       LCD_Position(0, 0);
+ 000A 10                push X
+ 000B 5000              mov A,0
+ 000D 5700              mov X,0
+ 000F 7C0000            xcall _LCD_Position
+ 0012                   .dbline 23
+ 0012           ;       LCD_PrCString("00/00/00");
+ 0012 5009              mov A,>L32
+ 0014 08                push A
+ 0015 5009              mov A,<L32
+ 0017 5C                mov X,A
+ 0018 18                pop A
+ 0019 7C0000            xcall _LCD_PrCString
+ 001C                   .dbline 24
+ 001C           ;       LCD_Position(1,0);
+ 001C 5700              mov X,0
+ 001E 5001              mov A,1
+ 0020 7C0000            xcall _LCD_Position
+ 0023                   .dbline 25
+ 0023           ;       LCD_PrCString("00:00:00");
+ 0023 5000              mov A,>L33
+ 0025 08                push A
+ 0026 5000              mov A,<L33
+ 0028 5C                mov X,A
+ 0029 18                pop A
+ 002A 7C0000            xcall _LCD_PrCString
+ 002D 20                pop X
+ 002E                   .dbline -2
+ 002E           L31:
+ 002E                   .dbline 0 ; func end
+ 002E 7F                ret
+ 002F                   .dbend
+ 002F                   .dbfunc e DateTimeView_Update _DateTimeView_Update fV
+ 002F           _DateTimeView_Update::
+ 002F                   .dbline -1
+ 002F 10                push X
+ 0030 4F                mov X,SP
+ 0031 3802              add SP,2
+ 0033                   .dbline 29
+ 0033           ; }
+ 0033           ; 
+ 0033           ; void DateTimeView_Update(void)
+ 0033           ; {
+ 0033                   .dbline 30
+ 0033           ;       if(Keypad_IsKeyStored())
+ 0033 7C0000            xcall _Keypad_IsKeyStored
+ 0036 62D000            mov REG[0xd0],>__r0
+ 0039 3900              cmp A,0
+ 003B A132              jz L35
+ 003D                   .dbline 32
+ 003D           ;       {
+ 003D           ;               switch(Keypad_GetKey())
+ 003D                   .dbline 32
+ 003D 7C0000            xcall _Keypad_GetKey
+ 0040 62D000            mov REG[0xd0],>__r0
+ 0043 5401              mov [X+1],A
+ 0045 560000            mov [X+0],0
+ 0048 3D0000            cmp [X+0],0
+ 004B B006              jnz X0
+ 004D 3D0142            cmp [X+1],66
+ 0050 A0DE              jz L46
+ 0052           X0:
+ 0052 5201              mov A,[X+1]
+ 0054 1144              sub A,68
+ 0056 62D000            mov REG[0xd0],>__r0
+ 0059 5300              mov [__rY],A
+ 005B 5200              mov A,[X+0]
+ 005D 3180              xor A,-128
+ 005F 1980              sbb A,(0 ^ 0x80)
+ 0061 2A00              or A,[__rY]
+ 0063 A0C1              jz L45
+ 0065 D056              jnc L54
+ 0067           X1:
+ 0067           L53:
+ 0067 3D0000            cmp [X+0],0
+ 006A B006              jnz X2
+ 006C 3D0122            cmp [X+1],34
+ 006F A0DD              jz L49
+ 0071           X2:
+ 0071 5201              mov A,[X+1]
+ 0073 1124              sub A,36
+ 0075 62D000            mov REG[0xd0],>__r0
+ 0078 5300              mov [__rY],A
+ 007A 5200              mov A,[X+0]
+ 007C 3180              xor A,-128
+ 007E 1980              sbb A,(0 ^ 0x80)
+ 0080 2A00              or A,[__rY]
+ 0082 A0C0              jz L48
+ 0084 D02B              jnc L56
+ 0086           X3:
+ 0086           L55:
+ 0086 3D0000            cmp [X+0],0
+ 0089 B006              jnz X4
+ 008B 3D0111            cmp [X+1],17
+ 008E A0C8              jz L50
+ 0090           X4:
+ 0090 3D0000            cmp [X+0],0
+ 0093 B006              jnz X5
+ 0095 3D0112            cmp [X+1],18
+ 0098 A0CD              jz L52
+ 009A           X5:
+ 009A 3D0000            cmp [X+0],0
+ 009D B006              jnz X6
+ 009F 3D0114            cmp [X+1],20
+ 00A2 A050              jz L40
+ 00A4           X6:
+ 00A4 3D0000            cmp [X+0],0
+ 00A7 B006              jnz X7
+ 00A9 3D0118            cmp [X+1],24
+ 00AC A0AF              jz L51
+ 00AE           X7:
+ 00AE 80BF              xjmp L37
+ 00B0           L56:
+ 00B0 3D0000            cmp [X+0],0
+ 00B3 B006              jnz X8
+ 00B5 3D0128            cmp [X+1],40
+ 00B8 A080              jz L47
+ 00BA           X8:
+ 00BA 80B3              xjmp L37
+ 00BC           L54:
+ 00BC 3D0000            cmp [X+0],0
+ 00BF B006              jnz X9
+ 00C1 3D0182            cmp [X+1],-126
+ 00C4 A04C              jz L43
+ 00C6           X9:
+ 00C6 5201              mov A,[X+1]
+ 00C8 1184              sub A,-124
+ 00CA 62D000            mov REG[0xd0],>__r0
+ 00CD 5300              mov [__rY],A
+ 00CF 5200              mov A,[X+0]
+ 00D1 3180              xor A,-128
+ 00D3 1980              sbb A,(0 ^ 0x80)
+ 00D5 2A00              or A,[__rY]
+ 00D7 A02F              jz L42
+ 00D9 D00D              jnc L58
+ 00DB           X10:
+ 00DB           L57:
+ 00DB 3D0000            cmp [X+0],0
+ 00DE B006              jnz X11
+ 00E0 3D0148            cmp [X+1],72
+ 00E3 A037              jz L44
+ 00E5           X11:
+ 00E5 8088              xjmp L37
+ 00E7           L58:
+ 00E7 3D0000            cmp [X+0],0
+ 00EA B006              jnz X12
+ 00EC 3D0188            cmp [X+1],-120
+ 00EF A00D              jz L41
+ 00F1           X12:
+ 00F1 807C              xjmp L37
+ 00F3           L40:
+ 00F3                   .dbline 36
+ 00F3           ;               {
+ 00F3           ;                       case 0x14:
+ 00F3           ;                                       // "0"
+ 00F3           ;                                       Time_Adj_Mi(TIME_DOWN);
+ 00F3 5000              mov A,0
+ 00F5 08                push A
+ 00F6 7C0000            xcall _Time_Adj_Mi
+ 00F9 38FF              add SP,-1
+ 00FB                   .dbline 37
+ 00FB           ;                                       break;
+ 00FB 8072              xjmp L38
+ 00FD           L41:
+ 00FD                   .dbline 40
+ 00FD           ;                               case 0x88:
+ 00FD           ;                                       // "1"
+ 00FD           ;                                       Time_Adj_D(TIME_UP);
+ 00FD 5001              mov A,1
+ 00FF 08                push A
+ 0100 7C0000            xcall _Time_Adj_D
+ 0103 38FF              add SP,-1
+ 0105                   .dbline 41
+ 0105           ;                                       break;
+ 0105 8068              xjmp L38
+ 0107           L42:
+ 0107                   .dbline 44
+ 0107           ;                               case 0x84:
+ 0107           ;                                       // "2"
+ 0107           ;                                       Time_Adj_Mo(TIME_UP);
+ 0107 5001              mov A,1
+ 0109 08                push A
+ 010A 7C0000            xcall _Time_Adj_Mo
+ 010D 38FF              add SP,-1
+ 010F                   .dbline 45
+ 010F           ;                                       break;
+ 010F 805E              xjmp L38
+ 0111           L43:
+ 0111                   .dbline 48
+ 0111           ;                               case 0x82:
+ 0111           ;                                       // "3"
+ 0111           ;                                       Time_Adj_Y(TIME_UP);
+ 0111 5001              mov A,1
+ 0113 08                push A
+ 0114 7C0000            xcall _Time_Adj_Y
+ 0117 38FF              add SP,-1
+ 0119                   .dbline 49
+ 0119           ;                                       break;
+ 0119 8054              xjmp L38
+ 011B           L44:
+ 011B                   .dbline 52
+ 011B           ;                               case 0x48:
+ 011B           ;                                       // "4"
+ 011B           ;                                       Time_Adj_D(TIME_DOWN);
+ 011B 5000              mov A,0
+ 011D 08                push A
+ 011E 7C0000            xcall _Time_Adj_D
+ 0121 38FF              add SP,-1
+ 0123                   .dbline 53
+ 0123           ;                                       break;
+ 0123 804A              xjmp L38
+ 0125           L45:
+ 0125                   .dbline 56
+ 0125           ;                               case 0x44:
+ 0125           ;                                       // "5"
+ 0125           ;                                       Time_Adj_Mo(TIME_DOWN);
+ 0125 5000              mov A,0
+ 0127 08                push A
+ 0128 7C0000            xcall _Time_Adj_Mo
+ 012B 38FF              add SP,-1
+ 012D                   .dbline 57
+ 012D           ;                                       break;
+ 012D 8040              xjmp L38
+ 012F           L46:
+ 012F                   .dbline 60
+ 012F           ;                               case 0x42:
+ 012F           ;                                       // "6"
+ 012F           ;                                       Time_Adj_Y(TIME_DOWN);
+ 012F 5000              mov A,0
+ 0131 08                push A
+ 0132 7C0000            xcall _Time_Adj_Y
+ 0135 38FF              add SP,-1
+ 0137                   .dbline 61
+ 0137           ;                                       break;
+ 0137 8036              xjmp L38
+ 0139           L47:
+ 0139                   .dbline 64
+ 0139           ;                               case 0x28:
+ 0139           ;                                       // "7"
+ 0139           ;                                       Time_Adj_H(TIME_UP);
+ 0139 5001              mov A,1
+ 013B 08                push A
+ 013C 7C0000            xcall _Time_Adj_H
+ 013F 38FF              add SP,-1
+ 0141                   .dbline 65
+ 0141           ;                                       break;
+ 0141 802C              xjmp L38
+ 0143           L48:
+ 0143                   .dbline 68
+ 0143           ;                               case 0x24:
+ 0143           ;                                       // "8"
+ 0143           ;                                       Time_Adj_Mi(TIME_UP);
+ 0143 5001              mov A,1
+ 0145 08                push A
+ 0146 7C0000            xcall _Time_Adj_Mi
+ 0149 38FF              add SP,-1
+ 014B                   .dbline 69
+ 014B           ;                                       break;
+ 014B 8022              xjmp L38
+ 014D           L49:
+ 014D                   .dbline 72
+ 014D           ;                               case 0x22:
+ 014D           ;                                       // "9"
+ 014D           ;                                       Time_Adj_S(TIME_UP);
+ 014D 5001              mov A,1
+ 014F 08                push A
+ 0150 7C0000            xcall _Time_Adj_S
+ 0153 38FF              add SP,-1
+ 0155                   .dbline 73
+ 0155           ;                                       break;
+ 0155 8018              xjmp L38
+ 0157           L50:
+ 0157                   .dbline 76
+ 0157           ;                               case 0x11:
+ 0157           ;                                       // "D"
+ 0157           ;                                       MainView_Callback();
+ 0157 7C0000            xcall _MainView_Callback
+ 015A                   .dbline 77
+ 015A           ;                                       return;
+ 015A 8075              xjmp L34
+ 015C           L51:
+ 015C                   .dbline 81
+ 015C           ;                                       break;
+ 015C           ;                               case 0x18:
+ 015C           ;                                       // "*"
+ 015C           ;                                       Time_Adj_H(TIME_DOWN);
+ 015C 5000              mov A,0
+ 015E 08                push A
+ 015F 7C0000            xcall _Time_Adj_H
+ 0162 38FF              add SP,-1
+ 0164                   .dbline 82
+ 0164           ;                                       break;
+ 0164 8009              xjmp L38
+ 0166           L52:
+ 0166                   .dbline 85
+ 0166           ;                               case 0x12:
+ 0166           ;                                       // "#"
+ 0166           ;                                       Time_Adj_S(TIME_DOWN);
+ 0166 5000              mov A,0
+ 0168 08                push A
+ 0169 7C0000            xcall _Time_Adj_S
+ 016C 38FF              add SP,-1
+ 016E                   .dbline 86
+ 016E           ;                                       break;
+ 016E           L37:
+ 016E           L38:
+ 016E                   .dbline 88
+ 016E           ;               }
+ 016E           ;       }
+ 016E           L35:
+ 016E                   .dbline 90
+ 016E           ; 
+ 016E           ;       Rtc_ReadFromRtc();
+ 016E 7C0000            xcall _Rtc_ReadFromRtc
+ 0171 62D000            mov REG[0xd0],>__r0
+ 0174                   .dbline 92
+ 0174           ;       
+ 0174           ;       LCD_Position(0, 0);
+ 0174 10                push X
+ 0175 5000              mov A,0
+ 0177 5700              mov X,0
+ 0179 7C0000            xcall _LCD_Position
+ 017C                   .dbline 93
+ 017C           ;       LCD_PrHexByte(datetime._04h.byte);
+ 017C 62D000            mov REG[0xd0],>_datetime
+ 017F 5104              mov A,[_datetime+4]
+ 0181 7C0000            xcall _LCD_PrHexByte
+ 0184                   .dbline 94
+ 0184           ;       LCD_Position(0, 3);
+ 0184 5703              mov X,3
+ 0186 5000              mov A,0
+ 0188 7C0000            xcall _LCD_Position
+ 018B                   .dbline 95
+ 018B           ;       LCD_PrHexByte(datetime._05h.byte);
+ 018B 62D000            mov REG[0xd0],>_datetime
+ 018E 5105              mov A,[_datetime+5]
+ 0190 7C0000            xcall _LCD_PrHexByte
+ 0193                   .dbline 96
+ 0193           ;       LCD_Position(0, 6);
+ 0193 5706              mov X,6
+ 0195 5000              mov A,0
+ 0197 7C0000            xcall _LCD_Position
+ 019A                   .dbline 97
+ 019A           ;       LCD_PrHexByte(datetime._06h.byte);
+ 019A 62D000            mov REG[0xd0],>_datetime
+ 019D 5106              mov A,[_datetime+6]
+ 019F 7C0000            xcall _LCD_PrHexByte
+ 01A2                   .dbline 99
+ 01A2           ; 
+ 01A2           ;       LCD_Position(1, 0);
+ 01A2 5700              mov X,0
+ 01A4 5001              mov A,1
+ 01A6 7C0000            xcall _LCD_Position
+ 01A9                   .dbline 106
+ 01A9           ;       /*if(is12h)
+ 01A9           ;       {
+ 01A9           ;               LCD_PrHexByte(datetime._02h.bits_ampm.hours | (datetime._02h.bits_ampm.hours10 << 4));
+ 01A9           ;       }
+ 01A9           ;       else
+ 01A9           ;       {*/
+ 01A9           ;               LCD_PrHexByte(datetime._02h.byte);
+ 01A9 62D000            mov REG[0xd0],>_datetime
+ 01AC 5102              mov A,[_datetime+2]
+ 01AE 7C0000            xcall _LCD_PrHexByte
+ 01B1                   .dbline 108
+ 01B1           ;       //}
+ 01B1           ;       LCD_Position(1, 3);
+ 01B1 5703              mov X,3
+ 01B3 5001              mov A,1
+ 01B5 7C0000            xcall _LCD_Position
+ 01B8                   .dbline 109
+ 01B8           ;       LCD_PrHexByte(datetime._01h.byte);
+ 01B8 62D000            mov REG[0xd0],>_datetime
+ 01BB 5101              mov A,[_datetime+1]
+ 01BD 7C0000            xcall _LCD_PrHexByte
+ 01C0                   .dbline 110
+ 01C0           ;       LCD_Position(1, 6);
+ 01C0 5706              mov X,6
+ 01C2 5001              mov A,1
+ 01C4 7C0000            xcall _LCD_Position
+ 01C7                   .dbline 111
+ 01C7           ;       LCD_PrHexByte(datetime._00h.byte);
+ 01C7 62D000            mov REG[0xd0],>_datetime
+ 01CA 5100              mov A,[_datetime]
+ 01CC 7C0000            xcall _LCD_PrHexByte
+ 01CF 20                pop X
+ 01D0                   .dbline -2
+ 01D0           L34:
+ 01D0 38FE              add SP,-2
+ 01D2 20                pop X
+ 01D3                   .dbline 0 ; func end
+ 01D3 7F                ret
+ 01D4                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0000           L33:
+ 0000 30303A30303A303000        .byte 48,48,58,48,48,58,48,48,0
+ 0009           L32:
+ 0009 30302F30302F303000        .byte 48,48,47,48,48,47,48,48,0

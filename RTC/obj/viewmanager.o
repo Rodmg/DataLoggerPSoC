@@ -1,0 +1,14 @@
+XH
+H 3 areas 1 global symbols
+M viewmanager.c
+A text size 0 flags 0
+dbfile ./viewmanager.c
+A data size 1 flags 20
+dbfile ./viewmanager.c
+dbfile C:\Users\Rod\Desktop\RTC\RTC\viewmanager.c
+dbsym e currentView 0 c
+S _currentView Def0000
+A data size 0 flags 20
+dbfile C:\Users\Rod\Desktop\RTC\RTC\viewmanager.c
+T 00 00 00
+R 00 00 00 01

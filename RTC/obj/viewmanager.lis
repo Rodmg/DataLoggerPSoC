@@ -1,0 +1,12 @@
+ 0000                   cpu LMM
+                        .module viewmanager.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./viewmanager.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile ./viewmanager.c
+ 0000           _currentView::
+ 0000 00                .byte 0
+ 0001                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\viewmanager.c
+ 0001                   .dbsym e currentView _currentView c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\viewmanager.c

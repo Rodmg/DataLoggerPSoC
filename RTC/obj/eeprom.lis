@@ -1,0 +1,412 @@
+ 0000                   cpu LMM
+                        .module eeprom.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./eeprom.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\eeprom.c
+ 0000                   .dbfunc e EEPROM_Start _EEPROM_Start fV
+ 0000           _EEPROM_Start::
+ 0000                   .dbline -1
+ 0000                   .dbline 8
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #include "EEPROM.h"
+ 0000           ; #include "delay.h"
+ 0000           ; 
+ 0000           ; extern BYTE data;
+ 0000           ; void EEPROM_Start(void)
+ 0000           ; {
+ 0000                   .dbline 9
+ 0000           ;       I2Cm_Start();
+ 0000 10                push X
+ 0001 7C0000            xcall _I2Cm_Start
+ 0004 20                pop X
+ 0005                   .dbline -2
+ 0005           L1:
+ 0005                   .dbline 0 ; func end
+ 0005 7F                ret
+ 0006                   .dbend
+ 0006                   .dbfunc e EEPROM_Stop _EEPROM_Stop fV
+ 0006           _EEPROM_Stop::
+ 0006                   .dbline -1
+ 0006                   .dbline 12
+ 0006           ; }
+ 0006           ; void EEPROM_Stop(void)
+ 0006           ; {
+ 0006                   .dbline 13
+ 0006           ;       I2Cm_Stop();
+ 0006 10                push X
+ 0007 7C0000            xcall _I2Cm_Stop
+ 000A 20                pop X
+ 000B                   .dbline -2
+ 000B           L2:
+ 000B                   .dbline 0 ; func end
+ 000B 7F                ret
+ 000C                   .dbend
+ 000C                   .dbfunc e EEPROM_Write _EEPROM_Write fc
+ 000C           ;          error -> X+1
+ 000C           ;              i -> X+0
+ 000C           ;          count -> X-8
+ 000C           ;        address -> X-7
+ 000C           ;         buffer -> X-5
+ 000C           _EEPROM_Write::
+ 000C                   .dbline -1
+ 000C 10                push X
+ 000D 4F                mov X,SP
+ 000E 3802              add SP,2
+ 0010                   .dbline 17
+ 0010           ; }
+ 0010           ; 
+ 0010           ; BYTE EEPROM_Write(void* buffer, WORD address, BYTE count)
+ 0010           ; {
+ 0010                   .dbline 18
+ 0010           ;       BYTE error = EEPROM_NOERROR;
+ 0010 560100            mov [X+1],0
+ 0013                   .dbline 19
+ 0013           ;       BYTE i=0;
+ 0013 560000            mov [X+0],0
+ 0016                   .dbline 21
+ 0016           ;       
+ 0016           ;       if(I2Cm_fSendStart(EEPROM_I2C_ADD, I2Cm_WRITE) != 0)
+ 0016 10                push X
+ 0017 5700              mov X,0
+ 0019 5050              mov A,80
+ 001B 7C0000            xcall _I2Cm_fSendStart
+ 001E 20                pop X
+ 001F 62D000            mov REG[0xd0],>__r0
+ 0022 3900              cmp A,0
+ 0024 A05F              jz L4
+ 0026                   .dbline 23
+ 0026           ;       {
+ 0026           ;               if(I2Cm_fWrite(address >> 8) != 0)
+ 0026                   .dbline 23
+ 0026 52F9              mov A,[X-7]
+ 0028 10                push X
+ 0029 7C0000            xcall _I2Cm_fWrite
+ 002C 20                pop X
+ 002D 62D000            mov REG[0xd0],>__r0
+ 0030 3900              cmp A,0
+ 0032 A04C              jz L6
+ 0034                   .dbline 25
+ 0034           ;               {
+ 0034           ;                       if(I2Cm_fWrite(address & 0xFF) != 0)
+ 0034                   .dbline 25
+ 0034 52FA              mov A,[X-6]
+ 0036 10                push X
+ 0037 7C0000            xcall _I2Cm_fWrite
+ 003A 20                pop X
+ 003B 62D000            mov REG[0xd0],>__r0
+ 003E 3900              cmp A,0
+ 0040 A039              jz L8
+ 0042                   .dbline 27
+ 0042           ;                       {
+ 0042           ;                               for (i=0; i<count; i++)
+ 0042                   .dbline 27
+ 0042 560000            mov [X+0],0
+ 0045 802C              xjmp L13
+ 0047           L10:
+ 0047                   .dbline 28
+ 0047           ;                               {
+ 0047                   .dbline 29
+ 0047           ;                                       if(I2Cm_fWrite(*((BYTE*)buffer+i)) == 0)
+ 0047 62D000            mov REG[0xd0],>__r0
+ 004A 5200              mov A,[X+0]
+ 004C 5300              mov [__r1],A
+ 004E 550000            mov [__r0],0
+ 0051 52FC              mov A,[X-4]
+ 0053 0400              add [__r1],A
+ 0055 52FB              mov A,[X-5]
+ 0057 0C00              adc [__r0],A
+ 0059 5100              mov A,[__r0]
+ 005B 60D4              mov REG[0xd4],A
+ 005D 3E00              mvi A,[__r1]
+ 005F 10                push X
+ 0060 7C0000            xcall _I2Cm_fWrite
+ 0063 20                pop X
+ 0064 62D000            mov REG[0xd0],>__r0
+ 0067 3900              cmp A,0
+ 0069 B006              jnz L14
+ 006B                   .dbline 31
+ 006B           ;                                       {       
+ 006B           ;                                               error= EEPROM_SLAVENOTACKDATA;
+ 006B                   .dbline 31
+ 006B 560102            mov [X+1],2
+ 006E                   .dbline 32
+ 006E           ;                                               break;
+ 006E 8018              xjmp L5
+ 0070           L14:
+ 0070                   .dbline 34
+ 0070           ;                                       }
+ 0070           ;                               }
+ 0070           L11:
+ 0070                   .dbline 27
+ 0070 7700              inc [X+0]
+ 0072           L13:
+ 0072                   .dbline 27
+ 0072 5200              mov A,[X+0]
+ 0074 3BF8              cmp A,[X-8]
+ 0076 CFD0              jc L10
+ 0078           X0:
+ 0078                   .dbline 35
+ 0078           ;                       }
+ 0078 800E              xjmp L5
+ 007A           L8:
+ 007A                   .dbline 37
+ 007A           ;                       else
+ 007A           ;                       {
+ 007A                   .dbline 38
+ 007A           ;                               error = EEPROM_SLAVENOTACKADDRESS;
+ 007A 560101            mov [X+1],1
+ 007D                   .dbline 39
+ 007D           ;                       }
+ 007D                   .dbline 40
+ 007D           ;               }
+ 007D 8009              xjmp L5
+ 007F           L6:
+ 007F                   .dbline 42
+ 007F           ;               else
+ 007F           ;               {
+ 007F                   .dbline 43
+ 007F           ;               error = EEPROM_SLAVENOTACKADDRESS;
+ 007F 560101            mov [X+1],1
+ 0082                   .dbline 44
+ 0082           ;               }
+ 0082                   .dbline 45
+ 0082           ;       }
+ 0082 8004              xjmp L5
+ 0084           L4:
+ 0084                   .dbline 47
+ 0084           ;       else
+ 0084           ;       {
+ 0084                   .dbline 48
+ 0084           ;               error = EEPROM_SLAVENOTACKADDRESS;
+ 0084 560101            mov [X+1],1
+ 0087                   .dbline 49
+ 0087           ;       }
+ 0087           L5:
+ 0087                   .dbline 51
+ 0087           ;     
+ 0087           ;       I2Cm_SendStop();
+ 0087 10                push X
+ 0088 7C0000            xcall _I2Cm_SendStop
+ 008B                   .dbline 53
+ 008B           ;       
+ 008B           ;       Delay50uTimes(0x64);
+ 008B 5064              mov A,100
+ 008D 7C0000            xcall _Delay50uTimes
+ 0090 20                pop X
+ 0091                   .dbline 55
+ 0091           ; 
+ 0091           ;       return error;
+ 0091 5201              mov A,[X+1]
+ 0093 62D000            mov REG[0xd0],>__r0
+ 0096                   .dbline -2
+ 0096           L3:
+ 0096 38FE              add SP,-2
+ 0098 20                pop X
+ 0099                   .dbline 0 ; func end
+ 0099 7F                ret
+ 009A                   .dbsym l error 1 c
+ 009A                   .dbsym l i 0 c
+ 009A                   .dbsym l count -8 c
+ 009A                   .dbsym l address -7 i
+ 009A                   .dbsym l buffer -5 pV
+ 009A                   .dbend
+ 009A                   .dbfunc e EEPROM_Read _EEPROM_Read fc
+ 009A           ;          error -> X+1
+ 009A           ;              i -> X+0
+ 009A           ;          count -> X-8
+ 009A           ;        address -> X-7
+ 009A           ;         buffer -> X-5
+ 009A           _EEPROM_Read::
+ 009A                   .dbline -1
+ 009A 10                push X
+ 009B 4F                mov X,SP
+ 009C 3802              add SP,2
+ 009E                   .dbline 58
+ 009E           ; }
+ 009E           ; BYTE EEPROM_Read(void* buffer, WORD address, BYTE count)
+ 009E           ; {
+ 009E                   .dbline 59
+ 009E           ;       BYTE error = EEPROM_NOERROR;
+ 009E 560100            mov [X+1],0
+ 00A1                   .dbline 60
+ 00A1           ;       BYTE i=0;
+ 00A1 560000            mov [X+0],0
+ 00A4                   .dbline 62
+ 00A4           ;       
+ 00A4           ;       if(I2Cm_fSendStart(EEPROM_I2C_ADD, I2Cm_WRITE) != 0)
+ 00A4 10                push X
+ 00A5 5700              mov X,0
+ 00A7 5050              mov A,80
+ 00A9 7C0000            xcall _I2Cm_fSendStart
+ 00AC 20                pop X
+ 00AD 62D000            mov REG[0xd0],>__r0
+ 00B0 3900              cmp A,0
+ 00B2 A093              jz L17
+ 00B4                   .dbline 64
+ 00B4           ;       {
+ 00B4           ;               if(I2Cm_fWrite(address >> 8) != 0)
+ 00B4                   .dbline 64
+ 00B4 52F9              mov A,[X-7]
+ 00B6 10                push X
+ 00B7 7C0000            xcall _I2Cm_fWrite
+ 00BA 20                pop X
+ 00BB 62D000            mov REG[0xd0],>__r0
+ 00BE 3900              cmp A,0
+ 00C0 A080              jz L19
+ 00C2                   .dbline 66
+ 00C2           ;               {
+ 00C2           ;                       if (I2Cm_fWrite(address & 0xFF) != 0)
+ 00C2                   .dbline 66
+ 00C2 52FA              mov A,[X-6]
+ 00C4 10                push X
+ 00C5 7C0000            xcall _I2Cm_fWrite
+ 00C8 20                pop X
+ 00C9 62D000            mov REG[0xd0],>__r0
+ 00CC 3900              cmp A,0
+ 00CE A06D              jz L21
+ 00D0                   .dbline 68
+ 00D0           ;                       {
+ 00D0           ;                               if (I2Cm_fSendRepeatStart(EEPROM_I2C_ADD,I2Cm_READ) != 0)
+ 00D0                   .dbline 68
+ 00D0 10                push X
+ 00D1 5701              mov X,1
+ 00D3 5050              mov A,80
+ 00D5 7C0000            xcall _I2Cm_fSendRepeatStart
+ 00D8 20                pop X
+ 00D9 62D000            mov REG[0xd0],>__r0
+ 00DC 3900              cmp A,0
+ 00DE A058              jz L23
+ 00E0                   .dbline 70
+ 00E0           ;                               {
+ 00E0           ;                                       count--;
+ 00E0                   .dbline 70
+ 00E0 7BF8              dec [X-8]
+ 00E2                   .dbline 71
+ 00E2           ;                                       for (i=0;i<count;i++)
+ 00E2 560000            mov [X+0],0
+ 00E5 8026              xjmp L28
+ 00E7           L25:
+ 00E7                   .dbline 72
+ 00E7           ;                                       {
+ 00E7                   .dbline 73
+ 00E7           ;                                               *((BYTE*)buffer+i) =I2Cm_bRead(I2Cm_ACKslave);
+ 00E7 10                push X
+ 00E8 5001              mov A,1
+ 00EA 7C0000            xcall _I2Cm_bRead
+ 00ED 20                pop X
+ 00EE 62D000            mov REG[0xd0],>__r0
+ 00F1 5300              mov [__r0],A
+ 00F3 5200              mov A,[X+0]
+ 00F5 5300              mov [__r3],A
+ 00F7 550000            mov [__r2],0
+ 00FA 52FC              mov A,[X-4]
+ 00FC 0400              add [__r3],A
+ 00FE 52FB              mov A,[X-5]
+ 0100 0C00              adc [__r2],A
+ 0102 5100              mov A,[__r2]
+ 0104 60D5              mov REG[0xd5],A
+ 0106 5100              mov A,[__r0]
+ 0108 3F00              mvi [__r3],A
+ 010A                   .dbline 74
+ 010A           ;                                       }
+ 010A           L26:
+ 010A                   .dbline 71
+ 010A 7700              inc [X+0]
+ 010C           L28:
+ 010C                   .dbline 71
+ 010C 5200              mov A,[X+0]
+ 010E 3BF8              cmp A,[X-8]
+ 0110 CFD6              jc L25
+ 0112           X1:
+ 0112                   .dbline 75
+ 0112           ;                                       *((BYTE*)buffer+i) =I2Cm_bRead(I2Cm_NAKslave);
+ 0112 10                push X
+ 0113 5000              mov A,0
+ 0115 7C0000            xcall _I2Cm_bRead
+ 0118 20                pop X
+ 0119 62D000            mov REG[0xd0],>__r0
+ 011C 5300              mov [__r0],A
+ 011E 5200              mov A,[X+0]
+ 0120 5300              mov [__r3],A
+ 0122 550000            mov [__r2],0
+ 0125 52FC              mov A,[X-4]
+ 0127 0400              add [__r3],A
+ 0129 52FB              mov A,[X-5]
+ 012B 0C00              adc [__r2],A
+ 012D 5100              mov A,[__r2]
+ 012F 60D5              mov REG[0xd5],A
+ 0131 5100              mov A,[__r0]
+ 0133 3F00              mvi [__r3],A
+ 0135                   .dbline 76
+ 0135           ;                               }
+ 0135 8013              xjmp L18
+ 0137           L23:
+ 0137                   .dbline 78
+ 0137           ;                               else
+ 0137           ;                               {
+ 0137                   .dbline 79
+ 0137           ;                               error = EEPROM_SLAVENOTACKDATA;
+ 0137 560102            mov [X+1],2
+ 013A                   .dbline 80
+ 013A           ;                               }
+ 013A                   .dbline 81
+ 013A           ;                       }
+ 013A 800E              xjmp L18
+ 013C           L21:
+ 013C                   .dbline 83
+ 013C           ;                       else
+ 013C           ;                       {
+ 013C                   .dbline 84
+ 013C           ;                       error = EEPROM_SLAVENOTACKDATA;
+ 013C 560102            mov [X+1],2
+ 013F                   .dbline 85
+ 013F           ;                       }
+ 013F                   .dbline 86
+ 013F           ;               }
+ 013F 8009              xjmp L18
+ 0141           L19:
+ 0141                   .dbline 88
+ 0141           ;               else
+ 0141           ;               {
+ 0141                   .dbline 89
+ 0141           ;               error = EEPROM_SLAVENOTACKADDRESS;
+ 0141 560101            mov [X+1],1
+ 0144                   .dbline 90
+ 0144           ;               }
+ 0144                   .dbline 91
+ 0144           ;       }
+ 0144 8004              xjmp L18
+ 0146           L17:
+ 0146                   .dbline 93
+ 0146           ;       else
+ 0146           ;       {
+ 0146                   .dbline 94
+ 0146           ;               error = EEPROM_SLAVENOTACKADDRESS;
+ 0146 560101            mov [X+1],1
+ 0149                   .dbline 95
+ 0149           ;       }
+ 0149           L18:
+ 0149                   .dbline 97
+ 0149           ;       
+ 0149           ;       I2Cm_SendStop();
+ 0149 10                push X
+ 014A 7C0000            xcall _I2Cm_SendStop
+ 014D 20                pop X
+ 014E                   .dbline 99
+ 014E           ;       
+ 014E           ;       return error;
+ 014E 5201              mov A,[X+1]
+ 0150 62D000            mov REG[0xd0],>__r0
+ 0153                   .dbline -2
+ 0153           L16:
+ 0153 38FE              add SP,-2
+ 0155 20                pop X
+ 0156                   .dbline 0 ; func end
+ 0156 7F                ret
+ 0157                   .dbsym l error 1 c
+ 0157                   .dbsym l i 0 c
+ 0157                   .dbsym l count -8 c
+ 0157                   .dbsym l address -7 i
+ 0157                   .dbsym l buffer -5 pV
+ 0157                   .dbend

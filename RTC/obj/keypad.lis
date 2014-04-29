@@ -1,0 +1,512 @@
+ 0000                   cpu LMM
+                        .module keypad.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./keypad.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile ./keypad.c
+ 0000           _keyStillPressed:
+ 0000 00                .byte 0
+ 0001                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\keypad.c
+ 0001                   .dbsym s keyStillPressed _keyStillPressed c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\keypad.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\keypad.c
+ 0000           _keypadMask:
+ 0000 0F                .byte 15
+ 0001                   .dbsym s keypadMask _keypadMask c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\keypad.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\keypad.c
+ 0000           _pressedKey:
+ 0000 00                .byte 0
+ 0001                   .dbsym s pressedKey _pressedKey c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\keypad.c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\keypad.c
+ 0000           _keyPressed:
+ 0000 00                .byte 0
+ 0001                   .dbsym s keyPressed _keyPressed c
+                        .area data(ram, con, rel)
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\keypad.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\keypad.c
+ 0000                   .dbfunc e Keypad_Start _Keypad_Start fV
+ 0000           _Keypad_Start::
+ 0000                   .dbline -1
+ 0000                   .dbline 45
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h" 
+ 0000           ; #include "Keypad.h"
+ 0000           ; 
+ 0000           ; #if KEYPAD_PORT == 0
+ 0000           ;       #define PRTxDM2 PRT0DM2
+ 0000           ;       #define PRTxDM1 PRT0DM1
+ 0000           ;       #define PRTxDM0 PRT0DM0
+ 0000           ;       #define PRTxDR  PRT0DR
+ 0000           ;       
+ 0000           ;       #define PRTxIC1 PRT0IC1
+ 0000           ;       #define PRTxIC0 PRT0IC0
+ 0000           ;       #define PRTxIE  PRT0IE
+ 0000           ;               
+ 0000           ; #elif KEYPAD_PORT == 1
+ 0000           ;       #define PRTxDM2 PRT1DM2
+ 0000           ;       #define PRTxDM1 PRT1DM1
+ 0000           ;       #define PRTxDM0 PRT1DM0
+ 0000           ;       #define PRTxDR  PRT1DR
+ 0000           ;       
+ 0000           ;       #define PRTxIC1 PRT1IC1
+ 0000           ;       #define PRTxIC0 PRT1IC0
+ 0000           ;       #define PRTxIE  PRT1IE
+ 0000           ;               
+ 0000           ; #elif KEYPAD_PORT == 2
+ 0000           ;       #define PRTxDM2 PRT2DM2
+ 0000           ;       #define PRTxDM1 PRT2DM1
+ 0000           ;       #define PRTxDM0 PRT2DM0
+ 0000           ;       #define PRTxDR  PRT2DR
+ 0000           ;       
+ 0000           ;       #define PRTxIC1 PRT2IC1
+ 0000           ;       #define PRTxIC0 PRT2IC0
+ 0000           ;       #define PRTxIE  PRT2IE
+ 0000           ;               
+ 0000           ; #else 
+ 0000           ;       #error "Keypad port is invalid!"
+ 0000           ; #endif
+ 0000           ;               
+ 0000           ; static BOOL keyStillPressed = FALSE;
+ 0000           ; static BYTE keypadMask = 0x0F;
+ 0000           ; static BYTE pressedKey = 0x00;
+ 0000           ; static BOOL keyPressed = FALSE;
+ 0000           ; 
+ 0000           ; void Keypad_Start(void)
+ 0000           ; {
+ 0000                   .dbline 46
+ 0000           ;       PRTxDM2 &= ~keypadMask; // initialize button
+ 0000 62D000            mov REG[0xd0],>_keypadMask
+ 0003 5100              mov A,[_keypadMask]
+ 0005 73                cpl A
+ 0006 62D000            mov REG[0xd0],>__r0
+ 0009 5300              mov [__r0],A
+ 000B 5D07              mov A,REG[0x7]
+ 000D 2200              and A,[__r0]
+ 000F 6007              mov REG[0x7],A
+ 0011                   .dbline 47
+ 0011           ;       PRTxDM1 &= ~keypadMask;
+ 0011 62D000            mov REG[0xd0],>_keypadMask
+ 0014 5100              mov A,[_keypadMask]
+ 0016 73                cpl A
+ 0017 62D000            mov REG[0xd0],>__r0
+ 001A 5300              mov [__r0],A
+ 001C 7110              or F,0x10  ; iopage = 1
+ 001E 5D05              mov A,REG[0x5]
+ 0020 2200              and A,[__r0]
+ 0022 6005              mov REG[0x5],A
+ 0024                   .dbline 48
+ 0024           ;       PRTxDM0 &= ~keypadMask;
+ 0024 70CF              and F,0xCF      ; iopage = 0
+ 0026 62D000            mov REG[0xd0],>_keypadMask
+ 0029 5100              mov A,[_keypadMask]
+ 002B 73                cpl A
+ 002C 62D000            mov REG[0xd0],>__r0
+ 002F 5300              mov [__r0],A
+ 0031 7110              or F,0x10  ; iopage = 1
+ 0033 5D04              mov A,REG[0x4]
+ 0035 2200              and A,[__r0]
+ 0037 6004              mov REG[0x4],A
+ 0039                   .dbline 50
+ 0039           ;       
+ 0039           ;       PRTxDM2 &= keypadMask;  // initialize button
+ 0039 70CF              and F,0xCF      ; iopage = 0
+ 003B 5D07              mov A,REG[0x7]
+ 003D 5300              mov [__r0],A
+ 003F 62D000            mov REG[0xd0],>_keypadMask
+ 0042 5100              mov A,[_keypadMask]
+ 0044 62D000            mov REG[0xd0],>__r0
+ 0047 2400              and [__r0],A
+ 0049 5100              mov A,[__r0]
+ 004B 6007              mov REG[0x7],A
+ 004D                   .dbline 51
+ 004D           ;       PRTxDM1 &= keypadMask;
+ 004D 7110              or F,0x10  ; iopage = 1
+ 004F 5D05              mov A,REG[0x5]
+ 0051 5300              mov [__r0],A
+ 0053 70CF              and F,0xCF      ; iopage = 0
+ 0055 62D000            mov REG[0xd0],>_keypadMask
+ 0058 5100              mov A,[_keypadMask]
+ 005A 62D000            mov REG[0xd0],>__r0
+ 005D 2400              and [__r0],A
+ 005F 5100              mov A,[__r0]
+ 0061 7110              or F,0x10  ; iopage = 1
+ 0063 6005              mov REG[0x5],A
+ 0065                   .dbline 52
+ 0065           ;       PRTxDM0 &= keypadMask;
+ 0065 5D04              mov A,REG[0x4]
+ 0067 5300              mov [__r0],A
+ 0069 70CF              and F,0xCF      ; iopage = 0
+ 006B 62D000            mov REG[0xd0],>_keypadMask
+ 006E 5100              mov A,[_keypadMask]
+ 0070 62D000            mov REG[0xd0],>__r0
+ 0073 2400              and [__r0],A
+ 0075 5100              mov A,[__r0]
+ 0077 7110              or F,0x10  ; iopage = 1
+ 0079 6004              mov REG[0x4],A
+ 007B                   .dbline 54
+ 007B           ;       
+ 007B           ;       PRTxDR = ~keypadMask;   // Setup pull-down resistor
+ 007B 70CF              and F,0xCF      ; iopage = 0
+ 007D 62D000            mov REG[0xd0],>_keypadMask
+ 0080 5100              mov A,[_keypadMask]
+ 0082 73                cpl A
+ 0083 62D000            mov REG[0xd0],>__r0
+ 0086 6004              mov REG[0x4],A
+ 0088                   .dbline 56
+ 0088           ;       
+ 0088           ;       PRTxIC1 |= keypadMask; // setup interrupt mode
+ 0088 7110              or F,0x10  ; iopage = 1
+ 008A 5D07              mov A,REG[0x7]
+ 008C 5300              mov [__r0],A
+ 008E 70CF              and F,0xCF      ; iopage = 0
+ 0090 62D000            mov REG[0xd0],>_keypadMask
+ 0093 5100              mov A,[_keypadMask]
+ 0095 62D000            mov REG[0xd0],>__r0
+ 0098 2C00              or [__r0],A
+ 009A 5100              mov A,[__r0]
+ 009C 7110              or F,0x10  ; iopage = 1
+ 009E 6007              mov REG[0x7],A
+ 00A0                   .dbline 57
+ 00A0           ;       PRTxIC0 &= ~keypadMask;
+ 00A0 70CF              and F,0xCF      ; iopage = 0
+ 00A2 62D000            mov REG[0xd0],>_keypadMask
+ 00A5 5100              mov A,[_keypadMask]
+ 00A7 73                cpl A
+ 00A8 62D000            mov REG[0xd0],>__r0
+ 00AB 5300              mov [__r0],A
+ 00AD 7110              or F,0x10  ; iopage = 1
+ 00AF 5D06              mov A,REG[0x6]
+ 00B1 2200              and A,[__r0]
+ 00B3 6006              mov REG[0x6],A
+ 00B5                   .dbline 59
+ 00B5           ;       
+ 00B5           ;       PRTxIE |= keypadMask; //Enable GPIO port interrupt bits
+ 00B5 70CF              and F,0xCF      ; iopage = 0
+ 00B7 5D05              mov A,REG[0x5]
+ 00B9 5300              mov [__r0],A
+ 00BB 62D000            mov REG[0xd0],>_keypadMask
+ 00BE 5100              mov A,[_keypadMask]
+ 00C0 62D000            mov REG[0xd0],>__r0
+ 00C3 2C00              or [__r0],A
+ 00C5 5100              mov A,[__r0]
+ 00C7 6005              mov REG[0x5],A
+ 00C9                   .dbline 61
+ 00C9           ;       
+ 00C9           ;       INT_MSK0 |= INT_MSK0_GPIO; //Enable global GPIO interrupt
+ 00C9 43E020            or REG[0xe0],32
+ 00CC                   .dbline -2
+ 00CC           L1:
+ 00CC                   .dbline 0 ; func end
+ 00CC 7F                ret
+ 00CD                   .dbend
+ 00CD                   .dbfunc e KeyPad_Test _KeyPad_Test fc
+ 00CD           ;           cont -> X+1
+ 00CD           ;              i -> X+0
+ 00CD           _KeyPad_Test::
+ 00CD                   .dbline -1
+ 00CD 10                push X
+ 00CE 4F                mov X,SP
+ 00CF 3802              add SP,2
+ 00D1                   .dbline 66
+ 00D1           ;       
+ 00D1           ; }
+ 00D1           ; 
+ 00D1           ; BOOL KeyPad_Test(void)
+ 00D1           ; {
+ 00D1                   .dbline 68
+ 00D1           ;       BYTE i, cont;
+ 00D1           ;       cont = 0;
+ 00D1 560100            mov [X+1],0
+ 00D4                   .dbline 70
+ 00D4           ;       
+ 00D4           ;       for (i = 0; i<50 ;i++)
+ 00D4 560000            mov [X+0],0
+ 00D7 8039              xjmp L6
+ 00D9           L3:
+ 00D9                   .dbline 71
+ 00D9           ;       {
+ 00D9                   .dbline 72
+ 00D9           ;               if ((PRTxDR & keypadMask) != 0x00)
+ 00D9 5D04              mov A,REG[0x4]
+ 00DB 62D000            mov REG[0xd0],>__r0
+ 00DE 5300              mov [__r0],A
+ 00E0 62D000            mov REG[0xd0],>_keypadMask
+ 00E3 5100              mov A,[_keypadMask]
+ 00E5 62D000            mov REG[0xd0],>__r0
+ 00E8 2400              and [__r0],A
+ 00EA A01B              jz L7
+ 00EC                   .dbline 74
+ 00EC           ;               {
+ 00EC           ;                       cont ++;
+ 00EC                   .dbline 74
+ 00EC 7701              inc [X+1]
+ 00EE                   .dbline 75
+ 00EE           ;                       if ( (cont > 20) && !keyStillPressed )
+ 00EE 5014              mov A,20
+ 00F0 3B01              cmp A,[X+1]
+ 00F2 D01C              jnc L8
+ 00F4           X0:
+ 00F4 62D000            mov REG[0xd0],>_keyStillPressed
+ 00F7 3C0000            cmp [_keyStillPressed],0
+ 00FA B014              jnz L8
+ 00FC                   .dbline 77
+ 00FC           ;                       {
+ 00FC           ;                               keyStillPressed = TRUE;
+ 00FC                   .dbline 77
+ 00FC 550001            mov [_keyStillPressed],1
+ 00FF                   .dbline 78
+ 00FF           ;                               return TRUE;
+ 00FF 62D000            mov REG[0xd0],>__r0
+ 0102 5001              mov A,1
+ 0104 8016              xjmp L2
+ 0106           L7:
+ 0106                   .dbline 82
+ 0106           ;                       }
+ 0106           ;               }
+ 0106           ;               else 
+ 0106           ;               {
+ 0106                   .dbline 83
+ 0106           ;                       keyStillPressed = FALSE;
+ 0106 62D000            mov REG[0xd0],>_keyStillPressed
+ 0109 550000            mov [_keyStillPressed],0
+ 010C                   .dbline 84
+ 010C           ;                       cont = 0;
+ 010C 560100            mov [X+1],0
+ 010F                   .dbline 85
+ 010F           ;               }
+ 010F           L8:
+ 010F                   .dbline 86
+ 010F           ;       }
+ 010F           L4:
+ 010F                   .dbline 70
+ 010F 7700              inc [X+0]
+ 0111           L6:
+ 0111                   .dbline 70
+ 0111 3D0032            cmp [X+0],50
+ 0114 CFC4              jc L3
+ 0116           X1:
+ 0116                   .dbline 87
+ 0116           ;       return FALSE;
+ 0116 62D000            mov REG[0xd0],>__r0
+ 0119 5000              mov A,0
+ 011B                   .dbline -2
+ 011B           L2:
+ 011B 38FE              add SP,-2
+ 011D 20                pop X
+ 011E                   .dbline 0 ; func end
+ 011E 7F                ret
+ 011F                   .dbsym l cont 1 c
+ 011F                   .dbsym l i 0 c
+ 011F                   .dbend
+ 011F                   .dbfunc e Keypad_IsKeyStored _Keypad_IsKeyStored fc
+ 011F           _Keypad_IsKeyStored::
+ 011F                   .dbline -1
+ 011F                   .dbline 91
+ 011F           ; }
+ 011F           ; 
+ 011F           ; BOOL Keypad_IsKeyStored(void)
+ 011F           ; {
+ 011F                   .dbline 92
+ 011F           ;       if(keyPressed == TRUE)
+ 011F 62D000            mov REG[0xd0],>_keyPressed
+ 0122 3C0001            cmp [_keyPressed],1
+ 0125 B00B              jnz L12
+ 0127                   .dbline 94
+ 0127           ;       {
+ 0127           ;               keyPressed = FALSE;
+ 0127                   .dbline 94
+ 0127 550000            mov [_keyPressed],0
+ 012A                   .dbline 95
+ 012A           ;               return TRUE;
+ 012A 62D000            mov REG[0xd0],>__r0
+ 012D 5001              mov A,1
+ 012F 8006              xjmp L11
+ 0131           L12:
+ 0131                   .dbline 98
+ 0131           ;       }
+ 0131           ;       else
+ 0131           ;       {
+ 0131                   .dbline 99
+ 0131           ;               return FALSE;
+ 0131 62D000            mov REG[0xd0],>__r0
+ 0134 5000              mov A,0
+ 0136                   .dbline -2
+ 0136           L11:
+ 0136                   .dbline 0 ; func end
+ 0136 7F                ret
+ 0137                   .dbend
+ 0137                   .dbfunc e Keypad_GetKey _Keypad_GetKey fc
+ 0137           _Keypad_GetKey::
+ 0137                   .dbline -1
+ 0137                   .dbline 104
+ 0137           ;       }
+ 0137           ; }
+ 0137           ; 
+ 0137           ; BYTE Keypad_GetKey(void)
+ 0137           ; {
+ 0137                   .dbline 105
+ 0137           ;       return pressedKey;
+ 0137 62D000            mov REG[0xd0],>_pressedKey
+ 013A 5100              mov A,[_pressedKey]
+ 013C 62D000            mov REG[0xd0],>__r0
+ 013F                   .dbline -2
+ 013F           L14:
+ 013F                   .dbline 0 ; func end
+ 013F 7F                ret
+ 0140                   .dbend
+ 0140                   .dbfunc e Keypad_GPIO_ISR _Keypad_GPIO_ISR fV
+ 0140           _Keypad_GPIO_ISR::
+ 0140                   .dbline -1
+ 0140 71C0              or F,-64
+ 0142 08                push A
+ 0143 5DD0              mov A,REG[0xd0]
+ 0145 08                push A
+ 0146 5DD3              mov A,REG[0xd3]
+ 0148 08                push A
+ 0149 5DD4              mov A,REG[0xd4]
+ 014B 08                push A
+ 014C 5DD5              mov A,REG[0xd5]
+ 014E 08                push A
+ 014F 62D000            mov REG[0xd0],>__r0
+ 0152 5100              mov A,[__r0]
+ 0154 08                push A
+ 0155 5100              mov A,[__r1]
+ 0157 08                push A
+ 0158 5100              mov A,[__r2]
+ 015A 08                push A
+ 015B 5100              mov A,[__r3]
+ 015D 08                push A
+ 015E 5100              mov A,[__r4]
+ 0160 08                push A
+ 0161 5100              mov A,[__r5]
+ 0163 08                push A
+ 0164 5100              mov A,[__r6]
+ 0166 08                push A
+ 0167 5100              mov A,[__r7]
+ 0169 08                push A
+ 016A 5100              mov A,[__r8]
+ 016C 08                push A
+ 016D 5100              mov A,[__r9]
+ 016F 08                push A
+ 0170 5100              mov A,[__r10]
+ 0172 08                push A
+ 0173 5100              mov A,[__r11]
+ 0175 08                push A
+ 0176 5100              mov A,[__rX]
+ 0178 08                push A
+ 0179 5100              mov A,[__rY]
+ 017B 08                push A
+ 017C 5100              mov A,[__rZ]
+ 017E 08                push A
+ 017F                   .dbline 110
+ 017F           ; }
+ 017F           ; 
+ 017F           ; #pragma interrupt_handler Keypad_GPIO_ISR
+ 017F           ; void Keypad_GPIO_ISR(void)
+ 017F           ; {     
+ 017F                   .dbline 111
+ 017F           ;       if (KeyPad_Test())
+ 017F 9F4C              xcall _KeyPad_Test
+ 0181 3900              cmp A,0
+ 0183 A033              jz L16
+ 0185                   .dbline 114
+ 0185           ;       {
+ 0185           ;               //nos aseguramos de solo tomar los 4 bits menos significativos
+ 0185           ;               pressedKey = (PRTxDR & keypadMask);
+ 0185                   .dbline 114
+ 0185 5D04              mov A,REG[0x4]
+ 0187 62D000            mov REG[0xd0],>_keypadMask
+ 018A 2200              and A,[_keypadMask]
+ 018C 62D000            mov REG[0xd0],>_pressedKey
+ 018F 5300              mov [_pressedKey],A
+ 0191                   .dbline 118
+ 0191           ;               
+ 0191           ;               //Invierte los puertos 
+ 0191           ;               
+ 0191           ;               PRTxDR = keypadMask;    // Setup pull-down resistor
+ 0191 62D000            mov REG[0xd0],>_keypadMask
+ 0194 5100              mov A,[_keypadMask]
+ 0196 6004              mov REG[0x4],A
+ 0198                   .dbline 121
+ 0198           ;               
+ 0198           ;               //tomamos ahora los 4 bits mas significativos y obtenemos el byte completo
+ 0198           ;               pressedKey |= (PRTxDR & ~keypadMask); 
+ 0198 5100              mov A,[_keypadMask]
+ 019A 73                cpl A
+ 019B 62D000            mov REG[0xd0],>__r0
+ 019E 5300              mov [__r0],A
+ 01A0 5D04              mov A,REG[0x4]
+ 01A2 2200              and A,[__r0]
+ 01A4 62D000            mov REG[0xd0],>_pressedKey
+ 01A7 2C00              or [_pressedKey],A
+ 01A9                   .dbline 125
+ 01A9           ;               
+ 01A9           ;               //los regresa a la normalidad
+ 01A9           ;               
+ 01A9           ;               PRTxDR = ~keypadMask;
+ 01A9 62D000            mov REG[0xd0],>_keypadMask
+ 01AC 5100              mov A,[_keypadMask]
+ 01AE 73                cpl A
+ 01AF 6004              mov REG[0x4],A
+ 01B1                   .dbline 127
+ 01B1           ;               
+ 01B1           ;               keyPressed = TRUE;
+ 01B1 62D000            mov REG[0xd0],>_keyPressed
+ 01B4 550001            mov [_keyPressed],1
+ 01B7                   .dbline 128
+ 01B7           ;       }
+ 01B7           L16:
+ 01B7                   .dbline -2
+ 01B7           L15:
+ 01B7 62D000            mov REG[0xD0],>__r0
+ 01BA 18                pop A
+ 01BB 5300              mov [__rZ],A
+ 01BD 18                pop A
+ 01BE 5300              mov [__rY],A
+ 01C0 18                pop A
+ 01C1 5300              mov [__rX],A
+ 01C3 18                pop A
+ 01C4 5300              mov [__r11],A
+ 01C6 18                pop A
+ 01C7 5300              mov [__r10],A
+ 01C9 18                pop A
+ 01CA 5300              mov [__r9],A
+ 01CC 18                pop A
+ 01CD 5300              mov [__r8],A
+ 01CF 18                pop A
+ 01D0 5300              mov [__r7],A
+ 01D2 18                pop A
+ 01D3 5300              mov [__r6],A
+ 01D5 18                pop A
+ 01D6 5300              mov [__r5],A
+ 01D8 18                pop A
+ 01D9 5300              mov [__r4],A
+ 01DB 18                pop A
+ 01DC 5300              mov [__r3],A
+ 01DE 18                pop A
+ 01DF 5300              mov [__r2],A
+ 01E1 18                pop A
+ 01E2 5300              mov [__r1],A
+ 01E4 18                pop A
+ 01E5 5300              mov [__r0],A
+ 01E7 18                pop A
+ 01E8 60D5              mov REG[213],A
+ 01EA 18                pop A
+ 01EB 60D4              mov REG[212],A
+ 01ED 18                pop A
+ 01EE 60D3              mov REG[211],A
+ 01F0 18                pop A
+ 01F1 60D0              mov REG[208],A
+ 01F3 18                pop A
+ 01F4                   .dbline 0 ; func end
+ 01F4 7E                reti
+ 01F5                   .dbend
