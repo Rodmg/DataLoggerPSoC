@@ -1162,10 +1162,10 @@
  0000           ; register initial values
  0000           ;
  0000           ANALOG_IO_CONTROL:		equ 0h	;Analog IO Control register (ABF_CR)
- 0008           PORT_0_GLOBAL_SELECT:	equ 8h	;Port 0 global select register (PRT0GS)
- 0000           PORT_0_DRIVE_0:			equ 0h	;Port 0 drive mode 0 register (PRT0DM0)
- 00FF           PORT_0_DRIVE_1:			equ ffh	;Port 0 drive mode 1 register (PRT0DM1)
- 00F4           PORT_0_DRIVE_2:			equ f4h	;Port 0 drive mode 2 register (PRT0DM2)
+ 0044           PORT_0_GLOBAL_SELECT:	equ 44h	;Port 0 global select register (PRT0GS)
+ 0004           PORT_0_DRIVE_0:			equ 4h	;Port 0 drive mode 0 register (PRT0DM0)
+ 00FB           PORT_0_DRIVE_1:			equ fbh	;Port 0 drive mode 1 register (PRT0DM1)
+ 00B8           PORT_0_DRIVE_2:			equ b8h	;Port 0 drive mode 2 register (PRT0DM2)
  0000           PORT_0_INTENABLE:		equ 0h	;Port 0 interrupt enable register (PRT0IE)
  0000           PORT_0_INTCTRL_0:		equ 0h	;Port 0 interrupt control 0 register (PRT0IC0)
  0000           PORT_0_INTCTRL_1:		equ 0h	;Port 0 interrupt control 1 register (PRT0IC1)
@@ -1295,9 +1295,9 @@
                 
                     
  0000 550000            mov             [Port_0_Data_SHADE], 0h
- 0003 550200            mov             [Port_0_DriveMode_0_SHADE], 0h
- 0006 5503FF            mov             [Port_0_DriveMode_1_SHADE], ffh
- 0009 5504F4            mov             [Port_0_DriveMode_2_SHADE], f4h
+ 0003 550204            mov             [Port_0_DriveMode_0_SHADE], 4h
+ 0006 5503FB            mov             [Port_0_DriveMode_1_SHADE], fbh
+ 0009 5504B8            mov             [Port_0_DriveMode_2_SHADE], b8h
  000C 550100            mov             [Port_2_Data_SHADE], 0h
  000F 5505FF            mov             [Port_2_DriveMode_0_SHADE], ffh
  0012 550600            mov             [Port_2_DriveMode_1_SHADE], 0h

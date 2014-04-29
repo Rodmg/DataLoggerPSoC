@@ -1,9 +1,9 @@
-flash 41F9 SRAM    F:
- 00 115 bytes
-flash 41FD SRAM   91:
+flash 412C SRAM    F:
+ 00 133 bytes
+flash 4130 SRAM   A3:
  00 12 bytes
-flash 4201 SRAM   A1:
+flash 4134 SRAM   B3:
  <size at next line>   0  0  F
   [size:] 3 bytes
-flash 4207 SRAM   A4:
+flash 413A SRAM   B6:
  00 5 bytes

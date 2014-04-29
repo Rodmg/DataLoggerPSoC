@@ -8,7 +8,8 @@ typedef enum
 	REGTIME_CONFIG,
 	LEVEL_CONFIG,
 	CONFIG,
-	TEMP
+	TEMP,
+	DELET
 } CurrentView;
 
 extern CurrentView currentView;

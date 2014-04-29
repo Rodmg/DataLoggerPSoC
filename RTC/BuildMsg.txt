@@ -15,6 +15,10 @@ lib/psocconfig.asm
 
 lib/psocconfigtbl.asm
 
+lib/pwm8.asm
+
+lib/pwm8int.asm
+
 lib/tempbuf.asm
 
 lib/tempbufint.asm
@@ -25,7 +29,7 @@ lib/uartint.asm
 
 lib/uartplus.asm
 
-!W C:\Users\Rod\Desktop\RTC\RTC\main.c(26):[warning] missing return value
+!W Z:\Desktop\RTC\RTC\main.c(26):[warning] missing return value
 
 ./boot.asm
 
@@ -33,7 +37,7 @@ Linking..
 
 LMM info: area 'InterruptRAM' uses 15 bytes in SRAM bank 0
 
-LMM info: area 'data' item of 90 bytes allocated in SRAM page 0
+LMM info: area 'data' item of 108 bytes allocated in SRAM page 0
 
 LMM info: area 'data' item of 25 bytes allocated in SRAM page 0
 
@@ -63,12 +67,12 @@ LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
 
 idata dump at output/RTC.idata
 
-  ROM 51% full. 16473 out of 32768 bytes used (does not include absolute areas).
+  ROM 50% full. 16268 out of 32768 bytes used (does not include absolute areas).
 
-  RAM 10% full. 169 bytes used (does not include stack usage).
+  RAM 11% full. 187 bytes used (does not include stack usage).
 
 Built with ICCM8C STD V7.05.00
 
  
-RTC - 0 error(s) 1 warning(s) 12:00:58
+RTC - 0 error(s) 1 warning(s) 13:35:47
 

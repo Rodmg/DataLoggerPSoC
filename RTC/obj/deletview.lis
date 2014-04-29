@@ -1,0 +1,151 @@
+ 0000                   cpu LMM
+                        .module deletview.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./deletview.c
+ 0000                   .dbfile Z:\Desktop\RTC\RTC\deletview.c
+ 0000                   .dbfunc e DeletView_Start _DeletView_Start fV
+ 0000           _DeletView_Start::
+ 0000                   .dbline -1
+ 0000                   .dbline 14
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #include "DeletView.h"
+ 0000           ; #include "mainView.h"
+ 0000           ; #include "menu.h"
+ 0000           ; #include "BcdUtil.h"
+ 0000           ; #include "viewManager.h"
+ 0000           ; #include "Keypad.h"
+ 0000           ; #include "Persist.h"
+ 0000           ; 
+ 0000           ; extern CurrentView currentView;
+ 0000           ; 
+ 0000           ; void DeletView_Start(void)
+ 0000           ; {
+ 0000                   .dbline -2
+ 0000           L10:
+ 0000                   .dbline 0 ; func end
+ 0000 7F                ret
+ 0001                   .dbend
+ 0001                   .dbfunc e DeletView_Callback _DeletView_Callback fV
+ 0001           ;            num -> X+4
+ 0001           ;            bcd -> X+3
+ 0001           ;          bcd10 -> X+2
+ 0001           ;           temp -> X+0
+ 0001           _DeletView_Callback::
+ 0001                   .dbline -1
+ 0001 10                push X
+ 0002 4F                mov X,SP
+ 0003 3805              add SP,5
+ 0005                   .dbline 19
+ 0005           ; 
+ 0005           ; }
+ 0005           ; 
+ 0005           ; void DeletView_Callback(void)
+ 0005           ; {
+ 0005                   .dbline 23
+ 0005           ;       int temp;
+ 0005           ;       BYTE bcd10,bcd,num;
+ 0005           ;       
+ 0005           ;       currentView = DELET;
+ 0005 62D000            mov REG[0xd0],>_currentView
+ 0008 550006            mov [_currentView],6
+ 000B                   .dbline 24
+ 000B           ;       Menu_Clear();
+ 000B 7C0000            xcall _Menu_Clear
+ 000E                   .dbline 25
+ 000E           ;       Persist_Clear();
+ 000E 7C0000            xcall _Persist_Clear
+ 0011                   .dbline 26
+ 0011           ;       LCD_Position(0, 0);
+ 0011 10                push X
+ 0012 5000              mov A,0
+ 0014 5700              mov X,0
+ 0016 7C0000            xcall _LCD_Position
+ 0019                   .dbline 27
+ 0019           ;       LCD_PrCString("Datos Borrados!");
+ 0019 5000              mov A,>L12
+ 001B 08                push A
+ 001C 5000              mov A,<L12
+ 001E 5C                mov X,A
+ 001F 18                pop A
+ 0020 7C0000            xcall _LCD_PrCString
+ 0023 20                pop X
+ 0024                   .dbline -2
+ 0024           L11:
+ 0024 38FB              add SP,-5
+ 0026 20                pop X
+ 0027                   .dbline 0 ; func end
+ 0027 7F                ret
+ 0028                   .dbsym l num 4 c
+ 0028                   .dbsym l bcd 3 c
+ 0028                   .dbsym l bcd10 2 c
+ 0028                   .dbsym l temp 0 I
+ 0028                   .dbend
+ 0028                   .dbfunc e DeletView_Update _DeletView_Update fV
+ 0028           ;            num -> X+4
+ 0028           ;            bcd -> X+3
+ 0028           ;          bcd10 -> X+2
+ 0028           ;           temp -> X+0
+ 0028           _DeletView_Update::
+ 0028                   .dbline -1
+ 0028 10                push X
+ 0029 4F                mov X,SP
+ 002A 3807              add SP,7
+ 002C                   .dbline 31
+ 002C           ; }
+ 002C           ; 
+ 002C           ; void DeletView_Update(void)
+ 002C           ; {
+ 002C                   .dbline 35
+ 002C           ;       int temp;
+ 002C           ;       BYTE bcd10,bcd,num;
+ 002C           ;       
+ 002C           ;       if(Keypad_IsKeyStored())
+ 002C 7C0000            xcall _Keypad_IsKeyStored
+ 002F 62D000            mov REG[0xd0],>__r0
+ 0032 3900              cmp A,0
+ 0034 A01B              jz L14
+ 0036                   .dbline 37
+ 0036           ;       {
+ 0036           ;               switch(Keypad_GetKey())
+ 0036                   .dbline 37
+ 0036 7C0000            xcall _Keypad_GetKey
+ 0039 62D000            mov REG[0xd0],>__r0
+ 003C 5406              mov [X+6],A
+ 003E 560500            mov [X+5],0
+ 0041 3D0500            cmp [X+5],0
+ 0044 B006              jnz X0
+ 0046 3D0611            cmp [X+6],17
+ 0049 A003              jz L19
+ 004B           X0:
+ 004B 8004              xjmp L16
+ 004D           L19:
+ 004D                   .dbline 41
+ 004D           ;               {
+ 004D           ;                       case 0x11:
+ 004D           ;                               // "B"
+ 004D           ;                               MainView_Callback();
+ 004D 7C0000            xcall _MainView_Callback
+ 0050                   .dbline 42
+ 0050           ;                               return;
+ 0050                   .dbline 43
+ 0050           ;                               break;
+ 0050           L16:
+ 0050                   .dbline 45
+ 0050           ;               }
+ 0050           ;       }
+ 0050           L14:
+ 0050                   .dbline -2
+ 0050           L13:
+ 0050 38F9              add SP,-7
+ 0052 20                pop X
+ 0053                   .dbline 0 ; func end
+ 0053 7F                ret
+ 0054                   .dbsym l num 4 c
+ 0054                   .dbsym l bcd 3 c
+ 0054                   .dbsym l bcd10 2 c
+ 0054                   .dbsym l temp 0 I
+ 0054                   .dbend
+                        .area lit(rom, con, rel, lit)
+ 0000           L12:
+ 0000 4461746F7320426F727261646F732100  .byte 'D,'a,'t,'o,'s,32,'B,'o,'r,'r,'a,'d,'o,'s,33,0

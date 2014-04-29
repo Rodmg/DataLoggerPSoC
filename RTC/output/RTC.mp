@@ -1,297 +1,325 @@
 Project:      output/RTC
 Build Number: 0
-Date:         Tue Apr 29 12:00:57 2014
+Date:         Tue Apr 29 13:35:46 2014
 Compiler:     ICCM8C
 Version:      7.05.00
 
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                             lit   01A0   032F =    815. bytes (rel,con,rom,lit)
+                             lit   01A0   035A =    858. bytes (rel,con,rom,lit)
 
        Addr  Global Symbol
       -----  --------------------------------
-       02A6  LoadConfigTBL_rtc_Bank0
-       031D  LoadConfigTBL_rtc_Bank1
-       035A  __ctype
-       04CF  __lit_end
+       02C5  LoadConfigTBL_rtc_Bank0
+       0342  LoadConfigTBL_rtc_Bank1
+       0385  __ctype
+       04FA  __lit_end
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                        func_lit   04CF   000E =     14. bytes (rel,con,rom,proclab)
+                        func_lit   04FA   0010 =     16. bytes (rel,con,rom,proclab)
 
        Addr  Global Symbol
       -----  --------------------------------
-       04CF  __func_lit_start
-       04DD  __func_lit_end
+       04FA  __func_lit_start
+       050A  __func_lit_end
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                     psoc_config   04DD   017C =    380. bytes (rel,con,rom,code)
+                     psoc_config   050A   017C =    380. bytes (rel,con,rom,code)
 
        Addr  Global Symbol
       -----  --------------------------------
-       04DD  LoadConfigTBL_rtc_Ordered
-       05E2  LoadConfigInit
-       05E2  _LoadConfigInit
-       05FE  LoadConfig_rtc
-       05FE  _LoadConfig_rtc
-       0659  __psoc_config_end
+       050A  LoadConfigTBL_rtc_Ordered
+       060F  LoadConfigInit
+       060F  _LoadConfigInit
+       062B  LoadConfig_rtc
+       062B  _LoadConfig_rtc
+       0686  __psoc_config_end
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                     UserModules   0659   084F =   2127. bytes (rel,con,rom,code)
+                     UserModules   0686   0896 =   2198. bytes (rel,con,rom,code)
 
        Addr  Global Symbol
       -----  --------------------------------
-       0659  _UART_TX_ISR
-       065A  _UART_RX_ISR
-       065B  _UART_EnableInt
-       065B  UART_EnableInt
-       0662  _UART_DisableInt
-       0662  UART_DisableInt
-       0669  UART_SetTxIntMode
-       0669  _UART_SetTxIntMode
-       067B  _UART_Start
-       067B  UART_Start
-       0682  UART_Stop
-       0682  _UART_Stop
-       0689  UART_SendData
-       0689  _UART_SendData
-       068C  UART_bReadTxStatus
-       068C  _bUART_ReadTxStatus
-       068C  _UART_bReadTxStatus
-       068C  bUART_ReadTxStatus
-       068F  _UART_bReadRxData
-       068F  _bUART_ReadRxData
-       068F  UART_bReadRxData
-       068F  bUART_ReadRxData
-       0692  UART_bReadRxStatus
-       0692  bUART_ReadRxStatus
-       0692  _bUART_ReadRxStatus
-       0692  _UART_bReadRxStatus
-       0695  UART_TxIntMode
-       0695  _UART_TxIntMode
-       06A8  UART_IntCntl
-       06A8  _UART_IntCntl
-       06D3  UART_PutSHexByte
-       06D3  _UART_PutSHexByte
-       06E6  UART_PutSHexInt
-       06E6  _UART_PutSHexInt
-       06ED  UART_PutChar
-       06ED  _UART_PutChar
-       06F5  UART_cGetChar
-       06F5  _UART_cGetChar
-       06FD  _UART_cReadChar
-       06FD  UART_cReadChar
-       0714  _UART_iReadChar
-       0714  UART_iReadChar
-       072A  _UART_PutString
-       072A  UART_PutString
-       073C  _UART_Write
-       073C  UART_Write
-       0764  _UART_CWrite
-       0764  UART_CWrite
-       0790  _UART_CPutString
-       0790  UART_CPutString
-       07A2  UART_PutCRLF
-       07A2  _UART_PutCRLF
-       07AB  _TempBuf_ISR
-       07AC  _PGA_Start
-       07AC  PGA_SetPower
-       07AC  PGA_Start
-       07AC  _PGA_SetPower
-       07BE  _PGA_SetGain
-       07BE  PGA_SetGain
-       07E8  PGA_Stop
-       07E8  _PGA_Stop
-       07EC  _LCD_PrCString
-       07EC  LCD_PrCString
-       07FE  LCD_HEX_STR
-       080E  _LCD_PrHexByte
-       080E  LCD_PrHexByte
-       0821  _LCD_PrHexInt
-       0821  LCD_PrHexInt
-       0828  _LCD_PrString
-       0828  LCD_PrString
-       083A  _LCD_Write_Data
-       083A  _LCD_WriteData
-       083A  LCD_WriteData
-       083A  LCD_Write_Data
-       084E  LCD_Control
-       084E  _LCD_Control
-       08FE  _LCD_Start
-       08FE  LCD_Init
-       08FE  _LCD_Init
-       08FE  LCD_Start
-       096D  LCD_ROW_OFFSET
-       0971  LCD_Position
-       0971  _LCD_Position
-       0981  LCD_Delay50uTimes
-       0981  _LCD_Delay50uTimes
-       0987  LCD_Delay50u_Table
-       098F  _LCD_Delay50u
-       098F  LCD_Delay50u
-       09A3  _LCD_DrawBG
-       09D4  _LCD_DrawVBG
-       0A08  LCD_InitVBG
-       0A08  _LCD_InitVBG
-       0A39  LCD_BG_TYPE1
-       0A40  LCD_BG_TYPE2
-       0A47  LCD_InitBG
-       0A47  _LCD_InitBG
-       0A7B  _I2Cm_Start
-       0A7B  I2Cm_Start
-       0A9F  I2Cm_Stop
-       0A9F  _I2Cm_Stop
-       0AA0  _I2Cm_fReadBytes
-       0B05  _I2Cm_bWriteBytes
-       0B61  _I2Cm_bWriteCBytes
-       0BB1  _I2Cm_fSendRepeatStart
-       0BB1  I2Cm_fSendRepeatStart
-       0BE7  I2Cm_fSendStart
-       0BE7  _I2Cm_fSendStart
-       0C21  _I2Cm_fWrite
-       0C21  I2Cm_fWrite
-       0CB8  I2Cm_bRead
-       0CB8  _I2Cm_bRead
-       0D63  I2Cm_SendStop
-       0D63  _I2Cm_SendStop
-       0D99  _ADCINC_ADConversion_ISR
-       0E07  ADCINC_Start
-       0E07  _ADCINC_Start
-       0E16  _ADCINC_SetPower
-       0E16  ADCINC_SetPower
-       0E28  ADCINC_Stop
-       0E28  _ADCINC_Stop
-       0E32  _ADCINC_GetSamples
-       0E32  ADCINC_GetSamples
-       0E5B  _ADCINC_StopADC
-       0E5B  ADCINC_StopADC
-       0E6F  ADCINC_fIsDataAvailable
-       0E6F  _ADCINC_fIsDataAvailable
-       0E75  ADCINC_wClearFlagGetData
-       0E75  _ADCINC_wClearFlagGetData
-       0E75  ADCINC_iClearFlagGetData
-       0E75  _ADCINC_iClearFlagGetData
-       0E85  ADCINC_cClearFlagGetData
-       0E85  ADCINC_bClearFlagGetData
-       0E85  _ADCINC_bClearFlagGetData
-       0E85  _ADCINC_cClearFlagGetData
-       0E8E  _ADCINC_iGetData
-       0E8E  _ADCINC_wGetData
-       0E8E  ADCINC_iGetData
-       0E8E  ADCINC_wGetData
-       0E96  _ADCINC_bGetData
-       0E96  ADCINC_bGetData
-       0E96  _ADCINC_cGetData
-       0E96  ADCINC_cGetData
-       0E9C  _ADCINC_fClearFlag
-       0E9C  ADCINC_fClearFlag
-       0EA5  ADCINC_WritePulseWidth
-       0EA5  _ADCINC_WritePulseWidth
-       0EA8  __UserModules_end
+       0686  _UART_TX_ISR
+       0687  _UART_RX_ISR
+       0688  _UART_EnableInt
+       0688  UART_EnableInt
+       068F  UART_DisableInt
+       068F  _UART_DisableInt
+       0696  UART_SetTxIntMode
+       0696  _UART_SetTxIntMode
+       06A8  _UART_Start
+       06A8  UART_Start
+       06AF  UART_Stop
+       06AF  _UART_Stop
+       06B6  _UART_SendData
+       06B6  UART_SendData
+       06B9  bUART_ReadTxStatus
+       06B9  _UART_bReadTxStatus
+       06B9  UART_bReadTxStatus
+       06B9  _bUART_ReadTxStatus
+       06BC  _bUART_ReadRxData
+       06BC  bUART_ReadRxData
+       06BC  _UART_bReadRxData
+       06BC  UART_bReadRxData
+       06BF  bUART_ReadRxStatus
+       06BF  UART_bReadRxStatus
+       06BF  _UART_bReadRxStatus
+       06BF  _bUART_ReadRxStatus
+       06C2  _UART_TxIntMode
+       06C2  UART_TxIntMode
+       06D5  _UART_IntCntl
+       06D5  UART_IntCntl
+       0700  _UART_PutSHexByte
+       0700  UART_PutSHexByte
+       0713  UART_PutSHexInt
+       0713  _UART_PutSHexInt
+       071A  _UART_PutChar
+       071A  UART_PutChar
+       0722  UART_cGetChar
+       0722  _UART_cGetChar
+       072A  _UART_cReadChar
+       072A  UART_cReadChar
+       0741  UART_iReadChar
+       0741  _UART_iReadChar
+       0757  UART_PutString
+       0757  _UART_PutString
+       0769  _UART_Write
+       0769  UART_Write
+       0791  _UART_CWrite
+       0791  UART_CWrite
+       07BD  UART_CPutString
+       07BD  _UART_CPutString
+       07CF  UART_PutCRLF
+       07CF  _UART_PutCRLF
+       07D8  _TempBuf_ISR
+       07D9  _PWM8_ISR
+       07DA  _PWM8_EnableInt
+       07DA  PWM8_EnableInt
+       07DE  PWM8_DisableInt
+       07DE  _PWM8_DisableInt
+       07E2  PWM8_Start
+       07E2  _PWM8_Start
+       07E6  PWM8_Stop
+       07E6  _PWM8_Stop
+       07EA  _PWM8_WritePeriod
+       07EA  PWM8_WritePeriod
+       07ED  PWM8_WritePulseWidth
+       07ED  _PWM8_WritePulseWidth
+       07F0  PWM8_bReadPulseWidth
+       07F0  bPWM8_ReadPulseWidth
+       07F0  _PWM8_bReadPulseWidth
+       07F0  _bPWM8_ReadPulseWidth
+       07F3  _PWM8_bReadCounter
+       07F3  PWM8_bReadCounter
+       07F3  bPWM8_ReadCounter
+       07F3  _bPWM8_ReadCounter
+       0820  _PGA_Start
+       0820  PGA_SetPower
+       0820  PGA_Start
+       0820  _PGA_SetPower
+       0832  _PGA_SetGain
+       0832  PGA_SetGain
+       085C  PGA_Stop
+       085C  _PGA_Stop
+       0860  _LCD_PrCString
+       0860  LCD_PrCString
+       0872  LCD_HEX_STR
+       0882  _LCD_PrHexByte
+       0882  LCD_PrHexByte
+       0895  _LCD_PrHexInt
+       0895  LCD_PrHexInt
+       089C  _LCD_PrString
+       089C  LCD_PrString
+       08AE  _LCD_Write_Data
+       08AE  LCD_Write_Data
+       08AE  LCD_WriteData
+       08AE  _LCD_WriteData
+       08C2  _LCD_Control
+       08C2  LCD_Control
+       0972  _LCD_Start
+       0972  LCD_Start
+       0972  LCD_Init
+       0972  _LCD_Init
+       09E1  LCD_ROW_OFFSET
+       09E5  _LCD_Position
+       09E5  LCD_Position
+       09F5  LCD_Delay50uTimes
+       09F5  _LCD_Delay50uTimes
+       09FB  LCD_Delay50u_Table
+       0A03  LCD_Delay50u
+       0A03  _LCD_Delay50u
+       0A17  _LCD_DrawBG
+       0A48  _LCD_DrawVBG
+       0A7C  LCD_InitVBG
+       0A7C  _LCD_InitVBG
+       0AAD  LCD_BG_TYPE1
+       0AB4  LCD_BG_TYPE2
+       0ABB  _LCD_InitBG
+       0ABB  LCD_InitBG
+       0AEF  I2Cm_Start
+       0AEF  _I2Cm_Start
+       0B13  I2Cm_Stop
+       0B13  _I2Cm_Stop
+       0B14  _I2Cm_fReadBytes
+       0B79  _I2Cm_bWriteBytes
+       0BD5  _I2Cm_bWriteCBytes
+       0C25  I2Cm_fSendRepeatStart
+       0C25  _I2Cm_fSendRepeatStart
+       0C5B  _I2Cm_fSendStart
+       0C5B  I2Cm_fSendStart
+       0C95  _I2Cm_fWrite
+       0C95  I2Cm_fWrite
+       0D2C  I2Cm_bRead
+       0D2C  _I2Cm_bRead
+       0DD7  _I2Cm_SendStop
+       0DD7  I2Cm_SendStop
+       0E0D  _ADCINC_ADConversion_ISR
+       0E7B  ADCINC_Start
+       0E7B  _ADCINC_Start
+       0E8A  _ADCINC_SetPower
+       0E8A  ADCINC_SetPower
+       0E9C  _ADCINC_Stop
+       0E9C  ADCINC_Stop
+       0EA6  _ADCINC_GetSamples
+       0EA6  ADCINC_GetSamples
+       0ECF  _ADCINC_StopADC
+       0ECF  ADCINC_StopADC
+       0EE3  _ADCINC_fIsDataAvailable
+       0EE3  ADCINC_fIsDataAvailable
+       0EE9  _ADCINC_iClearFlagGetData
+       0EE9  _ADCINC_wClearFlagGetData
+       0EE9  ADCINC_wClearFlagGetData
+       0EE9  ADCINC_iClearFlagGetData
+       0EF9  ADCINC_cClearFlagGetData
+       0EF9  ADCINC_bClearFlagGetData
+       0EF9  _ADCINC_cClearFlagGetData
+       0EF9  _ADCINC_bClearFlagGetData
+       0F02  ADCINC_wGetData
+       0F02  _ADCINC_iGetData
+       0F02  ADCINC_iGetData
+       0F02  _ADCINC_wGetData
+       0F0A  ADCINC_cGetData
+       0F0A  _ADCINC_bGetData
+       0F0A  _ADCINC_cGetData
+       0F0A  ADCINC_bGetData
+       0F10  _ADCINC_fClearFlag
+       0F10  ADCINC_fClearFlag
+       0F19  _ADCINC_WritePulseWidth
+       0F19  ADCINC_WritePulseWidth
+       0F1C  __UserModules_end
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   0EA8   3351 =  13137. bytes (rel,con,rom,code)
+                            text   0F1C   3210 =  12816. bytes (rel,con,rom,code)
 
        Addr  Global Symbol
       -----  --------------------------------
-       0EA8  __text_start
-       0EA8  _bcdToDec
-       0ED1  _decToBcd
-       0F18  _ConfigView_Start
-       0F19  _ConfigView_Callback
-       0FA5  _ConfigView_Update
-       1113  _DateTimeView_Start
-       1114  _DateTimeView_Callback
-       1142  _DateTimeView_Update
-       12E7  _isLeapYear
-       135A  _isValidDate
-       1412  _Delay10msTimes
-       1412  Delay10msTimes
-       141F  Delay50uTimes
-       141F  _Delay50uTimes
-       1425  Delay50u_Table
-       142D  Delay50u
-       142D  _Delay50u
-       1441  _EEPROM_Start
-       1447  _EEPROM_Stop
-       144D  _EEPROM_Write
-       14DB  _EEPROM_Read
-       1598  _Keypad_Start
-       1665  _KeyPad_Test
-       16B7  _Keypad_IsKeyStored
-       16CF  _Keypad_GetKey
-       16D8  _Keypad_GPIO_ISR
-       178D  _LevelView_Start
-       178E  _LevelView_Callback
-       183B  _LevelView_Update
-       19CD  _Logger_Start
-       19CE  _Logger_End
-       19CF  _Logger_Loop
-       1C48  _putchar
-       1C53  _main
-       1CF9  _MainView_Start
-       1D7E  _MainView_Callback
-       1D90  _MainView_Update
-       1E07  _Menu_Start
-       1E08  _Menu_Stop
-       1E09  _Menu_Update
-       1F05  _Menu_Up
-       1F44  _Menu_Down
-       1F92  _Menu_Select
-       2068  _Menu_Clear
-       208D  _Persist_Start
-       2091  _Persist_Stop
-       2095  _Persist_Clear
-       20BD  _Persist_SaveRecord
-       2153  _Persist_LoadRecord
-       21AB  _Persist_SaveConfig
-       21D1  _Persist_LoadConfig
-       21F7  _RegTimeView_Start
-       21F8  _RegTimeView_Callback
-       2202  _RegTimeView_Update
-       248D  _Rtc_Start
-       24A1  _Rtc_Stop
-       24B7  _Rtc_EnableSqw1Hz
-       24D4  _Rtc_WriteToRtc
-       24E8  _Rtc_ReadFromRtc
-       24FC  _Rtc_SetSqwOutConfig
-       2510  _Rtc_GetSqwOutConfig
-       2529  _Rtc_WriteToRam
-       259F  _Rtc_ReadFromRam
-       2649  _TempSensor_Start
-       265B  _TempSensor_Stop
-       2664  _TempSensor_GetTemp
-       282B  _TempView_Start
-       282C  _TempView_Callback
-       28AD  _TempView_Update
-       2926  _Time_Start
-       2942  _Time_Stop
-       2946  _Time_Pause
-       2977  _Time_Adj_1224hrs
-       2B52  _Time_Adj_S
-       2C10  _Time_Adj_Mi
-       2CCE  _Time_Adj_H
-       2EC8  _Time_Adj_D
-       3035  _Time_Adj_Mo
-       31A3  _Time_Adj_Y
-       388C  _cstrcpyLMM
-       3897  _cstrcpy
-       38B9  __plcall
-       38C5  _itoa
-       3A9E  _utoa
-       3BE1  _isdigit
-       3C02  _islower
-       3C23  _isspace
-       3C44  _toupper
-       3C82  _cprintf
-       3CC3  __cprint
-       41F9  __text_end
-       41F9  __xidata_start
-       420D  __xidata_end
+       0F1C  _bcdToDec
+       0F1C  __text_start
+       0F45  _decToBcd
+       0F8C  _ConfigView_Start
+       0F8D  _ConfigView_Callback
+       1019  _ConfigView_Update
+       1187  _DateTimeView_Start
+       1188  _DateTimeView_Callback
+       11B6  _DateTimeView_Update
+       135B  _isLeapYear
+       13CE  _isValidDate
+       1486  _Delay10msTimes
+       1486  Delay10msTimes
+       1493  Delay50uTimes
+       1493  _Delay50uTimes
+       1499  Delay50u_Table
+       14A1  _Delay50u
+       14A1  Delay50u
+       14B5  _DeletView_Start
+       14B6  _DeletView_Callback
+       14DD  _DeletView_Update
+       1509  _EEPROM_Start
+       150F  _EEPROM_Stop
+       1515  _EEPROM_Write
+       15A3  _EEPROM_Read
+       1660  _Keypad_Start
+       172D  _KeyPad_Test
+       177F  _Keypad_IsKeyStored
+       1797  _Keypad_GetKey
+       17A0  _Keypad_GPIO_ISR
+       1855  _Leds_Start
+       186D  _Leds_TurnOn
+       187F  _Leds_TurnOff
+       1892  _Leds_Toggle
+       18A6  _LevelView_Start
+       18A7  _LevelView_Callback
+       1954  _LevelView_Update
+       1AE6  _Logger_Start
+       1AE7  _Logger_End
+       1AE8  _Logger_Loop
+       1B66  _putchar
+       1B71  _main
+       1C17  _MainView_Start
+       1CB1  _MainView_Callback
+       1CC3  _MainView_Update
+       1D3A  _Menu_Start
+       1D3B  _Menu_Stop
+       1D3C  _Menu_Update
+       1E38  _Menu_Up
+       1E77  _Menu_Down
+       1EC5  _Menu_Select
+       1F9B  _Menu_Clear
+       1FC0  _Persist_Start
+       1FC4  _Persist_Stop
+       1FC8  _Persist_Clear
+       1FF0  _Persist_SaveRecord
+       2086  _Persist_LoadRecord
+       20DE  _Persist_SaveConfig
+       2104  _Persist_LoadConfig
+       212A  _RegTimeView_Start
+       212B  _RegTimeView_Callback
+       2135  _RegTimeView_Update
+       23C0  _Rtc_Start
+       23D4  _Rtc_Stop
+       23EA  _Rtc_EnableSqw1Hz
+       2407  _Rtc_WriteToRtc
+       241B  _Rtc_ReadFromRtc
+       242F  _Rtc_SetSqwOutConfig
+       2443  _Rtc_GetSqwOutConfig
+       245C  _Rtc_WriteToRam
+       24D2  _Rtc_ReadFromRam
+       257C  _TempSensor_Start
+       258E  _TempSensor_Stop
+       2597  _TempSensor_GetTemp
+       275E  _TempView_Start
+       275F  _TempView_Callback
+       27E0  _TempView_Update
+       2859  _Time_Start
+       2875  _Time_Stop
+       2879  _Time_Pause
+       28AA  _Time_Adj_1224hrs
+       2A85  _Time_Adj_S
+       2B43  _Time_Adj_Mi
+       2C01  _Time_Adj_H
+       2DFB  _Time_Adj_D
+       2F68  _Time_Adj_Mo
+       30D6  _Time_Adj_Y
+       37BF  _cstrcpyLMM
+       37CA  _cstrcpy
+       37EC  __plcall
+       37F8  _itoa
+       39D1  _utoa
+       3B14  _isdigit
+       3B35  _islower
+       3B56  _isspace
+       3B77  _toupper
+       3BB5  _cprintf
+       3BF6  __cprint
+       412C  __xidata_start
+       412C  __text_end
+       4140  __xidata_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -338,55 +366,55 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                         rtc_RAM   009D   0004 =      4. bytes (rel,con,ram)
+                         rtc_RAM   00AF   0004 =      4. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
-       009D  _I2Cm_bStatus
-       009D  I2Cm_bStatus
-       009E  _I2Cm_bData
-       009E  I2Cm_bData
-       009F  _I2Cm_bAddr
-       009F  I2Cm_bAddr
+       00AF  _I2Cm_bStatus
+       00AF  I2Cm_bStatus
+       00B0  _I2Cm_bData
+       00B0  I2Cm_bData
+       00B1  _I2Cm_bAddr
+       00B1  I2Cm_bAddr
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-               virtual_registers   0082   000F =     15. bytes (rel,con,ram)
+               virtual_registers   0094   000F =     15. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
-       0082  __rZ
-       0083  __rY
-       0084  __rX
-       0085  __r11
-       0086  __r10
-       0087  __r9
-       0088  __r8
-       0089  __r7
-       008A  __r6
-       008B  __r5
-       008C  __r4
-       008D  __r3
-       008E  __r2
-       008F  __r1
-       0090  __r0
+       0094  __rZ
+       0095  __rY
+       0096  __rX
+       0097  __r11
+       0098  __r10
+       0099  __r9
+       009A  __r8
+       009B  __r7
+       009C  __r6
+       009D  __r5
+       009E  __r4
+       009F  __r3
+       00A0  __r2
+       00A1  __r1
+       00A2  __r0
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            data   0000   0087 =    135. bytes (rel,con,ram)
+                            data   0000   0099 =    153. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
        0000  __data_start
        000F  _entries
-       0091  _datetime
-       0099  _menu
-       00A1  keypad.c:keyPressed
-       00A2  keypad.c:pressedKey
-       00A3  keypad.c:keypadMask
-       00A4  rtc.c:cr
-       00A5  keypad.c:keyStillPressed
-       00A6  _currentView
+       00A3  _datetime
+       00AB  _menu
+       00B3  keypad.c:keyPressed
+       00B4  keypad.c:pressedKey
+       00B5  keypad.c:keypadMask
+       00B6  rtc.c:cr
+       00B7  keypad.c:keyStillPressed
+       00B8  _currentView
 
 Files Linked      [ module(s) ]
 
@@ -396,8 +424,10 @@ obj/configview.o	[ configview.c ]
 obj/datetimeview.o	[ datetimeview.c ]
 obj/dateutil.o	[ dateutil.c ]
 obj/delay.o	[ delay.asm ]
+obj/deletview.o	[ deletview.c ]
 obj/eeprom.o	[ eeprom.c ]
 obj/keypad.o	[ keypad.c ]
+obj/ledarray.o	[ ledarray.c ]
 obj/levelview.o	[ levelview.c ]
 obj/logger.o	[ logger.c ]
 obj/main.o	[ main.c ]
@@ -410,10 +440,10 @@ obj/tempsensor.o	[ tempsensor.c ]
 obj/tempview.o	[ tempview.c ]
 obj/time.o	[ time.c ]
 obj/viewmanager.o	[ viewmanager.c ]
-<library>	[ uartint.asm, uart.asm, tempbufint.asm, psocconfigtbl.asm, psocconfig.asm, pga.asm, lcd.asm, i2cm.asm ]
-[ adcincint.asm, adcinc.asm, rZ.asm, rY.asm, rX.asm, r11.asm, r10.asm, r9.asm, r8.asm, r7.asm, r6.asm, r5.asm ]
-[ r4.asm, r3.asm, r2.asm, r1.asm, r0.asm, divmodu_16x16_16_util.asm, divmodu_8x8_8_util.asm, fp2long_util.asm ]
-[ fp_analysiseject_util.asm, fp_clrreg_util.asm, fp_nan_res_util.asm, fp_saveres_util.asm ]
+<library>	[ uartint.asm, uart.asm, tempbufint.asm, pwm8int.asm, pwm8.asm, psocconfigtbl.asm, psocconfig.asm ]
+[ pga.asm, lcd.asm, i2cm.asm, adcincint.asm, adcinc.asm, rZ.asm, rY.asm, rX.asm, r11.asm, r10.asm, r9.asm ]
+[ r8.asm, r7.asm, r6.asm, r5.asm, r4.asm, r3.asm, r2.asm, r1.asm, r0.asm, divmodu_16x16_16_util.asm, divmodu_8x8_8_util.asm ]
+[ fp2long_util.asm, fp_analysiseject_util.asm, fp_clrreg_util.asm, fp_nan_res_util.asm, fp_saveres_util.asm ]
 [ fp_sendtoreg_util.asm, fp_sinf_res_util.asm, fp_szero_res_util.asm, fp_type_oprnd_util.asm ]
 [ fp_unnormal_util.asm, fpadd_util.asm, fpdiv_util.asm, fpmul_util.asm, fpsub_util.asm, i_div16_block_util.asm ]
 [ i_div32_not_util.asm, i_div8_block_util.asm, i_mulu8_block_util.asm, long2fp_util.asm, mul16_util.asm ]
@@ -425,7 +455,7 @@ Area Definitions
 -blit:0x1a0.0x7fff
 -bdata:0.0x6ff
 -BInterruptRAM:0	allocated at: 0
--Bvirtual_registers	allocated at: 0x82
--Brtc_RAM	allocated at: 0x9d
+-Bvirtual_registers	allocated at: 0x94
+-Brtc_RAM	allocated at: 0xaf
 -rwh:SSCParmBlk:0xf7.0xff
 

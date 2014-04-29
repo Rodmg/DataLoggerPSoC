@@ -9,11 +9,12 @@
 #include "levelView.h"
 #include "configView.h"
 #include "TempView.h"
+#include "DeletView.h"
 #include <string.h>
 
 extern CurrentView currentView;
 
-MenuEntry entries[5];
+MenuEntry entries[6];
 Menu menu;
 
 void MainView_Start(void)
@@ -25,15 +26,17 @@ void MainView_Start(void)
 	cstrcpy(entries[2].text, "Ajustar Nivel");
 	cstrcpy(entries[3].text, "Configuracion");
 	cstrcpy(entries[4].text, "Temp Actual");
+	cstrcpy(entries[5].text, "Borrar Memoria");
 
 	entries[0].callback = &DateTimeView_Callback;
 	entries[1].callback = &RegTimeView_Callback;
 	entries[2].callback = &LevelView_Callback;
 	entries[3].callback = &ConfigView_Callback;
 	entries[4].callback = &TempView_Callback;
+	entries[5].callback = &DeletView_Callback;
 
 	menu.currentIndex = 0;
-	menu.nOptions = 5;
+	menu.nOptions = 6;
 	menu.entries = entries;
 }
 

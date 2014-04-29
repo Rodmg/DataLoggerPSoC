@@ -1,5 +1,5 @@
 XH
-H B areas 12 global symbols
+H B areas 13 global symbols
 M boot.asm
 S _main Ref0000
 S __text_end Ref0000
@@ -9,6 +9,7 @@ S __r0 Ref0000
 S __r1 Ref0000
 S LoadConfigInit Ref0000
 S _Keypad_GPIO_ISR Ref0000
+S _PWM8_ISR Ref0000
 S _UART_RX_ISR Ref0000
 S _UART_TX_ISR Ref0000
 A TOP size 143 flags C
@@ -31,7 +32,8 @@ dbline 9D 28
 dbline 9E 2B
 dbline A1 2C
 dbline A2 2F
-dbline A6 30
+dbline A5 30
+dbline A6 33
 dbline AA 34
 dbline AE 38
 dbline B2 3C
@@ -182,11 +184,11 @@ dbfile memory.inc
 dbfunc 0 ? 0 I
 dbfile ./boot.asm
 dbfunc 0 ? 0 I
-dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8ssc.inc
+dbfile C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/m8ssc.inc
 dbfunc 0 ? 0 I
 dbfile ./boot.asm
 dbfunc 0 ? 0 I
-dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc
+dbfile C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/m8c.inc
 dbfunc 0 ? 0 I
 dbfile ./boot.asm
 dbfunc 0 ? 0 I
@@ -214,11 +216,11 @@ R 00 00 00 00 02 03 00 02
 T 00 24 7D 00 00 7E
 R 00 00 00 00 02 03 00 03
 T 00 28 7D 00 00 7E
-R 00 00 00 00 02 03 00 09
+R 00 00 00 00 02 03 00 0A
 T 00 2C 7D 00 00 7E
+R 00 00 00 00 02 03 00 09
+T 00 30 7D 00 00 7E
 R 00 00 00 00 02 03 00 08
-T 00 30 7E
-R 00 00 00 00
 T 00 34 7E
 R 00 00 00 00
 T 00 38 7E

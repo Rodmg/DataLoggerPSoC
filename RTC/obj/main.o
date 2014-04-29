@@ -26,7 +26,7 @@ S _MainView_Start Ref0000
 S _currentView Ref0000
 A text size B1 flags 0
 dbfile ./main.c
-dbfile C:\Users\Rod\Desktop\RTC\RTC\main.c
+dbfile Z:\Desktop\RTC\RTC\main.c
 dbfunc e putchar 0 fI
 dbsym l c FFFFFFFC c
 dbline FFFFFFFF 0

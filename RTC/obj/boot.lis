@@ -94,10 +94,10 @@
  0000           ; register initial values
  0000           ;
  0000           ANALOG_IO_CONTROL:		equ 0h	;Analog IO Control register (ABF_CR)
- 0008           PORT_0_GLOBAL_SELECT:	equ 8h	;Port 0 global select register (PRT0GS)
- 0000           PORT_0_DRIVE_0:			equ 0h	;Port 0 drive mode 0 register (PRT0DM0)
- 00FF           PORT_0_DRIVE_1:			equ ffh	;Port 0 drive mode 1 register (PRT0DM1)
- 00F4           PORT_0_DRIVE_2:			equ f4h	;Port 0 drive mode 2 register (PRT0DM2)
+ 0044           PORT_0_GLOBAL_SELECT:	equ 44h	;Port 0 global select register (PRT0GS)
+ 0004           PORT_0_DRIVE_0:			equ 4h	;Port 0 drive mode 0 register (PRT0DM0)
+ 00FB           PORT_0_DRIVE_1:			equ fbh	;Port 0 drive mode 1 register (PRT0DM1)
+ 00B8           PORT_0_DRIVE_2:			equ b8h	;Port 0 drive mode 2 register (PRT0DM2)
  0000           PORT_0_INTENABLE:		equ 0h	;Port 0 interrupt enable register (PRT0IE)
  0000           PORT_0_INTCTRL_0:		equ 0h	;Port 0 interrupt control 0 register (PRT0IC0)
  0000           PORT_0_INTCTRL_1:		equ 0h	;Port 0 interrupt control 1 register (PRT0IC1)
@@ -1511,9 +1511,9 @@
  002F 7E            reti
  0030           
                     org   30h                      ;PSoC Block DBB10 Interrupt Vector
-                    // call     void_handler
- 0030 7E            reti
- 0031           
+ 0030 7D0000        ljmp        _PWM8_ISR
+ 0033 7E            reti
+ 0034           
                     org   34h                      ;PSoC Block DBB11 Interrupt Vector
                     // call     void_handler
  0034 7E            reti

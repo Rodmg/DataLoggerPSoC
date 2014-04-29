@@ -1,0 +1,72 @@
+XH
+H 2 areas C global symbols
+M deletview.c
+S _LCD_PrCString Ref0000
+S _Menu_Clear Ref0000
+S __r0 Ref0000
+S _Keypad_GetKey Ref0000
+S _Keypad_IsKeyStored Ref0000
+S _Persist_Clear Ref0000
+S _LCD_Position Ref0000
+S _MainView_Callback Ref0000
+S _currentView Ref0000
+A text size 54 flags 0
+dbfile ./deletview.c
+dbfile Z:\Desktop\RTC\RTC\deletview.c
+dbfunc e DeletView_Start 0 fV
+dbline FFFFFFFF 0
+dbline E 0
+dbline FFFFFFFE 0
+dbline 0 0
+dbfunc e DeletView_Callback 1 fV
+dbsym l num 4 c
+dbsym l bcd 3 c
+dbsym l bcd10 2 c
+dbsym l temp 0 I
+dbline FFFFFFFF 1
+dbline 13 5
+dbline 17 5
+dbline 18 B
+dbline 19 E
+dbline 1A 11
+dbline 1B 19
+dbline FFFFFFFE 24
+dbline 0 27
+dbfunc e DeletView_Update 28 fV
+dbsym l num 4 c
+dbsym l bcd 3 c
+dbsym l bcd10 2 c
+dbsym l temp 0 I
+dbline FFFFFFFF 28
+dbline 1F 2C
+dbline 23 2C
+dbline 25 36
+dbline 25 36
+dbline 29 4D
+dbline 2A 50
+dbline 2B 50
+dbline 2D 50
+dbline FFFFFFFE 50
+dbline 0 53
+S _DeletView_Callback Def0001
+S _DeletView_Start Def0000
+S _DeletView_Update Def0028
+A lit size 10 flags 1
+T 00 00 7F 10 4F 38 05 62 D0 00 00 55 00 00 06 7C
+R 00 00 00 00 43 09 00 08 03 0C 00 08
+T 00 0C 00 00 7C 00 00 10 50 00 57 00 7C 00 00 50
+R 00 00 00 00 02 02 00 01 02 05 00 05 02 0D 00 06
+T 00 1A 00 00 08 50 00 00 5C 18 7C 00 00 20 38 FB
+R 00 00 00 00 41 02 00 01 01 06 00 01 02 0B 00 00
+T 00 26 20 7F 10 4F 38 07 7C 00 00 62 D0 00 00 39
+R 00 00 00 00 02 09 00 04 43 0D 00 02
+T 00 33 00 A0 1B 7C 00 00 62 D0 00 00 54 06 56 05
+R 00 00 00 00 02 06 00 03 43 0A 00 02
+T 00 40 00 3D 05 00 B0 06 3D 06 11 A0 03 80 04 7C
+R 00 00 00 00
+T 00 4E 00 00 38 F9 20 7F
+R 00 00 00 00 02 02 00 07
+T 00 00 44 61 74 6F 73 20 42 6F 72 72 61 64 6F 73
+R 00 00 00 01
+T 00 0E 21 00
+R 00 00 00 01

@@ -22,6 +22,7 @@
 #include "I2Cm.h"
 #include "LCD.h"
 #include "PGA.h"
+#include "PWM8.h"
 #include "TempBuf.h"
 #include "UART.h"
 

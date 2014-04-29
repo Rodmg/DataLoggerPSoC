@@ -38,6 +38,11 @@ LoadConfigTBL_rtc_Bank0:
 	db		7ah, 21h		;PGA_GAIN_CR1(ACB02CR1)
 	db		7bh, 20h		;PGA_GAIN_CR2(ACB02CR2)
 	db		78h, 00h		;PGA_GAIN_CR3(ACB02CR3)
+;  Instance name PWM8, User Module PWM8
+;       Instance name PWM8, Block Name PWM8(DBB10)
+	db		33h, 00h		;PWM8_CONTROL_REG(DBB10CR0)
+	db		31h, 06h		;PWM8_PERIOD_REG(DBB10DR1)
+	db		32h, 03h		;PWM8_COMPARE_REG(DBB10DR2)
 ;  Instance name TempBuf, User Module DigBuf
 ;       Instance name TempBuf, Block Name DigBuf(DBB01)
 	db		27h, 03h		;TempBuf_CONTROL_REG(DBB01CR0)
@@ -60,7 +65,7 @@ LoadConfigTBL_rtc_Bank0:
 	db		e6h, 04h		; DecimatorControl_0 register (DEC_CR0)
 	db		e7h, 42h		; DecimatorControl_1 register (DEC_CR1)
 	db		d6h, 00h		; I2CConfig register (I2C_CFG)
-	db		b0h, 30h		; Row_0_InputMux register (RDI0RI)
+	db		b0h, 10h		; Row_0_InputMux register (RDI0RI)
 	db		b1h, 00h		; Row_0_InputSync register (RDI0SYN)
 	db		b2h, 00h		; Row_0_LogicInputAMux register (RDI0IS)
 	db		b3h, 33h		; Row_0_LogicSelect_0 register (RDI0LT0)
@@ -73,7 +78,7 @@ LoadConfigTBL_rtc_Bank0:
 	db		bbh, 33h		; Row_1_LogicSelect_0 register (RDI1LT0)
 	db		bch, 33h		; Row_1_LogicSelect_1 register (RDI1LT1)
 	db		bdh, 00h		; Row_1_OutputDrive_0 register (RDI1SRO0)
-	db		beh, 00h		; Row_1_OutputDrive_1 register (RDI1SRO1)
+	db		beh, 01h		; Row_1_OutputDrive_1 register (RDI1SRO1)
 	db		c0h, 00h		; Row_2_InputMux register (RDI2RI)
 	db		c1h, 00h		; Row_2_InputSync register (RDI2SYN)
 	db		c2h, 20h		; Row_2_LogicInputAMux register (RDI2IS)
@@ -104,6 +109,11 @@ LoadConfigTBL_rtc_Bank1:
 ;  Instance name LCD, User Module LCD
 ;  Instance name PGA, User Module PGA
 ;       Instance name PGA, Block Name GAIN(ACB02)
+;  Instance name PWM8, User Module PWM8
+;       Instance name PWM8, Block Name PWM8(DBB10)
+	db		30h, 21h		;PWM8_FUNC_REG(DBB10FN)
+	db		31h, 17h		;PWM8_INPUT_REG(DBB10IN)
+	db		32h, 46h		;PWM8_OUTPUT_REG(DBB10OU)
 ;  Instance name TempBuf, User Module DigBuf
 ;       Instance name TempBuf, Block Name DigBuf(DBB01)
 	db		24h, 22h		;TempBuf_FUNC_REG(DBB01FN)
@@ -112,7 +122,7 @@ LoadConfigTBL_rtc_Bank1:
 ;  Instance name UART, User Module UART
 ;       Instance name UART, Block Name RX(DCB03)
 	db		2ch, 05h		;UART_RX_FUNC_REG   (DCB03FN)
-	db		2dh, f1h		;UART_RX_INPUT_REG  (DCB03IN)
+	db		2dh, e1h		;UART_RX_INPUT_REG  (DCB03IN)
 	db		2eh, 40h		;UART_RX_OUTPUT_REG (DCB03OU)
 ;       Instance name UART, Block Name TX(DCB02)
 	db		28h, 0dh		;UART_TX_FUNC_REG   (DCB02FN)
@@ -144,11 +154,11 @@ LoadConfigTBL_rtc_Ordered:
 	M8C_SetBank0
 	mov	reg[00h], 00h		; Port_0_Data register (PRT0DR)
 	M8C_SetBank1
-	mov	reg[00h], 00h		; Port_0_DriveMode_0 register (PRT0DM0)
-	mov	reg[01h], ffh		; Port_0_DriveMode_1 register (PRT0DM1)
+	mov	reg[00h], 04h		; Port_0_DriveMode_0 register (PRT0DM0)
+	mov	reg[01h], fbh		; Port_0_DriveMode_1 register (PRT0DM1)
 	M8C_SetBank0
-	mov	reg[03h], f4h		; Port_0_DriveMode_2 register (PRT0DM2)
-	mov	reg[02h], 08h		; Port_0_GlobalSelect register (PRT0GS)
+	mov	reg[03h], b8h		; Port_0_DriveMode_2 register (PRT0DM2)
+	mov	reg[02h], 44h		; Port_0_GlobalSelect register (PRT0GS)
 	M8C_SetBank1
 	mov	reg[02h], 00h		; Port_0_IntCtrl_0 register (PRT0IC0)
 	mov	reg[03h], 00h		; Port_0_IntCtrl_1 register (PRT0IC1)

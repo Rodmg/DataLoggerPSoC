@@ -15,7 +15,7 @@ dbfile memory.inc
 dbfunc 0 ? 0 I
 dbfile lib/psocconfig.asm
 dbfunc 0 ? 0 I
-dbfile C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.inc
+dbfile C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/m8c.inc
 dbfunc 0 ? 0 I
 A psoc_config size 77 flags 0
 dbfile lib/psocconfig.asm
@@ -106,9 +106,9 @@ S _Port_0_DriveMode_2_SHADE Def0004
 S _Port_2_DriveMode_1_SHADE Def0006
 S Port_0_Data_SHADE Def0000
 S Port_2_Data_SHADE Def0001
-T 00 00 55 00 00 00 55 00 02 00 55 00 03 FF 55
+T 00 00 55 00 00 00 55 00 02 04 55 00 03 FB 55
 R 00 00 00 01 01 03 00 02 01 07 00 02 01 0B 00 02
-T 00 0A 00 04 F4 55 00 01 00 55 00 05 FF 55
+T 00 0A 00 04 B8 55 00 01 00 55 00 05 FF 55
 R 00 00 00 01 01 02 00 02 01 06 00 02 01 0A 00 02
 T 00 13 00 06 00 7C 00 1C 7C 00 00 7F 10 70 EF 50
 R 00 00 00 01 01 02 00 02 00 06 00 01 02 09 00 02
