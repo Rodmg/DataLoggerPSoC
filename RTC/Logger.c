@@ -18,7 +18,8 @@ void Logger_End(void)
 
 void Logger_Loop(void)
 {
-	BYTE currentTemp, elapsedSeconds, previousSecond, currentSecond;
+	static BYTE elapsedSeconds, previousSecond;
+	BYTE currentTemp, currentSecond;
 	BYTE currentHour, currentMin, currentDate, currentMonth, currentYear;
 	int timestampNow, timestampStart, timestampEnd;
 	Time now;
