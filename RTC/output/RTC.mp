@@ -1,6 +1,6 @@
 Project:      output/RTC
 Build Number: 0
-Date:         Tue Apr 29 11:58:30 2014
+Date:         Tue Apr 29 12:00:57 2014
 Compiler:     ICCM8C
 Version:      7.05.00
 
@@ -194,7 +194,7 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   0EA8   3345 =  13125. bytes (rel,con,rom,code)
+                            text   0EA8   3351 =  13137. bytes (rel,con,rom,code)
 
        Addr  Global Symbol
       -----  --------------------------------
@@ -231,67 +231,67 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
        19CD  _Logger_Start
        19CE  _Logger_End
        19CF  _Logger_Loop
-       1C3C  _putchar
-       1C47  _main
-       1CED  _MainView_Start
-       1D72  _MainView_Callback
-       1D84  _MainView_Update
-       1DFB  _Menu_Start
-       1DFC  _Menu_Stop
-       1DFD  _Menu_Update
-       1EF9  _Menu_Up
-       1F38  _Menu_Down
-       1F86  _Menu_Select
-       205C  _Menu_Clear
-       2081  _Persist_Start
-       2085  _Persist_Stop
-       2089  _Persist_Clear
-       20B1  _Persist_SaveRecord
-       2147  _Persist_LoadRecord
-       219F  _Persist_SaveConfig
-       21C5  _Persist_LoadConfig
-       21EB  _RegTimeView_Start
-       21EC  _RegTimeView_Callback
-       21F6  _RegTimeView_Update
-       2481  _Rtc_Start
-       2495  _Rtc_Stop
-       24AB  _Rtc_EnableSqw1Hz
-       24C8  _Rtc_WriteToRtc
-       24DC  _Rtc_ReadFromRtc
-       24F0  _Rtc_SetSqwOutConfig
-       2504  _Rtc_GetSqwOutConfig
-       251D  _Rtc_WriteToRam
-       2593  _Rtc_ReadFromRam
-       263D  _TempSensor_Start
-       264F  _TempSensor_Stop
-       2658  _TempSensor_GetTemp
-       281F  _TempView_Start
-       2820  _TempView_Callback
-       28A1  _TempView_Update
-       291A  _Time_Start
-       2936  _Time_Stop
-       293A  _Time_Pause
-       296B  _Time_Adj_1224hrs
-       2B46  _Time_Adj_S
-       2C04  _Time_Adj_Mi
-       2CC2  _Time_Adj_H
-       2EBC  _Time_Adj_D
-       3029  _Time_Adj_Mo
-       3197  _Time_Adj_Y
-       3880  _cstrcpyLMM
-       388B  _cstrcpy
-       38AD  __plcall
-       38B9  _itoa
-       3A92  _utoa
-       3BD5  _isdigit
-       3BF6  _islower
-       3C17  _isspace
-       3C38  _toupper
-       3C76  _cprintf
-       3CB7  __cprint
-       41ED  __text_end
-       41ED  __xidata_start
-       41FF  __xidata_end
+       1C48  _putchar
+       1C53  _main
+       1CF9  _MainView_Start
+       1D7E  _MainView_Callback
+       1D90  _MainView_Update
+       1E07  _Menu_Start
+       1E08  _Menu_Stop
+       1E09  _Menu_Update
+       1F05  _Menu_Up
+       1F44  _Menu_Down
+       1F92  _Menu_Select
+       2068  _Menu_Clear
+       208D  _Persist_Start
+       2091  _Persist_Stop
+       2095  _Persist_Clear
+       20BD  _Persist_SaveRecord
+       2153  _Persist_LoadRecord
+       21AB  _Persist_SaveConfig
+       21D1  _Persist_LoadConfig
+       21F7  _RegTimeView_Start
+       21F8  _RegTimeView_Callback
+       2202  _RegTimeView_Update
+       248D  _Rtc_Start
+       24A1  _Rtc_Stop
+       24B7  _Rtc_EnableSqw1Hz
+       24D4  _Rtc_WriteToRtc
+       24E8  _Rtc_ReadFromRtc
+       24FC  _Rtc_SetSqwOutConfig
+       2510  _Rtc_GetSqwOutConfig
+       2529  _Rtc_WriteToRam
+       259F  _Rtc_ReadFromRam
+       2649  _TempSensor_Start
+       265B  _TempSensor_Stop
+       2664  _TempSensor_GetTemp
+       282B  _TempView_Start
+       282C  _TempView_Callback
+       28AD  _TempView_Update
+       2926  _Time_Start
+       2942  _Time_Stop
+       2946  _Time_Pause
+       2977  _Time_Adj_1224hrs
+       2B52  _Time_Adj_S
+       2C10  _Time_Adj_Mi
+       2CCE  _Time_Adj_H
+       2EC8  _Time_Adj_D
+       3035  _Time_Adj_Mo
+       31A3  _Time_Adj_Y
+       388C  _cstrcpyLMM
+       3897  _cstrcpy
+       38B9  __plcall
+       38C5  _itoa
+       3A9E  _utoa
+       3BE1  _isdigit
+       3C02  _islower
+       3C23  _isspace
+       3C44  _toupper
+       3C82  _cprintf
+       3CC3  __cprint
+       41F9  __text_end
+       41F9  __xidata_start
+       420D  __xidata_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
@@ -373,7 +373,7 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            data   0000   0085 =    133. bytes (rel,con,ram)
+                            data   0000   0087 =    135. bytes (rel,con,ram)
 
        Addr  Global Symbol
       -----  --------------------------------
@@ -381,12 +381,12 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
        000F  _entries
        0091  _datetime
        0099  _menu
-       00A1  keypad.c:keypadMask
-       00A2  rtc.c:cr
-       00A3  keypad.c:keyStillPressed
-       00A4  _currentView
-       00A5  keypad.c:pressedKey
-       00A6  keypad.c:keyPressed
+       00A1  keypad.c:keyPressed
+       00A2  keypad.c:pressedKey
+       00A3  keypad.c:keypadMask
+       00A4  rtc.c:cr
+       00A5  keypad.c:keyStillPressed
+       00A6  _currentView
 
 Files Linked      [ module(s) ]
 
