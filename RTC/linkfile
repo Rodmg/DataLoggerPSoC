@@ -2,5 +2,5 @@
  -bdata:0.0x6ff -rwh:SSCParmBlk:0x00F7.0x00FF -BInterruptRAM:0 -Bvirtual_registers  
  -Brtc_RAM 
  -o"output/RTC" 
-obj/bcdutil.o obj/configview.o obj/datetimeview.o obj/dateutil.o obj/delay.o obj/eeprom.o obj/keypad.o obj/levelview.o obj/main.o obj/mainview.o obj/menu.o obj/persist.o obj/regtimeview.o obj/rtc.o obj/tempsensor.o obj/tempview.o obj/time.o obj/viewmanager.o 	
+obj/bcdutil.o obj/configview.o obj/datetimeview.o obj/dateutil.o obj/delay.o obj/eeprom.o obj/keypad.o obj/levelview.o obj/logger.o obj/main.o obj/mainview.o obj/menu.o obj/persist.o obj/regtimeview.o obj/rtc.o obj/tempsensor.o obj/tempview.o obj/time.o obj/viewmanager.o 	
  ./lib/libPSoc.a -LC:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/lib/LMM/eightpages C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/lib/CY8C29000/cms.a C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/lib/LMM/UASW/MAC/arith.a  

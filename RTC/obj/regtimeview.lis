@@ -6,7 +6,7 @@
  0000                   .dbfunc e RegTimeView_Start _RegTimeView_Start fV
  0000           _RegTimeView_Start::
  0000                   .dbline -1
- 0000                   .dbline 13
+ 0000                   .dbline 14
  0000           ; #include <m8c.h>        // part specific constants and macros
  0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
  0000           ; #include "regTimeView.h"
@@ -15,121 +15,640 @@
  0000           ; #include "BcdUtil.h"
  0000           ; #include "viewManager.h"
  0000           ; #include "Keypad.h"
+ 0000           ; #include "Persist.h"
  0000           ; 
  0000           ; extern CurrentView currentView;
  0000           ; 
  0000           ; void RegTimeView_Start(void)
  0000           ; {
  0000                   .dbline -2
- 0000           L4:
+ 0000           L10:
  0000                   .dbline 0 ; func end
  0000 7F                ret
  0001                   .dbend
  0001                   .dbfunc e RegTimeView_Callback _RegTimeView_Callback fV
  0001           _RegTimeView_Callback::
  0001                   .dbline -1
- 0001                   .dbline 18
+ 0001                   .dbline 19
  0001           ; 
  0001           ; }
  0001           ; 
  0001           ; void RegTimeView_Callback(void)
  0001           ; {
- 0001                   .dbline 19
+ 0001                   .dbline 20
  0001           ;       currentView = REGTIME_CONFIG;
  0001 62D000            mov REG[0xd0],>_currentView
  0004 550002            mov [_currentView],2
- 0007                   .dbline 20
+ 0007                   .dbline 21
  0007           ;       Menu_Clear();
  0007 7C0000            xcall _Menu_Clear
- 000A                   .dbline 21
- 000A           ;       LCD_Position(0, 0);
- 000A 10                push X
- 000B 5000              mov A,0
- 000D 5700              mov X,0
- 000F 7C0000            xcall _LCD_Position
- 0012                   .dbline 22
- 0012           ;       LCD_PrCString("Inicio: 00:00");
- 0012 500E              mov A,>L6
+ 000A                   .dbline -2
+ 000A           L11:
+ 000A                   .dbline 0 ; func end
+ 000A 7F                ret
+ 000B                   .dbend
+ 000B                   .dbfunc e RegTimeView_Update _RegTimeView_Update fV
+ 000B                   .dbstruct 0 1 .7
+ 000B                   .dbfield 0 registerEnabled F[0:1]
+ 000B                   .dbfield 0 alarmEnabled F[1:1]
+ 000B                   .dbend
+ 000B                   .dbstruct 0 2 .4
+ 000B                   .dbfield 0 hour c
+ 000B                   .dbfield 1 min c
+ 000B                   .dbend
+ 000B                   .dbstruct 0 11 .6
+ 000B                   .dbfield 0 flags S[.7]
+ 000B                   .dbfield 1 registerStart S[.4]
+ 000B                   .dbfield 3 registerEnd S[.4]
+ 000B                   .dbfield 5 maxTemp c
+ 000B                   .dbfield 6 minTemp c
+ 000B                   .dbfield 7 maxRegisteredTemp c
+ 000B                   .dbfield 8 minRegisteredTemp c
+ 000B                   .dbfield 9 nRecords s
+ 000B                   .dbend
+ 000B           ;      endHour10 -> X+18
+ 000B           ;    startHour10 -> X+17
+ 000B           ;       endMin10 -> X+16
+ 000B           ;     startMin10 -> X+15
+ 000B           ;        endHour -> X+14
+ 000B           ;      startHour -> X+13
+ 000B           ;         endMin -> X+12
+ 000B           ;       startMin -> X+11
+ 000B           ;           conf -> X+0
+ 000B           _RegTimeView_Update::
+ 000B                   .dbline -1
+ 000B 10                push X
+ 000C 4F                mov X,SP
+ 000D 3815              add SP,21
+ 000F                   .dbline 25
+ 000F           ; }
+ 000F           ; 
+ 000F           ; void RegTimeView_Update(void)
+ 000F           ; {
+ 000F                   .dbline 28
+ 000F           ;       BYTE startMin10, startMin, endMin10, endMin, startHour10, startHour, endHour10, endHour;
+ 000F           ;       Config conf;
+ 000F           ;       Persist_LoadConfig(&conf);
+ 000F 62D000            mov REG[0xd0],>__r0
+ 0012 5007              mov A,7
  0014 08                push A
- 0015 500E              mov A,<L6
- 0017 5C                mov X,A
- 0018 18                pop A
- 0019 7C0000            xcall _LCD_PrCString
- 001C                   .dbline 23
- 001C           ;       LCD_Position(1,0);
- 001C 5700              mov X,0
- 001E 5001              mov A,1
- 0020 7C0000            xcall _LCD_Position
- 0023                   .dbline 24
- 0023           ;       LCD_PrCString("Fin:    00:00");
- 0023 5000              mov A,>L7
- 0025 08                push A
- 0026 5000              mov A,<L7
- 0028 5C                mov X,A
- 0029 18                pop A
- 002A 7C0000            xcall _LCD_PrCString
- 002D 20                pop X
- 002E                   .dbline -2
- 002E           L5:
- 002E                   .dbline 0 ; func end
- 002E 7F                ret
- 002F                   .dbend
- 002F                   .dbfunc e RegTimeView_Update _RegTimeView_Update fV
- 002F           _RegTimeView_Update::
- 002F                   .dbline -1
- 002F 10                push X
- 0030 4F                mov X,SP
- 0031 3802              add SP,2
- 0033                   .dbline 28
- 0033           ; }
- 0033           ; 
- 0033           ; void RegTimeView_Update(void)
- 0033           ; {
- 0033                   .dbline 29
- 0033           ;       if(Keypad_IsKeyStored())
- 0033 7C0000            xcall _Keypad_IsKeyStored
- 0036 62D000            mov REG[0xd0],>__r0
- 0039 3900              cmp A,0
- 003B A01B              jz L9
- 003D                   .dbline 31
- 003D           ;       {
- 003D           ;               switch(Keypad_GetKey())
- 003D                   .dbline 31
- 003D 7C0000            xcall _Keypad_GetKey
- 0040 62D000            mov REG[0xd0],>__r0
- 0043 5401              mov [X+1],A
- 0045 560000            mov [X+0],0
- 0048 3D0000            cmp [X+0],0
- 004B B006              jnz X0
- 004D 3D0111            cmp [X+1],17
- 0050 A003              jz L14
- 0052           X0:
- 0052 8004              xjmp L11
- 0054           L14:
- 0054                   .dbline 35
- 0054           ;               {
- 0054           ;                       case 0x11:
- 0054           ;                               // "D"
- 0054           ;                               MainView_Callback();
- 0054 7C0000            xcall _MainView_Callback
- 0057                   .dbline 36
- 0057           ;                               return;
- 0057                   .dbline 37
- 0057           ;                               break;
- 0057           L11:
- 0057                   .dbline 39
- 0057           ;               }
- 0057           ;       }
- 0057           L9:
- 0057                   .dbline -2
- 0057           L8:
- 0057 38FE              add SP,-2
- 0059 20                pop X
- 005A                   .dbline 0 ; func end
- 005A 7F                ret
- 005B                   .dbend
+ 0015 10                push X
+ 0016 7C0000            xcall _Persist_LoadConfig
+ 0019 38FE              add SP,-2
+ 001B 62D000            mov REG[0xd0],>__r0
+ 001E                   .dbline 30
+ 001E           ;       
+ 001E           ;       if(Keypad_IsKeyStored())
+ 001E 7C0000            xcall _Keypad_IsKeyStored
+ 0021 62D000            mov REG[0xd0],>__r0
+ 0024 3900              cmp A,0
+ 0026 A16C              jz L13
+ 0028                   .dbline 32
+ 0028           ;       {
+ 0028           ;               switch(Keypad_GetKey())
+ 0028                   .dbline 32
+ 0028 7C0000            xcall _Keypad_GetKey
+ 002B 62D000            mov REG[0xd0],>__r0
+ 002E 5414              mov [X+20],A
+ 0030 561300            mov [X+19],0
+ 0033 5214              mov A,[X+20]
+ 0035 1128              sub A,40
+ 0037 5300              mov [__rY],A
+ 0039 5213              mov A,[X+19]
+ 003B 3180              xor A,-128
+ 003D 1980              sbb A,(0 ^ 0x80)
+ 003F 2A00              or A,[__rY]
+ 0041 A0E2              jz L42
+ 0043 D038              jnc L68
+ 0045           X0:
+ 0045           L67:
+ 0045 5214              mov A,[X+20]
+ 0047 1118              sub A,24
+ 0049 62D000            mov REG[0xd0],>__r0
+ 004C 5300              mov [__rY],A
+ 004E 5213              mov A,[X+19]
+ 0050 3180              xor A,-128
+ 0052 1980              sbb A,(0 ^ 0x80)
+ 0054 2A00              or A,[__rY]
+ 0056 A101              jz L54
+ 0058 D017              jnc L70
+ 005A           X1:
+ 005A           L69:
+ 005A 3D1300            cmp [X+19],0
+ 005D B006              jnz X2
+ 005F 3D1411            cmp [X+20],17
+ 0062 A12B              jz L66
+ 0064           X2:
+ 0064 3D1300            cmp [X+19],0
+ 0067 B006              jnz X3
+ 0069 3D1414            cmp [X+20],20
+ 006C A106              jz L59
+ 006E           X3:
+ 006E 8124              xjmp L15
+ 0070           L70:
+ 0070 3D1300            cmp [X+19],0
+ 0073 B006              jnz X4
+ 0075 3D1424            cmp [X+20],36
+ 0078 A0C5              jz L47
+ 007A           X4:
+ 007A 8118              xjmp L15
+ 007C           L68:
+ 007C 5214              mov A,[X+20]
+ 007E 1148              sub A,72
+ 0080 62D000            mov REG[0xd0],>__r0
+ 0083 5300              mov [__rY],A
+ 0085 5213              mov A,[X+19]
+ 0087 3180              xor A,-128
+ 0089 1980              sbb A,(0 ^ 0x80)
+ 008B 2A00              or A,[__rY]
+ 008D A060              jz L30
+ 008F D00D              jnc L72
+ 0091           X5:
+ 0091           L71:
+ 0091 3D1300            cmp [X+19],0
+ 0094 B006              jnz X6
+ 0096 3D1444            cmp [X+20],68
+ 0099 A06F              jz L35
+ 009B           X6:
+ 009B 80F7              xjmp L15
+ 009D           L72:
+ 009D 5214              mov A,[X+20]
+ 009F 1184              sub A,-124
+ 00A1 62D000            mov REG[0xd0],>__r0
+ 00A4 5300              mov [__rY],A
+ 00A6 5213              mov A,[X+19]
+ 00A8 3180              xor A,-128
+ 00AA 1980              sbb A,(0 ^ 0x80)
+ 00AC C0E6              jc L15
+ 00AE 2A00              or A,[__rY]
+ 00B0 A027              jz L23
+ 00B2           X7:
+ 00B2           L73:
+ 00B2 3D1300            cmp [X+19],0
+ 00B5 B006              jnz X8
+ 00B7 3D1488            cmp [X+20],-120
+ 00BA A003              jz L18
+ 00BC           X8:
+ 00BC 80D6              xjmp L15
+ 00BE           L18:
+ 00BE                   .dbline 37
+ 00BE           ;               {
+ 00BE           ;                       case 0x88:
+ 00BE           ;                               // "1"
+ 00BE           ;                               // start h up
+ 00BE           ;                               if(conf.registerStart.hour < 23)
+ 00BE 3D0117            cmp [X+1],23
+ 00C1 D003              jnc L19
+ 00C3           X9:
+ 00C3                   .dbline 39
+ 00C3           ;                               {
+ 00C3           ;                                       conf.registerStart.hour++;
+ 00C3                   .dbline 39
+ 00C3 7701              inc [X+1]
+ 00C5                   .dbline 40
+ 00C5           ;                               }
+ 00C5           L19:
+ 00C5                   .dbline 41
+ 00C5           ;                               Persist_SaveConfig(&conf);
+ 00C5 62D000            mov REG[0xd0],>__r0
+ 00C8 5007              mov A,7
+ 00CA 08                push A
+ 00CB 10                push X
+ 00CC 7C0000            xcall _Persist_SaveConfig
+ 00CF 38FE              add SP,-2
+ 00D1 62D000            mov REG[0xd0],>__r0
+ 00D4 5300              mov [__r0],A
+ 00D6                   .dbline 42
+ 00D6           ;                               break;
+ 00D6 80BC              xjmp L16
+ 00D8           L23:
+ 00D8                   .dbline 46
+ 00D8           ;                       case 0x84:
+ 00D8           ;                               // "2"
+ 00D8           ;                               // start min up
+ 00D8           ;                               if(conf.registerStart.min < 59)
+ 00D8 3D023B            cmp [X+2],59
+ 00DB D003              jnc L24
+ 00DD           X10:
+ 00DD                   .dbline 48
+ 00DD           ;                               {
+ 00DD           ;                                       conf.registerStart.min++;
+ 00DD                   .dbline 48
+ 00DD 7702              inc [X+2]
+ 00DF                   .dbline 49
+ 00DF           ;                               }
+ 00DF           L24:
+ 00DF                   .dbline 50
+ 00DF           ;                               Persist_SaveConfig(&conf);
+ 00DF 62D000            mov REG[0xd0],>__r0
+ 00E2 5007              mov A,7
+ 00E4 08                push A
+ 00E5 10                push X
+ 00E6 7C0000            xcall _Persist_SaveConfig
+ 00E9 38FE              add SP,-2
+ 00EB 62D000            mov REG[0xd0],>__r0
+ 00EE           L30:
+ 00EE                   .dbline 54
+ 00EE           ;                       case 0x48:
+ 00EE           ;                               // "4"
+ 00EE           ;                               // start h down
+ 00EE           ;                               if(conf.registerStart.hour > 0)
+ 00EE 5000              mov A,0
+ 00F0 3B01              cmp A,[X+1]
+ 00F2 D003              jnc L31
+ 00F4           X11:
+ 00F4                   .dbline 56
+ 00F4           ;                               {
+ 00F4           ;                                       conf.registerStart.hour--;
+ 00F4                   .dbline 56
+ 00F4 7B01              dec [X+1]
+ 00F6                   .dbline 57
+ 00F6           ;                               }
+ 00F6           L31:
+ 00F6                   .dbline 58
+ 00F6           ;                               Persist_SaveConfig(&conf);
+ 00F6 62D000            mov REG[0xd0],>__r0
+ 00F9 5007              mov A,7
+ 00FB 08                push A
+ 00FC 10                push X
+ 00FD 7C0000            xcall _Persist_SaveConfig
+ 0100 38FE              add SP,-2
+ 0102 62D000            mov REG[0xd0],>__r0
+ 0105 5300              mov [__r0],A
+ 0107                   .dbline 59
+ 0107           ;                               break;
+ 0107 808B              xjmp L16
+ 0109           L35:
+ 0109                   .dbline 63
+ 0109           ;                       case 0x44:
+ 0109           ;                               // "5"
+ 0109           ;                               // start min down
+ 0109           ;                               if(conf.registerStart.min > 0)
+ 0109 5000              mov A,0
+ 010B 3B02              cmp A,[X+2]
+ 010D D003              jnc L36
+ 010F           X12:
+ 010F                   .dbline 65
+ 010F           ;                               {
+ 010F           ;                                       conf.registerStart.min--;
+ 010F                   .dbline 65
+ 010F 7B02              dec [X+2]
+ 0111                   .dbline 66
+ 0111           ;                               }
+ 0111           L36:
+ 0111                   .dbline 67
+ 0111           ;                               Persist_SaveConfig(&conf);
+ 0111 62D000            mov REG[0xd0],>__r0
+ 0114 5007              mov A,7
+ 0116 08                push A
+ 0117 10                push X
+ 0118 7C0000            xcall _Persist_SaveConfig
+ 011B 38FE              add SP,-2
+ 011D 62D000            mov REG[0xd0],>__r0
+ 0120 5300              mov [__r0],A
+ 0122                   .dbline 68
+ 0122           ;                               break;
+ 0122 8070              xjmp L16
+ 0124           L42:
+ 0124                   .dbline 72
+ 0124           ;                       case 0x28:
+ 0124           ;                               // "7"
+ 0124           ;                               // end h up
+ 0124           ;                               if(conf.registerEnd.hour < 23)
+ 0124 3D0317            cmp [X+3],23
+ 0127 D003              jnc L43
+ 0129           X13:
+ 0129                   .dbline 74
+ 0129           ;                               {
+ 0129           ;                                       conf.registerEnd.hour++;
+ 0129                   .dbline 74
+ 0129 7703              inc [X+3]
+ 012B                   .dbline 75
+ 012B           ;                               }
+ 012B           L43:
+ 012B                   .dbline 76
+ 012B           ;                               Persist_SaveConfig(&conf);
+ 012B 62D000            mov REG[0xd0],>__r0
+ 012E 5007              mov A,7
+ 0130 08                push A
+ 0131 10                push X
+ 0132 7C0000            xcall _Persist_SaveConfig
+ 0135 38FE              add SP,-2
+ 0137 62D000            mov REG[0xd0],>__r0
+ 013A 5300              mov [__r0],A
+ 013C                   .dbline 77
+ 013C           ;                               break;
+ 013C 8056              xjmp L16
+ 013E           L47:
+ 013E                   .dbline 81
+ 013E           ;                       case 0x24:
+ 013E           ;                               // "8"
+ 013E           ;                               // end min up
+ 013E           ;                               if(conf.registerEnd.min < 59)
+ 013E 3D043B            cmp [X+4],59
+ 0141 D003              jnc L48
+ 0143           X14:
+ 0143                   .dbline 83
+ 0143           ;                               {
+ 0143           ;                                       conf.registerEnd.min++;
+ 0143                   .dbline 83
+ 0143 7704              inc [X+4]
+ 0145                   .dbline 84
+ 0145           ;                               }
+ 0145           L48:
+ 0145                   .dbline 85
+ 0145           ;                               Persist_SaveConfig(&conf);
+ 0145 62D000            mov REG[0xd0],>__r0
+ 0148 5007              mov A,7
+ 014A 08                push A
+ 014B 10                push X
+ 014C 7C0000            xcall _Persist_SaveConfig
+ 014F 38FE              add SP,-2
+ 0151 62D000            mov REG[0xd0],>__r0
+ 0154 5300              mov [__r0],A
+ 0156                   .dbline 86
+ 0156           ;                               break;
+ 0156 803C              xjmp L16
+ 0158           L54:
+ 0158                   .dbline 90
+ 0158           ;                       case 0x18:
+ 0158           ;                               // "*"
+ 0158           ;                               // end h down
+ 0158           ;                               if(conf.registerEnd.hour > 0)
+ 0158 5000              mov A,0
+ 015A 3B03              cmp A,[X+3]
+ 015C D003              jnc L55
+ 015E           X15:
+ 015E                   .dbline 92
+ 015E           ;                               {
+ 015E           ;                                       conf.registerEnd.hour--;
+ 015E                   .dbline 92
+ 015E 7B03              dec [X+3]
+ 0160                   .dbline 93
+ 0160           ;                               }
+ 0160           L55:
+ 0160                   .dbline 94
+ 0160           ;                               Persist_SaveConfig(&conf);
+ 0160 62D000            mov REG[0xd0],>__r0
+ 0163 5007              mov A,7
+ 0165 08                push A
+ 0166 10                push X
+ 0167 7C0000            xcall _Persist_SaveConfig
+ 016A 38FE              add SP,-2
+ 016C 62D000            mov REG[0xd0],>__r0
+ 016F 5300              mov [__r0],A
+ 0171                   .dbline 95
+ 0171           ;                               break;
+ 0171 8021              xjmp L16
+ 0173           L59:
+ 0173                   .dbline 99
+ 0173           ;                       case 0x14:
+ 0173           ;                               // "0"
+ 0173           ;                               // end min down
+ 0173           ;                               if(conf.registerEnd.min > 0)
+ 0173 5000              mov A,0
+ 0175 3B04              cmp A,[X+4]
+ 0177 D003              jnc L60
+ 0179           X16:
+ 0179                   .dbline 101
+ 0179           ;                               {
+ 0179           ;                                       conf.registerEnd.min--;
+ 0179                   .dbline 101
+ 0179 7B04              dec [X+4]
+ 017B                   .dbline 102
+ 017B           ;                               }
+ 017B           L60:
+ 017B                   .dbline 103
+ 017B           ;                               Persist_SaveConfig(&conf);
+ 017B 62D000            mov REG[0xd0],>__r0
+ 017E 5007              mov A,7
+ 0180 08                push A
+ 0181 10                push X
+ 0182 7C0000            xcall _Persist_SaveConfig
+ 0185 38FE              add SP,-2
+ 0187 62D000            mov REG[0xd0],>__r0
+ 018A 5300              mov [__r0],A
+ 018C                   .dbline 104
+ 018C           ;                               break;
+ 018C 8006              xjmp L16
+ 018E           L66:
+ 018E                   .dbline 107
+ 018E           ;                       case 0x11:
+ 018E           ;                               // "D"
+ 018E           ;                               MainView_Callback();
+ 018E 7C0000            xcall _MainView_Callback
+ 0191                   .dbline 108
+ 0191           ;                               return;
+ 0191 8100              xjmp L12
+ 0193           L15:
+ 0193           L16:
+ 0193                   .dbline 111
+ 0193           ;                               break;
+ 0193           ;               }
+ 0193           ;       }
+ 0193           L13:
+ 0193                   .dbline 113
+ 0193           ;       
+ 0193           ;       decToBcd(&startHour10, &startHour, conf.registerStart.hour);
+ 0193 5201              mov A,[X+1]
+ 0195 08                push A
+ 0196 62D000            mov REG[0xd0],>__r0
+ 0199 5A00              mov [__r1],X
+ 019B 06000D            add [__r1],13
+ 019E 5007              mov A,7
+ 01A0 08                push A
+ 01A1 5100              mov A,[__r1]
+ 01A3 08                push A
+ 01A4 5A00              mov [__r1],X
+ 01A6 060011            add [__r1],17
+ 01A9 5007              mov A,7
+ 01AB 08                push A
+ 01AC 5100              mov A,[__r1]
+ 01AE 08                push A
+ 01AF 7C0000            xcall _decToBcd
+ 01B2                   .dbline 114
+ 01B2           ;       startHour = (startHour10 << 4) | startHour;
+ 01B2 5211              mov A,[X+17]
+ 01B4 62D000            mov REG[0xd0],>__r0
+ 01B7 64                asl A
+ 01B8 64                asl A
+ 01B9 64                asl A
+ 01BA 64                asl A
+ 01BB 2B0D              or A,[X+13]
+ 01BD 540D              mov [X+13],A
+ 01BF                   .dbline 115
+ 01BF           ;       decToBcd(&startMin10, &startMin, conf.registerStart.min);
+ 01BF 5202              mov A,[X+2]
+ 01C1 08                push A
+ 01C2 5A00              mov [__r1],X
+ 01C4 06000B            add [__r1],11
+ 01C7 5007              mov A,7
+ 01C9 08                push A
+ 01CA 5100              mov A,[__r1]
+ 01CC 08                push A
+ 01CD 5A00              mov [__r1],X
+ 01CF 06000F            add [__r1],15
+ 01D2 5007              mov A,7
+ 01D4 08                push A
+ 01D5 5100              mov A,[__r1]
+ 01D7 08                push A
+ 01D8 7C0000            xcall _decToBcd
+ 01DB 38F6              add SP,-10
+ 01DD                   .dbline 116
+ 01DD           ;       startMin = (startMin10 << 4) | startMin;
+ 01DD 520F              mov A,[X+15]
+ 01DF 62D000            mov REG[0xd0],>__r0
+ 01E2 64                asl A
+ 01E3 64                asl A
+ 01E4 64                asl A
+ 01E5 64                asl A
+ 01E6 2B0B              or A,[X+11]
+ 01E8 540B              mov [X+11],A
+ 01EA                   .dbline 118
+ 01EA           ;       
+ 01EA           ;       decToBcd(&endHour10, &endHour, conf.registerEnd.hour);
+ 01EA 5203              mov A,[X+3]
+ 01EC 08                push A
+ 01ED 5A00              mov [__r1],X
+ 01EF 06000E            add [__r1],14
+ 01F2 5007              mov A,7
+ 01F4 08                push A
+ 01F5 5100              mov A,[__r1]
+ 01F7 08                push A
+ 01F8 5A00              mov [__r1],X
+ 01FA 060012            add [__r1],18
+ 01FD 5007              mov A,7
+ 01FF 08                push A
+ 0200 5100              mov A,[__r1]
+ 0202 08                push A
+ 0203 7C0000            xcall _decToBcd
+ 0206                   .dbline 119
+ 0206           ;       endHour = (endHour10 << 4) | endHour;
+ 0206 5212              mov A,[X+18]
+ 0208 62D000            mov REG[0xd0],>__r0
+ 020B 64                asl A
+ 020C 64                asl A
+ 020D 64                asl A
+ 020E 64                asl A
+ 020F 2B0E              or A,[X+14]
+ 0211 540E              mov [X+14],A
+ 0213                   .dbline 120
+ 0213           ;       decToBcd(&endMin10, &endMin, conf.registerEnd.min);
+ 0213 5204              mov A,[X+4]
+ 0215 08                push A
+ 0216 5A00              mov [__r1],X
+ 0218 06000C            add [__r1],12
+ 021B 5007              mov A,7
+ 021D 08                push A
+ 021E 5100              mov A,[__r1]
+ 0220 08                push A
+ 0221 5A00              mov [__r1],X
+ 0223 060010            add [__r1],16
+ 0226 5007              mov A,7
+ 0228 08                push A
+ 0229 5100              mov A,[__r1]
+ 022B 08                push A
+ 022C 7C0000            xcall _decToBcd
+ 022F 38F6              add SP,-10
+ 0231                   .dbline 121
+ 0231           ;       endMin = (endMin10 << 4) | endMin;
+ 0231 5210              mov A,[X+16]
+ 0233 62D000            mov REG[0xd0],>__r0
+ 0236 64                asl A
+ 0237 64                asl A
+ 0238 64                asl A
+ 0239 64                asl A
+ 023A 2B0C              or A,[X+12]
+ 023C 540C              mov [X+12],A
+ 023E                   .dbline 123
+ 023E           ;       
+ 023E           ;       LCD_Position(0, 0);
+ 023E 10                push X
+ 023F 5000              mov A,0
+ 0241 5700              mov X,0
+ 0243 7C0000            xcall _LCD_Position
+ 0246                   .dbline 124
+ 0246           ;       LCD_PrCString("Inicio: ");
+ 0246 500B              mov A,>L80
+ 0248 08                push A
+ 0249 500B              mov A,<L80
+ 024B 5C                mov X,A
+ 024C 18                pop A
+ 024D 7C0000            xcall _LCD_PrCString
+ 0250 20                pop X
+ 0251                   .dbline 125
+ 0251           ;       LCD_PrHexByte(startHour);
+ 0251 10                push X
+ 0252 520D              mov A,[X+13]
+ 0254 7C0000            xcall _LCD_PrHexByte
+ 0257                   .dbline 126
+ 0257           ;       LCD_PrCString(":");
+ 0257 5009              mov A,>L81
+ 0259 08                push A
+ 025A 5009              mov A,<L81
+ 025C 5C                mov X,A
+ 025D 18                pop A
+ 025E 7C0000            xcall _LCD_PrCString
+ 0261 20                pop X
+ 0262                   .dbline 127
+ 0262           ;       LCD_PrHexByte(startMin);
+ 0262 10                push X
+ 0263 520B              mov A,[X+11]
+ 0265 7C0000            xcall _LCD_PrHexByte
+ 0268                   .dbline 128
+ 0268           ;       LCD_Position(1,0);
+ 0268 5700              mov X,0
+ 026A 5001              mov A,1
+ 026C 7C0000            xcall _LCD_Position
+ 026F                   .dbline 129
+ 026F           ;       LCD_PrCString("Fin:    ");
+ 026F 5000              mov A,>L82
+ 0271 08                push A
+ 0272 5000              mov A,<L82
+ 0274 5C                mov X,A
+ 0275 18                pop A
+ 0276 7C0000            xcall _LCD_PrCString
+ 0279 20                pop X
+ 027A                   .dbline 130
+ 027A           ;       LCD_PrHexByte(endHour);
+ 027A 10                push X
+ 027B 520E              mov A,[X+14]
+ 027D 7C0000            xcall _LCD_PrHexByte
+ 0280                   .dbline 131
+ 0280           ;       LCD_PrCString(":");
+ 0280 5009              mov A,>L81
+ 0282 08                push A
+ 0283 5009              mov A,<L81
+ 0285 5C                mov X,A
+ 0286 18                pop A
+ 0287 7C0000            xcall _LCD_PrCString
+ 028A 20                pop X
+ 028B                   .dbline 132
+ 028B           ;       LCD_PrHexByte(endMin);
+ 028B 10                push X
+ 028C 520C              mov A,[X+12]
+ 028E 7C0000            xcall _LCD_PrHexByte
+ 0291 20                pop X
+ 0292                   .dbline -2
+ 0292           L12:
+ 0292 38EB              add SP,-21
+ 0294 20                pop X
+ 0295                   .dbline 0 ; func end
+ 0295 7F                ret
+ 0296                   .dbsym l endHour10 18 c
+ 0296                   .dbsym l startHour10 17 c
+ 0296                   .dbsym l endMin10 16 c
+ 0296                   .dbsym l startMin10 15 c
+ 0296                   .dbsym l endHour 14 c
+ 0296                   .dbsym l startHour 13 c
+ 0296                   .dbsym l endMin 12 c
+ 0296                   .dbsym l startMin 11 c
+ 0296                   .dbsym l conf 0 S[.6]
+ 0296                   .dbend
                         .area lit(rom, con, rel, lit)
- 0000           L7:
- 0000 46696E3A2020202030303A303000      .byte 'F,'i,'n,58,32,32,32,32,48,48,58,48,48,0
- 000E           L6:
- 000E 496E6963696F3A2030303A303000      .byte 'I,'n,'i,'c,'i,'o,58,32,48,48,58,48,48,0
+ 0000           L82:
+ 0000 46696E3A2020202000        .byte 'F,'i,'n,58,32,32,32,32,0
+ 0009           L81:
+ 0009 3A00              .byte 58,0
+ 000B           L80:
+ 000B 496E6963696F3A2000        .byte 'I,'n,'i,'c,'i,'o,58,32,0

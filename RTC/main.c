@@ -15,6 +15,7 @@
 #include "configView.h"
 #include "TempSensor.h"
 #include "TempView.h"
+#include "Logger.h"
 #include <string.h>
 
 extern CurrentView currentView;
@@ -36,6 +37,7 @@ void main(void)
 	LevelView_Start();
 	ConfigView_Start();
 	TempSensor_Start();
+	Logger_Start();
 
 	UART_Start(UART_PARITY_NONE);
 	UART_IntCntl(UART_ENABLE_RX_INT);
@@ -67,6 +69,7 @@ void main(void)
 				TempView_Update();
 				break;
 		}
+		Logger_Loop();
 	}
 
 }

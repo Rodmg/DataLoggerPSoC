@@ -25,7 +25,7 @@ lib/uartint.asm
 
 lib/uartplus.asm
 
-!W C:\Users\Rod\Desktop\RTC\RTC\main.c(25):[warning] missing return value
+!W C:\Users\Rod\Desktop\RTC\RTC\main.c(26):[warning] missing return value
 
 ./boot.asm
 
@@ -59,12 +59,12 @@ LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
 
 idata dump at output/RTC.idata
 
-  ROM 47% full. 15269 out of 32768 bytes used (does not include absolute areas).
+  ROM 51% full. 16461 out of 32768 bytes used (does not include absolute areas).
 
   RAM 10% full. 167 bytes used (does not include stack usage).
 
 Built with ICCM8C STD V7.05.00
 
  
-RTC - 0 error(s) 1 warning(s) 10:20:16
+RTC - 0 error(s) 1 warning(s) 11:58:31
 

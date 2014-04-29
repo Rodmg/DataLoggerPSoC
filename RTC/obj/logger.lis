@@ -1,0 +1,560 @@
+ 0000                   cpu LMM
+                        .module logger.c
+                        .area text(rom, con, rel)
+ 0000                   .dbfile ./logger.c
+ 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\logger.c
+ 0000                   .dbfunc e Logger_Start _Logger_Start fV
+ 0000           _Logger_Start::
+ 0000                   .dbline -1
+ 0000                   .dbline 10
+ 0000           ; #include <m8c.h>        // part specific constants and macros
+ 0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
+ 0000           ; #include "Logger.h"
+ 0000           ; #include "TempSensor.h"
+ 0000           ; #include "Persist.h"
+ 0000           ; #include "Rtc.h"
+ 0000           ; #include "BcdUtil.h"
+ 0000           ; 
+ 0000           ; void Logger_Start(void)
+ 0000           ; {
+ 0000                   .dbline -2
+ 0000           L33:
+ 0000                   .dbline 0 ; func end
+ 0000 7F                ret
+ 0001                   .dbend
+ 0001                   .dbfunc e Logger_End _Logger_End fV
+ 0001           _Logger_End::
+ 0001                   .dbline -1
+ 0001                   .dbline 15
+ 0001           ;       
+ 0001           ; }
+ 0001           ; 
+ 0001           ; void Logger_End(void)
+ 0001           ; {
+ 0001                   .dbline -2
+ 0001           L34:
+ 0001                   .dbline 0 ; func end
+ 0001 7F                ret
+ 0002                   .dbend
+ 0002                   .dbfunc e Logger_Loop _Logger_Loop fV
+ 0002                   .dbstruct 0 1 .4
+ 0002                   .dbfield 0 registerEnabled F[8:1]
+ 0002                   .dbfield 0 alarmEnabled F[9:1]
+ 0002                   .dbend
+ 0002                   .dbstruct 0 2 .1
+ 0002                   .dbfield 0 hour c
+ 0002                   .dbfield 1 min c
+ 0002                   .dbend
+ 0002                   .dbstruct 0 11 .3
+ 0002                   .dbfield 0 flags S[.4]
+ 0002                   .dbfield 1 registerStart S[.1]
+ 0002                   .dbfield 3 registerEnd S[.1]
+ 0002                   .dbfield 5 maxTemp c
+ 0002                   .dbfield 6 minTemp c
+ 0002                   .dbfield 7 maxRegisteredTemp c
+ 0002                   .dbfield 8 minRegisteredTemp c
+ 0002                   .dbfield 9 nRecords s
+ 0002                   .dbend
+ 0002                   .dbstruct 0 3 .2
+ 0002                   .dbfield 0 date c
+ 0002                   .dbfield 1 month c
+ 0002                   .dbfield 2 year c
+ 0002                   .dbend
+ 0002                   .dbstruct 0 6 .6
+ 0002                   .dbfield 0 date S[.2]
+ 0002                   .dbfield 3 time S[.1]
+ 0002                   .dbfield 5 temp c
+ 0002                   .dbend
+ 0002           ;            now -> X+32
+ 0002           ;    currentYear -> X+31
+ 0002           ;   currentMonth -> X+30
+ 0002           ;    currentDate -> X+29
+ 0002           ;   timestampEnd -> X+27
+ 0002           ; timestampStart -> X+25
+ 0002           ;     currentMin -> X+24
+ 0002           ;    currentHour -> X+23
+ 0002           ;   timestampNow -> X+21
+ 0002           ;         record -> X+15
+ 0002           ; elapsedSeconds -> X+14
+ 0002           ; previousSecond -> X+13
+ 0002           ;  currentSecond -> X+12
+ 0002           ;    currentTemp -> X+11
+ 0002           ;           conf -> X+0
+ 0002           _Logger_Loop::
+ 0002                   .dbline -1
+ 0002 10                push X
+ 0003 4F                mov X,SP
+ 0004 3822              add SP,34
+ 0006                   .dbline 20
+ 0006           ;       
+ 0006           ; }
+ 0006           ; 
+ 0006           ; void Logger_Loop(void)
+ 0006           ; {
+ 0006                   .dbline 28
+ 0006           ;       BYTE currentTemp, elapsedSeconds, previousSecond, currentSecond;
+ 0006           ;       BYTE currentHour, currentMin, currentDate, currentMonth, currentYear;
+ 0006           ;       int timestampNow, timestampStart, timestampEnd;
+ 0006           ;       Time now;
+ 0006           ;       Config conf;
+ 0006           ;       Record record;
+ 0006           ;       
+ 0006           ;       Rtc_ReadFromRtc();
+ 0006 7C0000            xcall _Rtc_ReadFromRtc
+ 0009                   .dbline 31
+ 0009           ;       
+ 0009           ;       // Only proceed once in a second
+ 0009           ;       currentSecond = datetime._00h.bits.seconds;
+ 0009 62D000            mov REG[0xd0],>_datetime
+ 000C 5100              mov A,[_datetime]
+ 000E 210F              and A,15
+ 0010 62D000            mov REG[0xd0],>__r0
+ 0013 540C              mov [X+12],A
+ 0015                   .dbline 32
+ 0015           ;       if (currentSecond != previousSecond)
+ 0015 520C              mov A,[X+12]
+ 0017 3B0D              cmp A,[X+13]
+ 0019 A251              jz L36
+ 001B                   .dbline 34
+ 001B           ;       {
+ 001B           ;               previousSecond = currentSecond;
+ 001B                   .dbline 34
+ 001B 520C              mov A,[X+12]
+ 001D 540D              mov [X+13],A
+ 001F                   .dbline 35
+ 001F           ;               elapsedSeconds++;
+ 001F 770E              inc [X+14]
+ 0021                   .dbline 37
+ 0021           ;               
+ 0021           ;               Persist_LoadConfig(&conf);
+ 0021 5007              mov A,7
+ 0023 08                push A
+ 0024 10                push X
+ 0025 7C0000            xcall _Persist_LoadConfig
+ 0028 38FE              add SP,-2
+ 002A 62D000            mov REG[0xd0],>__r0
+ 002D                   .dbline 38
+ 002D           ;               currentTemp = TempSensor_GetTemp();
+ 002D 7C0000            xcall _TempSensor_GetTemp
+ 0030 62D000            mov REG[0xd0],>__r0
+ 0033 5100              mov A,[__r1]
+ 0035 540B              mov [X+11],A
+ 0037                   .dbline 41
+ 0037           ;               
+ 0037           ;               // Get max and min temperatures
+ 0037           ;               if (currentTemp > conf.maxRegisteredTemp)
+ 0037 5207              mov A,[X+7]
+ 0039 3B0B              cmp A,[X+11]
+ 003B D014              jnc L38
+ 003D           X0:
+ 003D                   .dbline 43
+ 003D           ;               {
+ 003D           ;                       conf.maxRegisteredTemp = currentTemp;
+ 003D                   .dbline 43
+ 003D 520B              mov A,[X+11]
+ 003F 5407              mov [X+7],A
+ 0041                   .dbline 44
+ 0041           ;                       Persist_SaveConfig(&conf);
+ 0041 62D000            mov REG[0xd0],>__r0
+ 0044 5007              mov A,7
+ 0046 08                push A
+ 0047 10                push X
+ 0048 7C0000            xcall _Persist_SaveConfig
+ 004B 38FE              add SP,-2
+ 004D 62D000            mov REG[0xd0],>__r0
+ 0050                   .dbline 45
+ 0050           ;               }
+ 0050           L38:
+ 0050                   .dbline 46
+ 0050           ;               if (currentTemp < conf.minRegisteredTemp)
+ 0050 520B              mov A,[X+11]
+ 0052 3B08              cmp A,[X+8]
+ 0054 D014              jnc L42
+ 0056           X1:
+ 0056                   .dbline 48
+ 0056           ;               {
+ 0056           ;                       conf.minRegisteredTemp = currentTemp;
+ 0056                   .dbline 48
+ 0056 520B              mov A,[X+11]
+ 0058 5408              mov [X+8],A
+ 005A                   .dbline 49
+ 005A           ;                       Persist_SaveConfig(&conf);
+ 005A 62D000            mov REG[0xd0],>__r0
+ 005D 5007              mov A,7
+ 005F 08                push A
+ 0060 10                push X
+ 0061 7C0000            xcall _Persist_SaveConfig
+ 0064 38FE              add SP,-2
+ 0066 62D000            mov REG[0xd0],>__r0
+ 0069                   .dbline 50
+ 0069           ;               }
+ 0069           L42:
+ 0069                   .dbline 53
+ 0069           ;       
+ 0069           ;               // Once in a minute
+ 0069           ;               if(conf.flags.registerEnabled && elapsedSeconds > 59)
+ 0069 5200              mov A,[X+0]
+ 006B 62D000            mov REG[0xd0],>__r0
+ 006E 67                asr A
+ 006F 67                asr A
+ 0070 67                asr A
+ 0071 67                asr A
+ 0072 67                asr A
+ 0073 67                asr A
+ 0074 67                asr A
+ 0075 2101              and A,1
+ 0077 5300              mov [__r0],A
+ 0079 260001            and [__r0],1
+ 007C A1CE              jz L46
+ 007E 503B              mov A,59
+ 0080 3B0E              cmp A,[X+14]
+ 0082 D1C8              jnc L46
+ 0084           X2:
+ 0084                   .dbline 55
+ 0084           ;               {
+ 0084           ;                       elapsedSeconds = 0;
+ 0084                   .dbline 55
+ 0084 560E00            mov [X+14],0
+ 0087                   .dbline 57
+ 0087           ;                       
+ 0087           ;                       bcdToDec((datetime._02h.bits_24hrs.hours10), (datetime._02h.bits_24hrs.hours), &currentHour);
+ 0087 62D000            mov REG[0xd0],>__r0
+ 008A 5A00              mov [__r1],X
+ 008C 060017            add [__r1],23
+ 008F 5007              mov A,7
+ 0091 08                push A
+ 0092 5100              mov A,[__r1]
+ 0094 08                push A
+ 0095 62D000            mov REG[0xd0],>_datetime
+ 0098 5102              mov A,[_datetime+2]
+ 009A 210F              and A,15
+ 009C 08                push A
+ 009D 5102              mov A,[_datetime+2]
+ 009F 62D000            mov REG[0xd0],>__r0
+ 00A2 67                asr A
+ 00A3 67                asr A
+ 00A4 67                asr A
+ 00A5 67                asr A
+ 00A6 210F              and A,15
+ 00A8 5300              mov [__r0],A
+ 00AA 260003            and [__r0],3
+ 00AD 5100              mov A,[__r0]
+ 00AF 08                push A
+ 00B0 7C0000            xcall _bcdToDec
+ 00B3 38FC              add SP,-4
+ 00B5                   .dbline 58
+ 00B5           ;                       bcdToDec((datetime._01h.bits.minutes10), (datetime._01h.bits.minutes), &currentMin);
+ 00B5 62D000            mov REG[0xd0],>__r0
+ 00B8 5A00              mov [__r1],X
+ 00BA 060018            add [__r1],24
+ 00BD 5007              mov A,7
+ 00BF 08                push A
+ 00C0 5100              mov A,[__r1]
+ 00C2 08                push A
+ 00C3 62D000            mov REG[0xd0],>_datetime
+ 00C6 5101              mov A,[_datetime+1]
+ 00C8 210F              and A,15
+ 00CA 08                push A
+ 00CB 5101              mov A,[_datetime+1]
+ 00CD 62D000            mov REG[0xd0],>__r0
+ 00D0 67                asr A
+ 00D1 67                asr A
+ 00D2 67                asr A
+ 00D3 67                asr A
+ 00D4 210F              and A,15
+ 00D6 5300              mov [__r0],A
+ 00D8 260007            and [__r0],7
+ 00DB 5100              mov A,[__r0]
+ 00DD 08                push A
+ 00DE 7C0000            xcall _bcdToDec
+ 00E1                   .dbline 59
+ 00E1           ;                       bcdToDec((datetime._04h.bits.date10), (datetime._04h.bits.date), &currentDate);
+ 00E1 62D000            mov REG[0xd0],>__r0
+ 00E4 5A00              mov [__r1],X
+ 00E6 06001D            add [__r1],29
+ 00E9 5007              mov A,7
+ 00EB 08                push A
+ 00EC 5100              mov A,[__r1]
+ 00EE 08                push A
+ 00EF 62D000            mov REG[0xd0],>_datetime
+ 00F2 5104              mov A,[_datetime+4]
+ 00F4 210F              and A,15
+ 00F6 08                push A
+ 00F7 5104              mov A,[_datetime+4]
+ 00F9 62D000            mov REG[0xd0],>__r0
+ 00FC 67                asr A
+ 00FD 67                asr A
+ 00FE 67                asr A
+ 00FF 67                asr A
+ 0100 210F              and A,15
+ 0102 5300              mov [__r0],A
+ 0104 260003            and [__r0],3
+ 0107 5100              mov A,[__r0]
+ 0109 08                push A
+ 010A 7C0000            xcall _bcdToDec
+ 010D 38F8              add SP,-8
+ 010F                   .dbline 60
+ 010F           ;                       bcdToDec((datetime._05h.bits.month10), (datetime._05h.bits.month), &currentMonth);
+ 010F 62D000            mov REG[0xd0],>__r0
+ 0112 5A00              mov [__r1],X
+ 0114 06001E            add [__r1],30
+ 0117 5007              mov A,7
+ 0119 08                push A
+ 011A 5100              mov A,[__r1]
+ 011C 08                push A
+ 011D 62D000            mov REG[0xd0],>_datetime
+ 0120 5105              mov A,[_datetime+5]
+ 0122 210F              and A,15
+ 0124 08                push A
+ 0125 5105              mov A,[_datetime+5]
+ 0127 62D000            mov REG[0xd0],>__r0
+ 012A 67                asr A
+ 012B 67                asr A
+ 012C 67                asr A
+ 012D 67                asr A
+ 012E 210F              and A,15
+ 0130 5300              mov [__r0],A
+ 0132 260001            and [__r0],1
+ 0135 5100              mov A,[__r0]
+ 0137 08                push A
+ 0138 7C0000            xcall _bcdToDec
+ 013B                   .dbline 61
+ 013B           ;                       bcdToDec((datetime._06h.bits.year10), (datetime._06h.bits.year), &currentYear);
+ 013B 62D000            mov REG[0xd0],>__r0
+ 013E 5A00              mov [__r1],X
+ 0140 06001F            add [__r1],31
+ 0143 5007              mov A,7
+ 0145 08                push A
+ 0146 5100              mov A,[__r1]
+ 0148 08                push A
+ 0149 62D000            mov REG[0xd0],>_datetime
+ 014C 5106              mov A,[_datetime+6]
+ 014E 210F              and A,15
+ 0150 08                push A
+ 0151 5106              mov A,[_datetime+6]
+ 0153 62D000            mov REG[0xd0],>__r0
+ 0156 67                asr A
+ 0157 67                asr A
+ 0158 67                asr A
+ 0159 67                asr A
+ 015A 210F              and A,15
+ 015C 5300              mov [__r0],A
+ 015E 26000F            and [__r0],15
+ 0161 5100              mov A,[__r0]
+ 0163 08                push A
+ 0164 7C0000            xcall _bcdToDec
+ 0167 38F8              add SP,-8
+ 0169                   .dbline 63
+ 0169           ;                       
+ 0169           ;                       timestampNow = currentHour*60 + currentMin;
+ 0169 62D000            mov REG[0xd0],>__r0
+ 016C 5218              mov A,[X+24]
+ 016E 5300              mov [__r1],A
+ 0170 550000            mov [__r0],0
+ 0173 5217              mov A,[X+23]
+ 0175 5300              mov [__r3],A
+ 0177 5000              mov A,0
+ 0179 08                push A
+ 017A 5100              mov A,[__r3]
+ 017C 08                push A
+ 017D 5000              mov A,0
+ 017F 08                push A
+ 0180 503C              mov A,60
+ 0182 08                push A
+ 0183 7C0000            xcall __mul16
+ 0186 38FC              add SP,-4
+ 0188 5100              mov A,[__rX]
+ 018A 5300              mov [__r3],A
+ 018C 5100              mov A,[__rY]
+ 018E 5300              mov [__r2],A
+ 0190 5100              mov A,[__r3]
+ 0192 0200              add A,[__r1]
+ 0194 5416              mov [X+22],A
+ 0196 5100              mov A,[__r2]
+ 0198 0A00              adc A,[__r0]
+ 019A 5415              mov [X+21],A
+ 019C                   .dbline 64
+ 019C           ;                       timestampStart = conf.registerStart.hour*60 + conf.registerStart.min;
+ 019C 5202              mov A,[X+2]
+ 019E 5300              mov [__r1],A
+ 01A0 5201              mov A,[X+1]
+ 01A2 5300              mov [__r3],A
+ 01A4 5000              mov A,0
+ 01A6 08                push A
+ 01A7 5100              mov A,[__r3]
+ 01A9 08                push A
+ 01AA 5000              mov A,0
+ 01AC 08                push A
+ 01AD 503C              mov A,60
+ 01AF 08                push A
+ 01B0 7C0000            xcall __mul16
+ 01B3 38FC              add SP,-4
+ 01B5 5100              mov A,[__rX]
+ 01B7 5300              mov [__r3],A
+ 01B9 5100              mov A,[__rY]
+ 01BB 5300              mov [__r2],A
+ 01BD 5100              mov A,[__r3]
+ 01BF 0200              add A,[__r1]
+ 01C1 541A              mov [X+26],A
+ 01C3 5100              mov A,[__r2]
+ 01C5 0A00              adc A,[__r0]
+ 01C7 5419              mov [X+25],A
+ 01C9                   .dbline 65
+ 01C9           ;                       timestampEnd = conf.registerEnd.hour*60 + conf.registerEnd.min;
+ 01C9 5204              mov A,[X+4]
+ 01CB 5300              mov [__r1],A
+ 01CD 5203              mov A,[X+3]
+ 01CF 5300              mov [__r3],A
+ 01D1 5000              mov A,0
+ 01D3 08                push A
+ 01D4 5100              mov A,[__r3]
+ 01D6 08                push A
+ 01D7 5000              mov A,0
+ 01D9 08                push A
+ 01DA 503C              mov A,60
+ 01DC 08                push A
+ 01DD 7C0000            xcall __mul16
+ 01E0 38FC              add SP,-4
+ 01E2 5100              mov A,[__rX]
+ 01E4 5300              mov [__r3],A
+ 01E6 5100              mov A,[__rY]
+ 01E8 5300              mov [__r2],A
+ 01EA 5100              mov A,[__r3]
+ 01EC 0200              add A,[__r1]
+ 01EE 541C              mov [X+28],A
+ 01F0 5100              mov A,[__r2]
+ 01F2 0A00              adc A,[__r0]
+ 01F4 541B              mov [X+27],A
+ 01F6                   .dbline 67
+ 01F6           ;                       
+ 01F6           ;                       if(timestampNow >= timestampStart && timestampNow < timestampEnd)
+ 01F6 5216              mov A,[X+22]
+ 01F8 131A              sub A,[X+26]
+ 01FA 5219              mov A,[X+25]
+ 01FC 3180              xor A,-128
+ 01FE 5300              mov [__rX],A
+ 0200 5215              mov A,[X+21]
+ 0202 3180              xor A,-128
+ 0204 1A00              sbb A,[__rX]
+ 0206 C044              jc L64
+ 0208           X3:
+ 0208 5216              mov A,[X+22]
+ 020A 131C              sub A,[X+28]
+ 020C 521B              mov A,[X+27]
+ 020E 3180              xor A,-128
+ 0210 62D000            mov REG[0xd0],>__r0
+ 0213 5300              mov [__rX],A
+ 0215 5215              mov A,[X+21]
+ 0217 3180              xor A,-128
+ 0219 1A00              sbb A,[__rX]
+ 021B D02F              jnc L64
+ 021D           X4:
+ 021D                   .dbline 70
+ 021D           ;                       {
+ 021D           ;                               // Log
+ 021D           ;                               record.temp = currentTemp;
+ 021D                   .dbline 70
+ 021D 520B              mov A,[X+11]
+ 021F 5414              mov [X+20],A
+ 0221                   .dbline 71
+ 0221           ;                               record.time.hour = currentHour;
+ 0221 5217              mov A,[X+23]
+ 0223 5412              mov [X+18],A
+ 0225                   .dbline 72
+ 0225           ;                               record.time.min = currentMin;
+ 0225 5218              mov A,[X+24]
+ 0227 5413              mov [X+19],A
+ 0229                   .dbline 73
+ 0229           ;                               record.date.date = currentDate;
+ 0229 521D              mov A,[X+29]
+ 022B 540F              mov [X+15],A
+ 022D                   .dbline 74
+ 022D           ;                               record.date.month = currentMonth;
+ 022D 521E              mov A,[X+30]
+ 022F 5410              mov [X+16],A
+ 0231                   .dbline 75
+ 0231           ;                               record.date.year = currentYear;
+ 0231 521F              mov A,[X+31]
+ 0233 5411              mov [X+17],A
+ 0235                   .dbline 76
+ 0235           ;                               Persist_SaveRecord(&record);
+ 0235 62D000            mov REG[0xd0],>__r0
+ 0238 5A00              mov [__r1],X
+ 023A 06000F            add [__r1],15
+ 023D 5007              mov A,7
+ 023F 08                push A
+ 0240 5100              mov A,[__r1]
+ 0242 08                push A
+ 0243 7C0000            xcall _Persist_SaveRecord
+ 0246 38FE              add SP,-2
+ 0248 62D000            mov REG[0xd0],>__r0
+ 024B                   .dbline 77
+ 024B           ;                       }
+ 024B           L64:
+ 024B                   .dbline 79
+ 024B           ;                       
+ 024B           ;               }
+ 024B           L46:
+ 024B                   .dbline 81
+ 024B           ;       
+ 024B           ;               if(conf.flags.alarmEnabled)
+ 024B 5200              mov A,[X+0]
+ 024D 62D000            mov REG[0xd0],>__r0
+ 0250 67                asr A
+ 0251 67                asr A
+ 0252 67                asr A
+ 0253 67                asr A
+ 0254 67                asr A
+ 0255 67                asr A
+ 0256 2103              and A,3
+ 0258 5300              mov [__r0],A
+ 025A 260001            and [__r0],1
+ 025D A00D              jz L72
+ 025F                   .dbline 83
+ 025F           ;               {
+ 025F           ;                       if(currentTemp > conf.maxTemp || currentTemp < conf.minTemp)
+ 025F                   .dbline 83
+ 025F 5205              mov A,[X+5]
+ 0261 3B0B              cmp A,[X+11]
+ 0263 C007              jc L78
+ 0265           X5:
+ 0265 520B              mov A,[X+11]
+ 0267 3B06              cmp A,[X+6]
+ 0269 D001              jnc L74
+ 026B           X6:
+ 026B           L78:
+ 026B                   .dbline 86
+ 026B           ;                       {
+ 026B           ;                               // Sound alarm
+ 026B           ;                       }
+ 026B                   .dbline 86
+ 026B           L74:
+ 026B                   .dbline 87
+ 026B           ;               }
+ 026B           L72:
+ 026B                   .dbline 89
+ 026B           ;               
+ 026B           ;       }
+ 026B           L36:
+ 026B                   .dbline -2
+ 026B           L35:
+ 026B 38DE              add SP,-34
+ 026D 20                pop X
+ 026E                   .dbline 0 ; func end
+ 026E 7F                ret
+ 026F                   .dbsym l now 32 S[.1]
+ 026F                   .dbsym l currentYear 31 c
+ 026F                   .dbsym l currentMonth 30 c
+ 026F                   .dbsym l currentDate 29 c
+ 026F                   .dbsym l timestampEnd 27 I
+ 026F                   .dbsym l timestampStart 25 I
+ 026F                   .dbsym l currentMin 24 c
+ 026F                   .dbsym l currentHour 23 c
+ 026F                   .dbsym l timestampNow 21 I
+ 026F                   .dbsym l record 15 S[.6]
+ 026F                   .dbsym l elapsedSeconds 14 c
+ 026F                   .dbsym l previousSecond 13 c
+ 026F                   .dbsym l currentSecond 12 c
+ 026F                   .dbsym l currentTemp 11 c
+ 026F                   .dbsym l conf 0 S[.3]
+ 026F                   .dbend

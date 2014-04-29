@@ -3,12 +3,14 @@
 
 #define MAX_RECORDS 5000
 
+// hour and min in dec
 typedef struct
 {
 	BYTE hour;
 	BYTE min;
 } Time;
 
+// date, month and year in dec, year 0-99
 typedef struct
 {
 	BYTE date;

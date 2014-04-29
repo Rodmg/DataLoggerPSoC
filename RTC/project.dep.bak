@@ -59,13 +59,21 @@
    C:\Users\Rod\Desktop\RTC\RTC\LEVELV~1.H\
    C:\Users\Rod\Desktop\RTC\RTC\mainView.h C:\Users\Rod\Desktop\RTC\RTC\menu.h\
    C:\Users\Rod\Desktop\RTC\RTC\VIEWMA~1.H
+./obj/logger.o :  ./lib/ADCINC.h ./lib/I2Cm.h ./lib/LCD.h ./lib/PGA.h\
+   ./lib/PSoCAPI.h ./lib/PSOCGP~1.H ./lib/TempBuf.h ./lib/UART.h\
+   C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/M8C.h\
+   C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.h\
+   C:\Users\Rod\Desktop\RTC\RTC\BcdUtil.h\
+   C:\Users\Rod\Desktop\RTC\RTC\Logger.h\
+   C:\Users\Rod\Desktop\RTC\RTC\Persist.h C:\Users\Rod\Desktop\RTC\RTC\Rtc.h\
+   C:\Users\Rod\Desktop\RTC\RTC\TEMPSE~1.H
 ./obj/main.o :  ./lib/ADCINC.h ./lib/I2Cm.h ./lib/LCD.h ./lib/PGA.h\
    ./lib/PSoCAPI.h ./lib/PSOCGP~1.H ./lib/TempBuf.h ./lib/UART.h\
    C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/M8C.h\
    C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.h\
    C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/_const.h\
    C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/string.h\
-   C:\Users\Rod\Desktop\RTC\RTC\Keypad.h\
+   C:\Users\Rod\Desktop\RTC\RTC\Keypad.h C:\Users\Rod\Desktop\RTC\RTC\Logger.h\
    C:\Users\Rod\Desktop\RTC\RTC\MainView.h\
    C:\Users\Rod\Desktop\RTC\RTC\Persist.h\
    C:\Users\Rod\Desktop\RTC\RTC\TEMPSE~1.H\
@@ -108,6 +116,7 @@
    C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1/m8c.h\
    C:\Users\Rod\Desktop\RTC\RTC\BcdUtil.h\
    C:\Users\Rod\Desktop\RTC\RTC\Keypad.h\
+   C:\Users\Rod\Desktop\RTC\RTC\Persist.h\
    C:\Users\Rod\Desktop\RTC\RTC\mainView.h C:\Users\Rod\Desktop\RTC\RTC\menu.h\
    C:\Users\Rod\Desktop\RTC\RTC\REGTIM~1.H\
    C:\Users\Rod\Desktop\RTC\RTC\VIEWMA~1.H
