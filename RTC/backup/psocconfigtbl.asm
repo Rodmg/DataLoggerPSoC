@@ -43,6 +43,7 @@ LoadConfigTBL_rtc_Bank0:
 	db		33h, 00h		;PWM8_CONTROL_REG(DBB10CR0)
 	db		31h, 06h		;PWM8_PERIOD_REG(DBB10DR1)
 	db		32h, 03h		;PWM8_COMPARE_REG(DBB10DR2)
+;  Instance name SHADOWREGS, User Module SHADOWREGS
 ;  Instance name TempBuf, User Module DigBuf
 ;       Instance name TempBuf, Block Name DigBuf(DBB01)
 	db		27h, 03h		;TempBuf_CONTROL_REG(DBB01CR0)
@@ -114,6 +115,7 @@ LoadConfigTBL_rtc_Bank1:
 	db		30h, 21h		;PWM8_FUNC_REG(DBB10FN)
 	db		31h, 17h		;PWM8_INPUT_REG(DBB10IN)
 	db		32h, 46h		;PWM8_OUTPUT_REG(DBB10OU)
+;  Instance name SHADOWREGS, User Module SHADOWREGS
 ;  Instance name TempBuf, User Module DigBuf
 ;       Instance name TempBuf, Block Name DigBuf(DBB01)
 	db		24h, 22h		;TempBuf_FUNC_REG(DBB01FN)

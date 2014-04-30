@@ -34,7 +34,7 @@ void Logger_Loop(void)
 	currentSecond = datetime._00h.bits.seconds;
 	if (currentSecond != previousSecond)
 	{
-		cprintf("Tick\n");
+		//cprintf("Tick\n");
 		
 		previousSecond = currentSecond;
 		elapsedSeconds++;
@@ -57,7 +57,7 @@ void Logger_Loop(void)
 		// Once in a minute
 		if(conf.flags.registerEnabled && elapsedSeconds > 59)
 		{
-			cprintf("Tock\n");
+			//cprintf("Tock\n");
 			
 			elapsedSeconds = 0;
 			
@@ -71,7 +71,9 @@ void Logger_Loop(void)
 			timestampStart = (int)(conf.registerStart.hour)*60 + conf.registerStart.min;
 			timestampEnd = (int)(conf.registerEnd.hour)*60 + conf.registerEnd.min;
 			
-			cprintf("Tiempos: %d %d %d\n", timestampNow, timestampStart, timestampEnd);
+			//cprintf("Horas: %d:%d - %d:%d\n", conf.registerStart.hour, conf.registerStart.min, conf.registerEnd.hour, conf.registerEnd.min);
+			
+			//cprintf("Tiempos: %d %d %d\n", timestampNow, timestampStart, timestampEnd);
 			
 			if(timestampNow >= timestampStart && timestampNow < timestampEnd)
 			{

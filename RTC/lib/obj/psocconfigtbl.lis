@@ -862,6 +862,7 @@
  0016 3300              db              33h, 00h                ;PWM8_CONTROL_REG(DBB10CR0)
  0018 3106              db              31h, 06h                ;PWM8_PERIOD_REG(DBB10DR1)
  001A 3203              db              32h, 03h                ;PWM8_COMPARE_REG(DBB10DR2)
+ 001C           ;  Instance name SHADOWREGS, User Module SHADOWREGS
  001C           ;  Instance name TempBuf, User Module DigBuf
  001C           ;       Instance name TempBuf, Block Name DigBuf(DBB01)
  001C 2703              db              27h, 03h                ;TempBuf_CONTROL_REG(DBB01CR0)
@@ -933,6 +934,7 @@
  0083 3021              db              30h, 21h                ;PWM8_FUNC_REG(DBB10FN)
  0085 3117              db              31h, 17h                ;PWM8_INPUT_REG(DBB10IN)
  0087 3246              db              32h, 46h                ;PWM8_OUTPUT_REG(DBB10OU)
+ 0089           ;  Instance name SHADOWREGS, User Module SHADOWREGS
  0089           ;  Instance name TempBuf, User Module DigBuf
  0089           ;       Instance name TempBuf, Block Name DigBuf(DBB01)
  0089 2422              db              24h, 22h                ;TempBuf_FUNC_REG(DBB01FN)
