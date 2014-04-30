@@ -17,7 +17,7 @@ S _MainView_Callback Ref0000
 S _currentView Ref0000
 A text size 296 flags 0
 dbfile ./regtimeview.c
-dbfile Z:\Desktop\RTC\RTC\regtimeview.c
+dbfile C:\Users\Rod\Desktop\RTC\RTC\regtimeview.c
 dbstruct 1 .7
 dbfield 0 registerEnabled F[0:1]
 dbfield 0 alarmEnabled F[1:1]

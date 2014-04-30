@@ -10,62 +10,52 @@ S _Persist_Clear Ref0000
 S _LCD_Position Ref0000
 S _MainView_Callback Ref0000
 S _currentView Ref0000
-A text size 54 flags 0
+A text size 4D flags 0
 dbfile ./deletview.c
-dbfile Z:\Desktop\RTC\RTC\deletview.c
+dbfile C:\Users\Rod\Desktop\RTC\RTC\deletview.c
 dbfunc e DeletView_Start 0 fV
 dbline FFFFFFFF 0
 dbline E 0
 dbline FFFFFFFE 0
 dbline 0 0
 dbfunc e DeletView_Callback 1 fV
-dbsym l num 4 c
-dbsym l bcd 3 c
-dbsym l bcd10 2 c
-dbsym l temp 0 I
 dbline FFFFFFFF 1
-dbline 13 5
-dbline 17 5
-dbline 18 B
-dbline 19 E
-dbline 1A 11
-dbline 1B 19
-dbline FFFFFFFE 24
-dbline 0 27
-dbfunc e DeletView_Update 28 fV
-dbsym l num 4 c
-dbsym l bcd 3 c
-dbsym l bcd10 2 c
-dbsym l temp 0 I
-dbline FFFFFFFF 28
-dbline 1F 2C
-dbline 23 2C
-dbline 25 36
-dbline 25 36
-dbline 29 4D
-dbline 2A 50
-dbline 2B 50
-dbline 2D 50
-dbline FFFFFFFE 50
-dbline 0 53
+dbline 13 1
+dbline 14 1
+dbline 15 7
+dbline 16 A
+dbline 17 D
+dbline 18 15
+dbline FFFFFFFE 20
+dbline 0 20
+dbfunc e DeletView_Update 21 fV
+dbline FFFFFFFF 21
+dbline 1C 25
+dbline 1D 25
+dbline 1F 2F
+dbline 1F 2F
+dbline 23 46
+dbline 24 49
+dbline 25 49
+dbline 27 49
+dbline FFFFFFFE 49
+dbline 0 4C
 S _DeletView_Callback Def0001
 S _DeletView_Start Def0000
-S _DeletView_Update Def0028
+S _DeletView_Update Def0021
 A lit size 10 flags 1
-T 00 00 7F 10 4F 38 05 62 D0 00 00 55 00 00 06 7C
-R 00 00 00 00 43 09 00 08 03 0C 00 08
-T 00 0C 00 00 7C 00 00 10 50 00 57 00 7C 00 00 50
-R 00 00 00 00 02 02 00 01 02 05 00 05 02 0D 00 06
-T 00 1A 00 00 08 50 00 00 5C 18 7C 00 00 20 38 FB
-R 00 00 00 00 41 02 00 01 01 06 00 01 02 0B 00 00
-T 00 26 20 7F 10 4F 38 07 7C 00 00 62 D0 00 00 39
-R 00 00 00 00 02 09 00 04 43 0D 00 02
-T 00 33 00 A0 1B 7C 00 00 62 D0 00 00 54 06 56 05
-R 00 00 00 00 02 06 00 03 43 0A 00 02
-T 00 40 00 3D 05 00 B0 06 3D 06 11 A0 03 80 04 7C
-R 00 00 00 00
-T 00 4E 00 00 38 F9 20 7F
-R 00 00 00 00 02 02 00 07
+T 00 00 7F 62 D0 00 00 55 00 00 06 7C 00 00 7C
+R 00 00 00 00 43 05 00 08 03 08 00 08 02 0C 00 01
+T 00 0B 00 00 10 50 00 57 00 7C 00 00 50 00 00 08
+R 00 00 00 00 02 02 00 05 02 0A 00 06 41 0D 00 01
+T 00 18 50 00 00 5C 18 7C 00 00 20 7F 10 4F 38 02
+R 00 00 00 00 01 03 00 01 02 08 00 00
+T 00 25 7C 00 00 62 D0 00 00 39 00 A0 1B 7C 00 00
+R 00 00 00 00 02 03 00 04 43 07 00 02 02 0E 00 03
+T 00 32 62 D0 00 00 54 01 56 00 00 3D 00 00 B0 06
+R 00 00 00 00 43 04 00 02
+T 00 3F 3D 01 11 A0 03 80 04 7C 00 00 38 FE 20 7F
+R 00 00 00 00 02 0A 00 07
 T 00 00 44 61 74 6F 73 20 42 6F 72 72 61 64 6F 73
 R 00 00 00 01
 T 00 0E 21 00

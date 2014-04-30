@@ -1,9 +1,9 @@
 PROJNAME=RTC
 DEVICE=CY8C29466
 BASEDEVICE=CY8C29000
-PROJPATH=Z:/Desktop/RTC/RTC
-PSOCDIR=C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1
-INCLUDE_PATH=C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1
+PROJPATH=C:/Users/Rod/Desktop/RTC/RTC
+PSOCDIR=C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1
+INCLUDE_PATH=C:/PROGRA~2/Cypress/PSOCDE~1/5.4/Common/CY110F~1/tools/include/CY8C29~1
 CSRCS= bcdutil.c configview.c datetimeview.c dateutil.c deletview.c eeprom.c keypad.c ledarray.c levelview.c logger.c main.c mainview.c menu.c persist.c regtimeview.c rtc.c tempsensor.c tempview.c time.c viewmanager.c
 LIBCSRCS=
 STDCSRCS=

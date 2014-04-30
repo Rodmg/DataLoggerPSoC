@@ -6,6 +6,7 @@
 #include "Rtc.h"
 #include "BcdUtil.h"
 #include "LedArray.h"
+#include <stdio.h>
 
 void Logger_Start(void)
 {
@@ -33,6 +34,8 @@ void Logger_Loop(void)
 	currentSecond = datetime._00h.bits.seconds;
 	if (currentSecond != previousSecond)
 	{
+		cprintf("Tick\n");
+		
 		previousSecond = currentSecond;
 		elapsedSeconds++;
 		
@@ -52,33 +55,37 @@ void Logger_Loop(void)
 //		}
 	
 		// Once in a minute
-//		if(conf.flags.registerEnabled && elapsedSeconds > 59)
-//		{
-//			elapsedSeconds = 0;
-//			
-//			bcdToDec((datetime._02h.bits_24hrs.hours10), (datetime._02h.bits_24hrs.hours), &currentHour);
-//			bcdToDec((datetime._01h.bits.minutes10), (datetime._01h.bits.minutes), &currentMin);
-//			bcdToDec((datetime._04h.bits.date10), (datetime._04h.bits.date), &currentDate);
-//			bcdToDec((datetime._05h.bits.month10), (datetime._05h.bits.month), &currentMonth);
-//			bcdToDec((datetime._06h.bits.year10), (datetime._06h.bits.year), &currentYear);
-//			
-//			timestampNow = currentHour*60 + currentMin;
-//			timestampStart = conf.registerStart.hour*60 + conf.registerStart.min;
-//			timestampEnd = conf.registerEnd.hour*60 + conf.registerEnd.min;
-//			
-//			if(timestampNow >= timestampStart && timestampNow < timestampEnd)
-//			{
-//				// Log
-//				record.temp = currentTemp;
-//				record.time.hour = currentHour;
-//				record.time.min = currentMin;
-//				record.date.date = currentDate;
-//				record.date.month = currentMonth;
-//				record.date.year = currentYear;
-//				Persist_SaveRecord(&record);
-//			}
-//			
-//		}
+		if(conf.flags.registerEnabled && elapsedSeconds > 59)
+		{
+			cprintf("Tock\n");
+			
+			elapsedSeconds = 0;
+			
+			bcdToDec((datetime._02h.bits_24hrs.hours10), (datetime._02h.bits_24hrs.hours), &currentHour);
+			bcdToDec((datetime._01h.bits.minutes10), (datetime._01h.bits.minutes), &currentMin);
+			bcdToDec((datetime._04h.bits.date10), (datetime._04h.bits.date), &currentDate);
+			bcdToDec((datetime._05h.bits.month10), (datetime._05h.bits.month), &currentMonth);
+			bcdToDec((datetime._06h.bits.year10), (datetime._06h.bits.year), &currentYear);
+			
+			timestampNow = (int)(currentHour)*60 + currentMin;
+			timestampStart = (int)(conf.registerStart.hour)*60 + conf.registerStart.min;
+			timestampEnd = (int)(conf.registerEnd.hour)*60 + conf.registerEnd.min;
+			
+			cprintf("Tiempos: %d %d %d\n", timestampNow, timestampStart, timestampEnd);
+			
+			if(timestampNow >= timestampStart && timestampNow < timestampEnd)
+			{
+				// Log
+				record.temp = currentTemp;
+				record.time.hour = currentHour;
+				record.time.min = currentMin;
+				record.date.date = currentDate;
+				record.date.month = currentMonth;
+				record.date.year = currentYear;
+				Persist_SaveRecord(&record);
+			}
+			
+		}
 	
 		if(conf.flags.alarmEnabled)
 		{
