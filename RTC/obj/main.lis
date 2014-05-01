@@ -2,14 +2,14 @@
                         .module main.c
                         .area text(rom, con, rel)
  0000                   .dbfile ./main.c
- 0000                   .dbfile C:\Users\Rod\Desktop\RTC\RTC\main.c
+ 0000                   .dbfile Z:\Desktop\RTC\RTC\main.c
  0000                   .dbfunc e putchar _putchar fI
  0000           ;              c -> X-4
  0000           _putchar::
  0000                   .dbline -1
  0000 10                push X
  0001 4F                mov X,SP
- 0002                   .dbline 24
+ 0002                   .dbline 25
  0002           ; //----------------------------------------------------------------------------
  0002           ; // C main line
  0002           ; //----------------------------------------------------------------------------
@@ -28,13 +28,14 @@
  0002           ; #include "TempSensor.h"
  0002           ; #include "TempView.h"
  0002           ; #include "Logger.h"
+ 0002           ; #include "LedArray.h"
  0002           ; #include <string.h>
  0002           ; 
  0002           ; extern CurrentView currentView;
  0002           ; 
  0002           ; int putchar(char c)
  0002           ; {
- 0002                   .dbline 25
+ 0002                   .dbline 26
  0002           ;       UART_PutChar(c);
  0002 10                push X
  0003 52FC              mov A,[X-4]
@@ -53,173 +54,176 @@
  000B 10                push X
  000C 4F                mov X,SP
  000D 3802              add SP,2
- 000F                   .dbline 29
+ 000F                   .dbline 30
  000F           ; }
  000F           ; 
  000F           ; void main(void)
  000F           ; {
- 000F                   .dbline 30
+ 000F                   .dbline 31
  000F           ;       Time_Start();
  000F 7C0000            xcall _Time_Start
- 0012                   .dbline 31
+ 0012                   .dbline 32
  0012           ;       Keypad_Start();
  0012 7C0000            xcall _Keypad_Start
- 0015                   .dbline 32
+ 0015                   .dbline 33
  0015           ;       Persist_Start();
  0015 7C0000            xcall _Persist_Start
- 0018                   .dbline 33
+ 0018                   .dbline 34
  0018           ;       LCD_Start();
  0018 10                push X
  0019 7C0000            xcall _LCD_Start
  001C 20                pop X
- 001D                   .dbline 34
+ 001D                   .dbline 35
  001D           ;       MainView_Start();
  001D 7C0000            xcall _MainView_Start
- 0020                   .dbline 35
+ 0020                   .dbline 36
  0020           ;       DateTimeView_Start();
  0020 7C0000            xcall _DateTimeView_Start
- 0023                   .dbline 36
+ 0023                   .dbline 37
  0023           ;       RegTimeView_Start();
  0023 7C0000            xcall _RegTimeView_Start
- 0026                   .dbline 37
+ 0026                   .dbline 38
  0026           ;       LevelView_Start();
  0026 7C0000            xcall _LevelView_Start
- 0029                   .dbline 38
+ 0029                   .dbline 39
  0029           ;       ConfigView_Start();
  0029 7C0000            xcall _ConfigView_Start
- 002C                   .dbline 39
+ 002C                   .dbline 40
  002C           ;       TempSensor_Start();
  002C 7C0000            xcall _TempSensor_Start
- 002F                   .dbline 40
+ 002F                   .dbline 41
  002F           ;       Logger_Start();
  002F 7C0000            xcall _Logger_Start
  0032                   .dbline 42
- 0032           ; 
- 0032           ;       UART_Start(UART_PARITY_NONE);
- 0032 10                push X
- 0033 5000              mov A,0
- 0035 7C0000            xcall _UART_Start
- 0038                   .dbline 43
- 0038           ;       UART_IntCntl(UART_ENABLE_RX_INT);
- 0038 5001              mov A,1
- 003A 7C0000            xcall _UART_IntCntl
- 003D 20                pop X
- 003E                   .dbline 45
- 003E           ; 
- 003E           ;       M8C_EnableGInt;
- 003E 7101                      or  F, 01h
- 0040           
- 0040                   .dbline 47
- 0040           ; 
- 0040           ;       MainView_Callback();
- 0040 7C0000            xcall _MainView_Callback
+ 0032           ;       Leds_Start();
+ 0032 7C0000            xcall _Leds_Start
+ 0035                   .dbline 44
+ 0035           ; 
+ 0035           ;       UART_Start(UART_PARITY_NONE);
+ 0035 10                push X
+ 0036 5000              mov A,0
+ 0038 7C0000            xcall _UART_Start
+ 003B                   .dbline 45
+ 003B           ;       UART_IntCntl(UART_ENABLE_RX_INT);
+ 003B 5001              mov A,1
+ 003D 7C0000            xcall _UART_IntCntl
+ 0040 20                pop X
+ 0041                   .dbline 47
+ 0041           ; 
+ 0041           ;       M8C_EnableGInt;
+ 0041 7101                      or  F, 01h
+ 0043           
  0043                   .dbline 49
  0043           ; 
- 0043           ;       for(;;)
- 0043           L10:
- 0043                   .dbline 50
- 0043           ;       {
- 0043                   .dbline 51
- 0043           ;               switch(currentView)
- 0043 62D000            mov REG[0xd0],>_currentView
- 0046 5100              mov A,[_currentView]
- 0048 5401              mov [X+1],A
- 004A 560000            mov [X+0],0
- 004D 3D0000            cmp [X+0],0
- 0050 B006              jnz X1
- 0052 3D0100            cmp [X+1],0
- 0055 A035              jz L17
- 0057           X1:
- 0057 3D0000            cmp [X+0],0
- 005A B006              jnz X2
- 005C 3D0101            cmp [X+1],1
- 005F A030              jz L18
- 0061           X2:
- 0061 3D0000            cmp [X+0],0
- 0064 B006              jnz X3
- 0066 3D0102            cmp [X+1],2
- 0069 A02B              jz L19
- 006B           X3:
- 006B 3D0000            cmp [X+0],0
- 006E B006              jnz X4
- 0070 3D0103            cmp [X+1],3
- 0073 A026              jz L20
- 0075           X4:
- 0075 3D0000            cmp [X+0],0
- 0078 B006              jnz X5
- 007A 3D0104            cmp [X+1],4
- 007D A021              jz L21
- 007F           X5:
- 007F 3D0000            cmp [X+0],0
- 0082 B006              jnz X6
- 0084 3D0105            cmp [X+1],5
- 0087 A01C              jz L22
- 0089           X6:
- 0089 801D              xjmp L14
- 008B           L17:
- 008B                   .dbline 54
- 008B           ;               {
- 008B           ;                       case MAIN:
- 008B           ;                               MainView_Update();
- 008B 7C0000            xcall _MainView_Update
- 008E                   .dbline 55
- 008E           ;                               break;
- 008E 8018              xjmp L15
- 0090           L18:
- 0090                   .dbline 57
- 0090           ;                       case DATETIME_CONFIG:
- 0090           ;                               DateTimeView_Update();
- 0090 7C0000            xcall _DateTimeView_Update
- 0093                   .dbline 58
- 0093           ;                               break;
- 0093 8013              xjmp L15
- 0095           L19:
- 0095                   .dbline 60
- 0095           ;                       case REGTIME_CONFIG:
- 0095           ;                               RegTimeView_Update();
- 0095 7C0000            xcall _RegTimeView_Update
- 0098                   .dbline 61
- 0098           ;                               break;
- 0098 800E              xjmp L15
- 009A           L20:
- 009A                   .dbline 63
- 009A           ;                       case LEVEL_CONFIG:
- 009A           ;                               LevelView_Update();
- 009A 7C0000            xcall _LevelView_Update
- 009D                   .dbline 64
- 009D           ;                               break;
- 009D 8009              xjmp L15
- 009F           L21:
- 009F                   .dbline 66
- 009F           ;                       case CONFIG:
- 009F           ;                               ConfigView_Update();
- 009F 7C0000            xcall _ConfigView_Update
- 00A2                   .dbline 67
- 00A2           ;                               break;
- 00A2 8004              xjmp L15
- 00A4           L22:
- 00A4                   .dbline 69
- 00A4           ;                       case TEMP:
- 00A4           ;                               TempView_Update();
- 00A4 7C0000            xcall _TempView_Update
- 00A7                   .dbline 70
- 00A7           ;                               break;
- 00A7           L14:
- 00A7           L15:
- 00A7                   .dbline 72
- 00A7           ;               }
- 00A7           ;               Logger_Loop();
- 00A7 7C0000            xcall _Logger_Loop
- 00AA                   .dbline 73
- 00AA           ;       }
- 00AA                   .dbline 49
- 00AA                   .dbline 49
- 00AA 8F98              xjmp L10
- 00AC           X0:
- 00AC                   .dbline -2
- 00AC           L9:
- 00AC 38FE              add SP,-2
- 00AE 20                pop X
- 00AF                   .dbline 0 ; func end
- 00AF 8FFF              jmp .
- 00B1                   .dbend
+ 0043           ;       MainView_Callback();
+ 0043 7C0000            xcall _MainView_Callback
+ 0046                   .dbline 51
+ 0046           ; 
+ 0046           ;       for(;;)
+ 0046           L10:
+ 0046                   .dbline 52
+ 0046           ;       {
+ 0046                   .dbline 53
+ 0046           ;               switch(currentView)
+ 0046 62D000            mov REG[0xd0],>_currentView
+ 0049 5100              mov A,[_currentView]
+ 004B 5401              mov [X+1],A
+ 004D 560000            mov [X+0],0
+ 0050 3D0000            cmp [X+0],0
+ 0053 B006              jnz X1
+ 0055 3D0100            cmp [X+1],0
+ 0058 A035              jz L17
+ 005A           X1:
+ 005A 3D0000            cmp [X+0],0
+ 005D B006              jnz X2
+ 005F 3D0101            cmp [X+1],1
+ 0062 A030              jz L18
+ 0064           X2:
+ 0064 3D0000            cmp [X+0],0
+ 0067 B006              jnz X3
+ 0069 3D0102            cmp [X+1],2
+ 006C A02B              jz L19
+ 006E           X3:
+ 006E 3D0000            cmp [X+0],0
+ 0071 B006              jnz X4
+ 0073 3D0103            cmp [X+1],3
+ 0076 A026              jz L20
+ 0078           X4:
+ 0078 3D0000            cmp [X+0],0
+ 007B B006              jnz X5
+ 007D 3D0104            cmp [X+1],4
+ 0080 A021              jz L21
+ 0082           X5:
+ 0082 3D0000            cmp [X+0],0
+ 0085 B006              jnz X6
+ 0087 3D0105            cmp [X+1],5
+ 008A A01C              jz L22
+ 008C           X6:
+ 008C 801D              xjmp L14
+ 008E           L17:
+ 008E                   .dbline 56
+ 008E           ;               {
+ 008E           ;                       case MAIN:
+ 008E           ;                               MainView_Update();
+ 008E 7C0000            xcall _MainView_Update
+ 0091                   .dbline 57
+ 0091           ;                               break;
+ 0091 8018              xjmp L15
+ 0093           L18:
+ 0093                   .dbline 59
+ 0093           ;                       case DATETIME_CONFIG:
+ 0093           ;                               DateTimeView_Update();
+ 0093 7C0000            xcall _DateTimeView_Update
+ 0096                   .dbline 60
+ 0096           ;                               break;
+ 0096 8013              xjmp L15
+ 0098           L19:
+ 0098                   .dbline 62
+ 0098           ;                       case REGTIME_CONFIG:
+ 0098           ;                               RegTimeView_Update();
+ 0098 7C0000            xcall _RegTimeView_Update
+ 009B                   .dbline 63
+ 009B           ;                               break;
+ 009B 800E              xjmp L15
+ 009D           L20:
+ 009D                   .dbline 65
+ 009D           ;                       case LEVEL_CONFIG:
+ 009D           ;                               LevelView_Update();
+ 009D 7C0000            xcall _LevelView_Update
+ 00A0                   .dbline 66
+ 00A0           ;                               break;
+ 00A0 8009              xjmp L15
+ 00A2           L21:
+ 00A2                   .dbline 68
+ 00A2           ;                       case CONFIG:
+ 00A2           ;                               ConfigView_Update();
+ 00A2 7C0000            xcall _ConfigView_Update
+ 00A5                   .dbline 69
+ 00A5           ;                               break;
+ 00A5 8004              xjmp L15
+ 00A7           L22:
+ 00A7                   .dbline 71
+ 00A7           ;                       case TEMP:
+ 00A7           ;                               TempView_Update();
+ 00A7 7C0000            xcall _TempView_Update
+ 00AA                   .dbline 72
+ 00AA           ;                               break;
+ 00AA           L14:
+ 00AA           L15:
+ 00AA                   .dbline 74
+ 00AA           ;               }
+ 00AA           ;               Logger_Loop();
+ 00AA 7C0000            xcall _Logger_Loop
+ 00AD                   .dbline 75
+ 00AD           ;       }
+ 00AD                   .dbline 51
+ 00AD                   .dbline 51
+ 00AD 8F98              xjmp L10
+ 00AF           X0:
+ 00AF                   .dbline -2
+ 00AF           L9:
+ 00AF 38FE              add SP,-2
+ 00B1 20                pop X
+ 00B2                   .dbline 0 ; func end
+ 00B2 8FFF              jmp .
+ 00B4                   .dbend

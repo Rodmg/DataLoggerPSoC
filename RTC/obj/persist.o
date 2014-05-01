@@ -13,7 +13,7 @@ S _EEPROM_Write Ref0000
 S _EEPROM_Start Ref0000
 A text size 197 flags 0
 dbfile ./persist.c
-dbfile C:\Users\Rod\Desktop\RTC\RTC\persist.c
+dbfile Z:\Desktop\RTC\RTC\persist.c
 dbstruct 1 .4
 dbfield 0 registerEnabled F[8:1]
 dbfield 0 alarmEnabled F[9:1]

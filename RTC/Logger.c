@@ -91,13 +91,22 @@ void Logger_Loop(void)
 	
 		if(conf.flags.alarmEnabled)
 		{
+			if(currentTemp+5 > conf.maxTemp || currentTemp-5 < conf.minTemp)
+			{
+				Leds_TurnOn(LED_3);
+			}
+			else 
+			{
+				Leds_TurnOff(LED_3);
+			}
 			if(currentTemp > conf.maxTemp || currentTemp < conf.minTemp)
 			{
+				Leds_TurnOn(LED_4);
 				PWM8_Start();
-				Leds_TurnOn(LEDS_MASK);
 			}
 			else
 			{
+				Leds_TurnOff(LED_4);
 				PWM8_Stop();
 			}
 		}

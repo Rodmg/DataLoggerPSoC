@@ -14,7 +14,7 @@ S _MainView_Callback Ref0000
 S _currentView Ref0000
 A text size 1FB flags 0
 dbfile ./configview.c
-dbfile C:\Users\Rod\Desktop\RTC\RTC\configview.c
+dbfile Z:\Desktop\RTC\RTC\configview.c
 dbstruct 1 .7
 dbfield 0 registerEnabled F[8:1]
 dbfield 0 alarmEnabled F[9:1]

@@ -13,7 +13,7 @@ S _Rtc_WriteToRtc Ref0000
 S _Rtc_Start Ref0000
 A text size 9EC flags 0
 dbfile ./time.c
-dbfile C:\Users\Rod\Desktop\RTC\RTC\time.c
+dbfile Z:\Desktop\RTC\RTC\time.c
 dbfunc e Time_Start 0 fV
 dbline FFFFFFFF 0
 dbline 9 0

@@ -14,7 +14,7 @@ S _LCD_PrString Ref0000
 S _LCD_Position Ref0000
 A text size 286 flags 0
 dbfile ./menu.c
-dbfile C:\Users\Rod\Desktop\RTC\RTC\menu.c
+dbfile Z:\Desktop\RTC\RTC\menu.c
 dbstruct 18 .1
 dbfield 0 text A[16:16]c
 dbfield 16 callback pfV
