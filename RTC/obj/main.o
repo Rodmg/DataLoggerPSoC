@@ -1,5 +1,5 @@
 XH
-H 1 areas 1A global symbols
+H 1 areas 1D global symbols
 M main.c
 S _UART_Start Ref0000
 S _ConfigView_Update Ref0000
@@ -7,6 +7,7 @@ S _RegTimeView_Start Ref0000
 S _Keypad_Start Ref0000
 S _Logger_Start Ref0000
 S _MainView_Update Ref0000
+S _PCView_Update Ref0000
 S _TempView_Update Ref0000
 S _Leds_Start Ref0000
 S _Time_Start Ref0000
@@ -14,6 +15,7 @@ S _LevelView_Start Ref0000
 S _RegTimeView_Update Ref0000
 S _DateTimeView_Start Ref0000
 S _LCD_Start Ref0000
+S _DeletView_Update Ref0000
 S _UART_PutChar Ref0000
 S _LevelView_Update Ref0000
 S _UART_IntCntl Ref0000
@@ -21,87 +23,99 @@ S _Persist_Start Ref0000
 S _Logger_Loop Ref0000
 S _ConfigView_Start Ref0000
 S _DateTimeView_Update Ref0000
+S _DevControl_Start Ref0000
 S _TempSensor_Start Ref0000
 S _MainView_Callback Ref0000
 S _MainView_Start Ref0000
 S _currentView Ref0000
-A text size B4 flags 0
+A text size D5 flags 0
 dbfile ./main.c
 dbfile Z:\Desktop\RTC\RTC\main.c
 dbfunc e putchar 0 fI
 dbsym l c FFFFFFFC c
 dbline FFFFFFFF 0
-dbline 19 2
-dbline 1A 2
+dbline 1C 2
+dbline 1D 2
 dbline FFFFFFFE 9
 dbline 0 A
 dbfunc e main B fV
 dbline FFFFFFFF B
-dbline 1E F
-dbline 1F F
-dbline 20 12
-dbline 21 15
-dbline 22 18
-dbline 23 1D
-dbline 24 20
-dbline 25 23
-dbline 26 26
-dbline 27 29
-dbline 28 2C
-dbline 29 2F
-dbline 2A 32
-dbline 2C 35
-dbline 2D 3B
-dbline 2F 41
-dbline 31 43
-dbline 33 46
-dbline 34 46
+dbline 21 F
+dbline 22 F
+dbline 23 12
+dbline 24 15
+dbline 25 18
+dbline 26 1D
+dbline 27 20
+dbline 28 23
+dbline 29 26
+dbline 2A 29
+dbline 2B 2C
+dbline 2C 2F
+dbline 2D 32
+dbline 2E 35
+dbline 30 38
+dbline 31 3E
+dbline 33 44
 dbline 35 46
-dbline 38 8E
-dbline 39 91
-dbline 3B 93
-dbline 3C 96
-dbline 3E 98
-dbline 3F 9B
-dbline 41 9D
-dbline 42 A0
-dbline 44 A2
-dbline 45 A5
-dbline 47 A7
-dbline 48 AA
-dbline 4A AA
-dbline 4B AD
-dbline 33 AD
-dbline 33 AD
-dbline FFFFFFFE AF
-dbline 0 B2
+dbline 37 49
+dbline 38 49
+dbline 39 49
+dbline 3C A5
+dbline 3D A8
+dbline 3F AA
+dbline 40 AD
+dbline 42 AF
+dbline 43 B2
+dbline 45 B4
+dbline 46 B7
+dbline 48 B9
+dbline 49 BC
+dbline 4B BE
+dbline 4C C1
+dbline 4E C3
+dbline 4F C6
+dbline 51 C8
+dbline 53 CB
+dbline 55 CB
+dbline 56 CE
+dbline 37 CE
+dbline 37 CE
+dbline FFFFFFFE D0
+dbline 0 D3
 S _main Def000B
 S _putchar Def0000
 T 00 00 10 4F 10 52 FC 7C 00 00 20 20 7F 10 4F 38
-R 00 00 00 00 02 08 00 0D
+R 00 00 00 00 02 08 00 0F
 T 00 0E 02 7C 00 00 7C 00 00 7C 00 00 10 7C
-R 00 00 00 00 02 04 00 08 02 07 00 03 02 0A 00 10
+R 00 00 00 00 02 04 00 09 02 07 00 03 02 0A 00 12
 T 00 1A 00 00 20 7C 00 00 7C 00 00 7C
-R 00 00 00 00 02 02 00 0C 02 06 00 16 02 09 00 0B
+R 00 00 00 00 02 02 00 0D 02 06 00 19 02 09 00 0C
 T 00 24 00 00 7C 00 00 7C 00 00 7C
-R 00 00 00 00 02 02 00 02 02 05 00 09 02 08 00 12
-T 00 2D 00 00 7C 00 00 7C 00 00 10 50 00 7C
-R 00 00 00 00 02 02 00 14 02 05 00 04 02 08 00 07
-T 00 39 00 00 50 01 7C 00 00 20 71 01 7C 00 00 62
-R 00 00 00 00 02 02 00 00 02 07 00 0F 02 0D 00 15
-T 00 47 D0 00 00 51 00 00 54 01 56 00 00 3D 00 00
-R 00 00 00 00 43 03 00 17 03 06 00 17
-T 00 53 B0 06 3D 01 00 A0 35 3D 00 00 B0 06 3D 01
+R 00 00 00 00 02 02 00 02 02 05 00 0A 02 08 00 14
+T 00 2D 00 00 7C 00 00 7C 00 00 7C
+R 00 00 00 00 02 02 00 17 02 05 00 04 02 08 00 08
+T 00 36 00 00 10 50 00 7C 00 00 50 01 7C 00 00 20
+R 00 00 00 00 02 02 00 16 02 08 00 00 02 0D 00 11
+T 00 44 71 01 7C 00 00 62 D0 00 00 51 00 00 54 01
+R 00 00 00 00 02 05 00 18 43 09 00 1A 03 0C 00 1A
+T 00 50 56 00 00 3D 00 00 B0 06 3D 01 00 A0 49 3D
 R 00 00 00 00
-T 00 61 01 A0 30 3D 00 00 B0 06 3D 01 02 A0 2B 3D
+T 00 5E 00 00 B0 06 3D 01 01 A0 44 3D 00 00 B0 06
 R 00 00 00 00
-T 00 6F 00 00 B0 06 3D 01 03 A0 26 3D 00 00 B0 06
+T 00 6C 3D 01 02 A0 3F 3D 00 00 B0 06 3D 01 03 A0
 R 00 00 00 00
-T 00 7D 3D 01 04 A0 21 3D 00 00 B0 06 3D 01 05 A0
+T 00 7A 3A 3D 00 00 B0 06 3D 01 04 A0 35 3D 00 00
 R 00 00 00 00
-T 00 8B 1C 80 1D 7C 00 00 80 18 7C 00 00 80 13 7C
-R 00 00 00 00 02 06 00 05 02 0B 00 13
-T 00 99 00 00 80 0E 7C 00 00 80 09 7C 00 00 80 04
-R 00 00 00 00 02 02 00 0A 02 07 00 0E 02 0C 00 01
-T 00 A7 7C 00 00 7C 00 00 8F 98 38 FE 20 8F FF
-R 00 00 00 00 02 03 00 06 02 06 00 11
+T 00 88 B0 06 3D 01 05 A0 30 3D 00 00 B0 06 3D 01
+R 00 00 00 00
+T 00 96 06 A0 2B 3D 00 00 B0 06 3D 01 07 A0 26 80
+R 00 00 00 00
+T 00 A4 27 7C 00 00 80 22 7C 00 00 80 1D 7C 00 00
+R 00 00 00 00 02 04 00 05 02 09 00 15 02 0E 00 0B
+T 00 B2 80 18 7C 00 00 80 13 7C 00 00 80 0E 7C
+R 00 00 00 00 02 05 00 10 02 0A 00 01
+T 00 BF 00 00 80 09 7C 00 00 80 04 7C 00 00 7C
+R 00 00 00 00 02 02 00 07 02 07 00 0E 02 0C 00 06
+T 00 CC 00 00 8F 7A 38 FE 20 8F FF
+R 00 00 00 00 02 02 00 13

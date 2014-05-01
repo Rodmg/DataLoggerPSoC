@@ -1,0 +1,66 @@
+XH
+H 2 areas B global symbols
+M pcview.c
+S _LCD_PrCString Ref0000
+S _Menu_Clear Ref0000
+S __r0 Ref0000
+S _Keypad_GetKey Ref0000
+S _Keypad_IsKeyStored Ref0000
+S _LCD_Position Ref0000
+S _MainView_Callback Ref0000
+S _currentView Ref0000
+A text size 5B flags 0
+dbfile ./pcview.c
+dbfile Z:\Desktop\RTC\RTC\pcview.c
+dbfunc e PCView_Start 0 fV
+dbline FFFFFFFF 0
+dbline D 0
+dbline FFFFFFFE 0
+dbline 0 0
+dbfunc e PCView_Callback 1 fV
+dbline FFFFFFFF 1
+dbline 12 1
+dbline 13 1
+dbline 14 7
+dbline 15 A
+dbline 16 12
+dbline 17 1C
+dbline 18 23
+dbline FFFFFFFE 2E
+dbline 0 2E
+dbfunc e PCView_Update 2F fV
+dbline FFFFFFFF 2F
+dbline 1C 33
+dbline 1D 33
+dbline 1F 3D
+dbline 1F 3D
+dbline 23 54
+dbline 24 57
+dbline 25 57
+dbline 27 57
+dbline FFFFFFFE 57
+dbline 0 5A
+S _PCView_Update Def002F
+S _PCView_Callback Def0001
+S _PCView_Start Def0000
+A lit size 1B flags 1
+T 00 00 7F 62 D0 00 00 55 00 00 07 7C 00 00 10 50
+R 00 00 00 00 43 05 00 07 03 08 00 07 02 0C 00 01
+T 00 0C 00 57 00 7C 00 00 50 00 0E 08 50 00 0E 5C
+R 00 00 00 00 02 06 00 05 41 09 00 01 01 0D 00 01
+T 00 18 18 7C 00 00 57 00 50 01 7C 00 00 50 00 00
+R 00 00 00 00 02 04 00 00 02 0B 00 05 41 0E 00 01
+T 00 25 08 50 00 00 5C 18 7C 00 00 20 7F 10 4F 38
+R 00 00 00 00 01 04 00 01 02 09 00 00
+T 00 32 02 7C 00 00 62 D0 00 00 39 00 A0 1B 7C
+R 00 00 00 00 02 04 00 04 43 08 00 02
+T 00 3E 00 00 62 D0 00 00 54 01 56 00 00 3D 00 00
+R 00 00 00 00 02 02 00 03 43 06 00 02
+T 00 4B B0 06 3D 01 11 A0 03 80 04 7C 00 00 38 FE
+R 00 00 00 00 02 0C 00 06
+T 00 59 20 7F
+R 00 00 00 00
+T 00 00 63 61 62 6C 65 20 73 65 72 69 61 6C 21 00
+R 00 00 00 01
+T 00 0E C2 A1 43 6F 6E 65 63 74 65 20 65 6C 00
+R 00 00 00 01

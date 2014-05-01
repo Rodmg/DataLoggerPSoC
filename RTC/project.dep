@@ -9,6 +9,14 @@
    C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/m8c.inc\
    C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/m8ssc.inc\
    Z:\Desktop\RTC\RTC\lib\GLOB~8IG.INC Z:\Desktop\RTC\RTC\memory.inc
+./obj/comm.o :  ./lib/ADCINC.h ./lib/I2Cm.h ./lib/LCD.h ./lib/PGA.h\
+   ./lib/PSoCAPI.h ./lib/PSOC~FJE.H ./lib/PWM8.h ./lib/TempBuf.h\
+   ./lib/UART.h\
+   C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/M8C.h\
+   C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/m8c.h\
+   C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/_const.h\
+   C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/string.h\
+   Z:\Desktop\RTC\RTC\Comm.h
 ./obj/configview.o :  ./lib/ADCINC.h ./lib/I2Cm.h ./lib/LCD.h\
    ./lib/PGA.h ./lib/PSoCAPI.h ./lib/PSOC~FJE.H ./lib/PWM8.h\
    ./lib/TempBuf.h ./lib/UART.h\
@@ -45,6 +53,14 @@
    Z:\Desktop\RTC\RTC\Keypad.h Z:\Desktop\RTC\RTC\Persist.h\
    Z:\Desktop\RTC\RTC\mainView.h Z:\Desktop\RTC\RTC\menu.h\
    Z:\Desktop\RTC\RTC\VIEW~DR9.H
+./obj/devcontrol.o :  ./lib/ADCINC.h ./lib/I2Cm.h ./lib/LCD.h\
+   ./lib/PGA.h ./lib/PSoCAPI.h ./lib/PSOC~FJE.H ./lib/PWM8.h\
+   ./lib/TempBuf.h ./lib/UART.h\
+   C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/M8C.h\
+   C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/m8c.h\
+   C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/_const.h\
+   Z:\Desktop\RTC\RTC\Comm.h Z:\Desktop\RTC\RTC\DEVC~L89.H\
+   Z:\Desktop\RTC\RTC\Persist.h Z:\Desktop\RTC\RTC\TEMP~A5Y.H
 ./obj/eeprom.o :  ./lib/ADCINC.h ./lib/I2Cm.h ./lib/LCD.h ./lib/PGA.h\
    ./lib/PSoCAPI.h ./lib/PSOC~FJE.H ./lib/PWM8.h ./lib/TempBuf.h\
    ./lib/UART.h\
@@ -90,13 +106,14 @@
    C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/m8c.h\
    C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/_const.h\
    C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/string.h\
+   Z:\Desktop\RTC\RTC\DELE~62O.H Z:\Desktop\RTC\RTC\DEVC~L89.H\
    Z:\Desktop\RTC\RTC\Keypad.h Z:\Desktop\RTC\RTC\LedArray.h\
    Z:\Desktop\RTC\RTC\Logger.h Z:\Desktop\RTC\RTC\MainView.h\
-   Z:\Desktop\RTC\RTC\Persist.h Z:\Desktop\RTC\RTC\TEMP~A5Y.H\
-   Z:\Desktop\RTC\RTC\TempView.h Z:\Desktop\RTC\RTC\Time.h\
-   Z:\Desktop\RTC\RTC\CONF~6MT.H Z:\Desktop\RTC\RTC\DATE~5UW.H\
-   Z:\Desktop\RTC\RTC\LEVE~CHT.H Z:\Desktop\RTC\RTC\REGT~TBW.H\
-   Z:\Desktop\RTC\RTC\VIEW~DR9.H
+   Z:\Desktop\RTC\RTC\PCView.h Z:\Desktop\RTC\RTC\Persist.h\
+   Z:\Desktop\RTC\RTC\TEMP~A5Y.H Z:\Desktop\RTC\RTC\TempView.h\
+   Z:\Desktop\RTC\RTC\Time.h Z:\Desktop\RTC\RTC\CONF~6MT.H\
+   Z:\Desktop\RTC\RTC\DATE~5UW.H Z:\Desktop\RTC\RTC\LEVE~CHT.H\
+   Z:\Desktop\RTC\RTC\REGT~TBW.H Z:\Desktop\RTC\RTC\VIEW~DR9.H
 ./obj/mainview.o :  ./lib/ADCINC.h ./lib/I2Cm.h ./lib/LCD.h\
    ./lib/PGA.h ./lib/PSoCAPI.h ./lib/PSOC~FJE.H ./lib/PWM8.h\
    ./lib/TempBuf.h ./lib/UART.h\
@@ -105,16 +122,25 @@
    C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/_const.h\
    C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/string.h\
    Z:\Desktop\RTC\RTC\DELE~62O.H Z:\Desktop\RTC\RTC\Keypad.h\
-   Z:\Desktop\RTC\RTC\Menu.h Z:\Desktop\RTC\RTC\TempView.h\
-   Z:\Desktop\RTC\RTC\CONF~6MT.H Z:\Desktop\RTC\RTC\DATE~5UW.H\
-   Z:\Desktop\RTC\RTC\LEVE~CHT.H Z:\Desktop\RTC\RTC\mainView.h\
-   Z:\Desktop\RTC\RTC\REGT~TBW.H Z:\Desktop\RTC\RTC\VIEW~DR9.H
+   Z:\Desktop\RTC\RTC\Menu.h Z:\Desktop\RTC\RTC\PCView.h\
+   Z:\Desktop\RTC\RTC\TempView.h Z:\Desktop\RTC\RTC\CONF~6MT.H\
+   Z:\Desktop\RTC\RTC\DATE~5UW.H Z:\Desktop\RTC\RTC\LEVE~CHT.H\
+   Z:\Desktop\RTC\RTC\mainView.h Z:\Desktop\RTC\RTC\REGT~TBW.H\
+   Z:\Desktop\RTC\RTC\VIEW~DR9.H
 ./obj/menu.o :  ./lib/ADCINC.h ./lib/I2Cm.h ./lib/LCD.h ./lib/PGA.h\
    ./lib/PSoCAPI.h ./lib/PSOC~FJE.H ./lib/PWM8.h ./lib/TempBuf.h\
    ./lib/UART.h\
    C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/M8C.h\
    C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/m8c.h\
    Z:\Desktop\RTC\RTC\menu.h
+./obj/pcview.o :  ./lib/ADCINC.h ./lib/I2Cm.h ./lib/LCD.h ./lib/PGA.h\
+   ./lib/PSoCAPI.h ./lib/PSOC~FJE.H ./lib/PWM8.h ./lib/TempBuf.h\
+   ./lib/UART.h\
+   C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/M8C.h\
+   C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/m8c.h\
+   Z:\Desktop\RTC\RTC\BcdUtil.h Z:\Desktop\RTC\RTC\Keypad.h\
+   Z:\Desktop\RTC\RTC\PCView.h Z:\Desktop\RTC\RTC\mainView.h\
+   Z:\Desktop\RTC\RTC\menu.h Z:\Desktop\RTC\RTC\VIEW~DR9.H
 ./obj/persist.o :  ./lib/ADCINC.h ./lib/I2Cm.h ./lib/LCD.h ./lib/PGA.h\
    ./lib/PSoCAPI.h ./lib/PSOC~FJE.H ./lib/PWM8.h ./lib/TempBuf.h\
    ./lib/UART.h\

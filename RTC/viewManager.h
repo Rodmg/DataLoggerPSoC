@@ -9,7 +9,8 @@ typedef enum
 	LEVEL_CONFIG,
 	CONFIG,
 	TEMP,
-	DELET
+	DELET,
+	PC
 } CurrentView;
 
 extern CurrentView currentView;

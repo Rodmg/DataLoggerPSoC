@@ -29,7 +29,7 @@ lib/uartint.asm
 
 lib/uartplus.asm
 
-!W Z:\Desktop\RTC\RTC\main.c(27):[warning] missing return value
+!W Z:\Desktop\RTC\RTC\main.c(30):[warning] missing return value
 
 ./boot.asm
 
@@ -37,9 +37,11 @@ Linking..
 
 LMM info: area 'InterruptRAM' uses 15 bytes in SRAM bank 0
 
-LMM info: area 'data' item of 108 bytes allocated in SRAM page 0
+LMM info: area 'data' item of 126 bytes allocated in SRAM page 0
 
 LMM info: area 'data' item of 25 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 15 bytes allocated in SRAM page 0
 
 LMM info: area 'virtual_registers' uses 15 bytes in SRAM page 0
 
@@ -65,14 +67,20 @@ LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
 
 LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
 
+LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
+
+LMM info: area 'data' item of 1 bytes allocated in SRAM page 0
+
 idata dump at output/RTC.idata
 
-  ROM 52% full. 16805 out of 32768 bytes used (does not include absolute areas).
+  ROM 56% full. 18115 out of 32768 bytes used (does not include absolute areas).
 
-  RAM 11% full. 187 bytes used (does not include stack usage).
+  RAM 13% full. 223 bytes used (does not include stack usage).
 
 Built with ICCM8C STD V7.05.00
 
  
-RTC - 0 error(s) 1 warning(s) 19:51:51
+RTC - 0 error(s) 1 warning(s) 13:25:41
 

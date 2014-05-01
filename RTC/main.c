@@ -17,6 +17,9 @@
 #include "TempView.h"
 #include "Logger.h"
 #include "LedArray.h"
+#include "DeletView.h"
+#include "PCView.h"
+#include "DevControl.h"
 #include <string.h>
 
 extern CurrentView currentView;
@@ -40,6 +43,7 @@ void main(void)
 	TempSensor_Start();
 	Logger_Start();
 	Leds_Start();
+	DevControl_Start();
 
 	UART_Start(UART_PARITY_NONE);
 	UART_IntCntl(UART_ENABLE_RX_INT);
@@ -69,6 +73,13 @@ void main(void)
 				break;
 			case TEMP:
 				TempView_Update();
+				break;
+			case DELET:
+				DeletView_Update();
+				break;
+			case PC:
+				PCView_Update();
+				//Funcion para checar comando
 				break;
 		}
 		Logger_Loop();

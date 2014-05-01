@@ -52,7 +52,7 @@
  0010 5700              mov X,0
  0012 7C0000            xcall _LCD_Position
  0015                   .dbline 24
- 0015           ;       LCD_PrCString("Datos Borrados!");
+ 0015           ;       LCD_PrCString("¡Datos Borrados!");
  0015 5000              mov A,>L12
  0017 08                push A
  0018 5000              mov A,<L12
@@ -121,4 +121,5 @@
  004D                   .dbend
                         .area lit(rom, con, rel, lit)
  0000           L12:
- 0000 4461746F7320426F727261646F732100  .byte 'D,'a,'t,'o,'s,32,'B,'o,'r,'r,'a,'d,'o,'s,33,0
+ 0000 C2A14461746F7320426F727261646F73  .byte 194,161,'D,'a,'t,'o,'s,32,'B,'o,'r,'r,'a,'d,'o,'s
+ 0010 2100              .byte 33,0

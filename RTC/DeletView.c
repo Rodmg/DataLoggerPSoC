@@ -21,7 +21,7 @@ void DeletView_Callback(void)
 	Menu_Clear();
 	Persist_Clear();
 	LCD_Position(0, 0);
-	LCD_PrCString("Datos Borrados!");
+	LCD_PrCString("¡Datos Borrados!");
 }
 
 void DeletView_Update(void)
