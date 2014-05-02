@@ -2,7 +2,7 @@
                         .module menu.c
                         .area text(rom, con, rel)
  0000                   .dbfile ./menu.c
- 0000                   .dbfile Z:\Desktop\RTC\RTC\menu.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\menu.c
  0000                   .dbfunc e Menu_Start _Menu_Start fV
  0000           _Menu_Start::
  0000                   .dbline -1

@@ -33,7 +33,7 @@ responde con un byte en datos de la temperatura*/
 #define CMD_SET_H_ALARM		0x07
 #define CMD_GET_L_ALARM 	0x08
 #define CMD_SET_L_ALARM		0x09
-#define CMD_TEMP			0x10
+#define CMD_TEMP			0x0a
 
 
 void DevControl_Start(void)

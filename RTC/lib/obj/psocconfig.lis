@@ -1088,9 +1088,9 @@
  0000             ENDIF
  0000             POP A
  0000           ENDIF
- 0000           CPU_CLOCK:				equ	0h		;CPU clock value
+ 0002           CPU_CLOCK:				equ	2h		;CPU clock value
  0007           CPU_CLOCK_MASK:			equ	7h		;CPU clock mask
- 0000           CPU_CLOCK_JUST:			equ	0h		;CPU clock value justified
+ 0002           CPU_CLOCK_JUST:			equ	2h		;CPU clock value justified
  0000           SELECT_32K:				equ	0h		;32K select value
  0080           SELECT_32K_MASK:		equ	80h		;32K select mask
  0000           SELECT_32K_JUST:		equ	0h		;32K select value justified
@@ -1131,12 +1131,12 @@
  000F           CLOCK_DIV_VC2:			equ	fh	;VC2 clock divider
  000F           CLOCK_DIV_VC2_MASK:		equ	fh	;VC2 clock divider mask
  000F           CLOCK_DIV_VC2_JUST:		equ	fh	;VC2 clock divider justified
- 0001           CLOCK_INPUT_VC3:		equ	1h	;VC3 clock source
+ 0000           CLOCK_INPUT_VC3:		equ	0h	;VC3 clock source
  0003           CLOCK_INPUT_VC3_MASK:	equ	3h	;VC3 clock source mask
- 0001           CLOCK_INPUT_VC3_JUST:	equ	1h	;VC3 clock source justified
- 0026           CLOCK_DIV_VC3:			equ	26h	;VC3 clock divider
+ 0000           CLOCK_INPUT_VC3_JUST:	equ	0h	;VC3 clock source justified
+ 009B           CLOCK_DIV_VC3:			equ	9bh	;VC3 clock divider
  00FF           CLOCK_DIV_VC3_MASK:		equ	ffh	;VC3 clock divider mask
- 0026           CLOCK_DIV_VC3_JUST:		equ	26h	;VC3 clock divider justified
+ 009B           CLOCK_DIV_VC3_JUST:		equ	9bh	;VC3 clock divider justified
  0000           ANALOG_BUFFER_PWR:		equ	0h	;Analog buffer power level
  0001           ANALOG_BUFFER_PWR_MASK:	equ	1h	;Analog buffer power level mask
  0000           ANALOG_BUFFER_PWR_JUST:	equ	0h	;Analog buffer power level justified

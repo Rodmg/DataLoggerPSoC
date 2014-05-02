@@ -2,7 +2,7 @@
                         .module devcontrol.c
                         .area text(rom, con, rel)
  0000                   .dbfile ./devcontrol.c
- 0000                   .dbfile Z:\Desktop\RTC\RTC\devcontrol.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\devcontrol.c
  0000                   .dbfunc e DevControl_Start _DevControl_Start fV
  0000           _DevControl_Start::
  0000                   .dbline -1
@@ -42,7 +42,7 @@
  0000           ; #define CMD_SET_H_ALARM               0x07
  0000           ; #define CMD_GET_L_ALARM       0x08
  0000           ; #define CMD_SET_L_ALARM               0x09
- 0000           ; #define CMD_TEMP                      0x10
+ 0000           ; #define CMD_TEMP                      0x0a
  0000           ; 
  0000           ; 
  0000           ; void DevControl_Start(void)
@@ -77,7 +77,7 @@
  0001 00000000000000000000      .word 0,0,0,0,0
  000B 000000000000000000        .byte 0,0,0,0,0,0,0,0,0
                         .area text(rom, con, rel)
- 0008                   .dbfile Z:\Desktop\RTC\RTC\devcontrol.c
+ 0008                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\devcontrol.c
  0008                   .dbfunc e DevControl_Check _DevControl_Check fV
  0008                   .dbstruct 0 4 .1
  0008                   .dbfield 0 cmd c
@@ -196,7 +196,7 @@
  00BB           X10:
  00BB 3D1800            cmp [X+24],0
  00BE B006              jnz X11
- 00C0 3D1910            cmp [X+25],16
+ 00C0 3D190A            cmp [X+25],10
  00C3 A02E              jz L27
  00C5           X11:
  00C5 8045              xjmp L15
@@ -286,7 +286,7 @@
  00FF 5007              mov A,7
  0101 08                push A
  0102 10                push X
- 0103 5010              mov A,16
+ 0103 500A              mov A,10
  0105 08                push A
  0106 7C0000            xcall _Comm_WriteCommand
  0109 38FC              add SP,-4

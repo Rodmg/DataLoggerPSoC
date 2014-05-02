@@ -79,6 +79,7 @@ void main(void)
 				break;
 			case PC:
 				PCView_Update();
+				DevControl_Check();
 				//Funcion para checar comando
 				break;
 		}

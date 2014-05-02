@@ -6,28 +6,29 @@
  0000                   .dbfile ./comm.c
  0000           _comm_packet_received::
  0000 00                .byte 0
- 0001                   .dbfile Z:\Desktop\RTC\RTC\comm.c
+ 0001                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
  0001                   .dbsym e comm_packet_received _comm_packet_received c
                         .area data(ram, con, rel)
- 0000                   .dbfile Z:\Desktop\RTC\RTC\comm.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
                         .area data(ram, con, rel)
- 0000                   .dbfile Z:\Desktop\RTC\RTC\comm.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
  0000           _comm_error::
  0000 00                .byte 0
  0001                   .dbsym e comm_error _comm_error c
                         .area data(ram, con, rel)
- 0000                   .dbfile Z:\Desktop\RTC\RTC\comm.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
                         .area text(rom, con, rel)
- 0000                   .dbfile Z:\Desktop\RTC\RTC\comm.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
  0000                   .dbfunc e Comm_Start _Comm_Start fV
  0000           _Comm_Start::
  0000                   .dbline -1
- 0000                   .dbline 23
+ 0000                   .dbline 24
  0000           ; 
  0000           ; #include <m8c.h>        // part specific constants and macros
  0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
  0000           ; #include <string.h>
  0000           ; #include "Comm.h"
+ 0000           ; #include <stdio.h>
  0000           ; 
  0000           ; // PACKET
  0000           ; // BYTE 0 --> [COMM_PACKET_HEADER_1ST]
@@ -46,12 +47,12 @@
  0000           ; 
  0000           ; void Comm_Start(void)
  0000           ; {
- 0000                   .dbline 24
+ 0000                   .dbline 25
  0000           ;       UART_Start(UART_PARITY_NONE);
  0000 10                push X
  0001 5000              mov A,0
  0003 7C0000            xcall _UART_Start
- 0006                   .dbline 25
+ 0006                   .dbline 26
  0006           ;       UART_IntCntl(UART_ENABLE_RX_INT);
  0006 5001              mov A,1
  0008 7C0000            xcall _UART_IntCntl
@@ -64,17 +65,17 @@
  000D                   .dbfunc e Comm_Stop _Comm_Stop fV
  000D           _Comm_Stop::
  000D                   .dbline -1
- 000D                   .dbline 29
+ 000D                   .dbline 30
  000D           ; }
  000D           ; 
  000D           ; void Comm_Stop(void)
  000D           ; {
- 000D                   .dbline 30
+ 000D                   .dbline 31
  000D           ;       UART_IntCntl(UART_DISABLE_RX_INT);
  000D 10                push X
  000E 5000              mov A,0
  0010 7C0000            xcall _UART_IntCntl
- 0013                   .dbline 31
+ 0013                   .dbline 32
  0013           ;       UART_Stop();
  0013 7C0000            xcall _UART_Stop
  0016 20                pop X
@@ -93,25 +94,25 @@
  0018 10                push X
  0019 4F                mov X,SP
  001A 3802              add SP,2
- 001C                   .dbline 35
+ 001C                   .dbline 36
  001C           ; }
  001C           ; 
  001C           ; static BYTE Comm_CalculateChecksum(BYTE* pBuffer, BYTE length)
  001C           ; {
- 001C                   .dbline 36
+ 001C                   .dbline 37
  001C           ;       BYTE i = 0;
  001C 560000            mov [X+0],0
- 001F                   .dbline 37
+ 001F                   .dbline 38
  001F           ;       BYTE sum = 0;
  001F 560100            mov [X+1],0
- 0022                   .dbline 38
+ 0022                   .dbline 39
  0022           ;       for (i = 0; i < length; i++)
  0022 560000            mov [X+0],0
  0025 801D              xjmp L8
  0027           L5:
- 0027                   .dbline 39
- 0027           ;       {
  0027                   .dbline 40
+ 0027           ;       {
+ 0027                   .dbline 41
  0027           ;               sum += pBuffer[i];
  0027 62D000            mov REG[0xd0],>__r0
  002A 5200              mov A,[X+0]
@@ -125,18 +126,18 @@
  003B 60D4              mov REG[0xd4],A
  003D 3E00              mvi A,[__r1]
  003F 0501              add [X+1],A
- 0041                   .dbline 41
+ 0041                   .dbline 42
  0041           ;       }
  0041           L6:
- 0041                   .dbline 38
+ 0041                   .dbline 39
  0041 7700              inc [X+0]
  0043           L8:
- 0043                   .dbline 38
+ 0043                   .dbline 39
  0043 5200              mov A,[X+0]
  0045 3BFA              cmp A,[X-6]
  0047 CFDF              jc L5
  0049           X0:
- 0049                   .dbline 43
+ 0049                   .dbline 44
  0049           ;       
  0049           ;       return sum;
  0049 5201              mov A,[X+1]
@@ -162,37 +163,37 @@
  0052 10                push X
  0053 4F                mov X,SP
  0054 380F              add SP,15
- 0056                   .dbline 47
+ 0056                   .dbline 48
  0056           ; }
  0056           ; 
  0056           ; void Comm_WriteCommand(BYTE command, CONST BYTE* pData, BYTE length)
  0056           ; {
- 0056                   .dbline 49
+ 0056                   .dbline 50
  0056           ;       BYTE txbuffer[COMM_MAX_DATA_SIZE + 5];
  0056           ;       txbuffer[0] = COMM_PACKET_HEADER_1ST;
  0056 560055            mov [X+0],85
- 0059                   .dbline 50
+ 0059                   .dbline 51
  0059           ;       txbuffer[1] = COMM_PACKET_HEADER_2ND;
  0059 5601AA            mov [X+1],-86
- 005C                   .dbline 51
+ 005C                   .dbline 52
  005C           ;       txbuffer[2] = command;
  005C 52FC              mov A,[X-4]
  005E 5402              mov [X+2],A
- 0060                   .dbline 52
+ 0060                   .dbline 53
  0060           ;       txbuffer[3] = length;
  0060 52F9              mov A,[X-7]
  0062 5403              mov [X+3],A
- 0064                   .dbline 54
+ 0064                   .dbline 55
  0064           ;       
  0064           ;       if (length > 0)
  0064 5000              mov A,0
  0066 3BF9              cmp A,[X-7]
  0068 D024              jnc L13
  006A           X1:
- 006A                   .dbline 56
+ 006A                   .dbline 57
  006A           ;       {
  006A           ;               memcpy(&txbuffer[4], pData, length);
- 006A                   .dbline 56
+ 006A                   .dbline 57
  006A 62D000            mov REG[0xd0],>__r0
  006D 52F9              mov A,[X-7]
  006F 5300              mov [__r1],A
@@ -212,10 +213,10 @@
  0087 08                push A
  0088 7C0000            xcall _memcpyLMM
  008B 38FA              add SP,-6
- 008D                   .dbline 57
+ 008D                   .dbline 58
  008D           ;       }
  008D           L13:
- 008D                   .dbline 59
+ 008D                   .dbline 60
  008D           ;       
  008D           ;       txbuffer[4 + length] = Comm_CalculateChecksum(txbuffer, 4 + length);
  008D 62D000            mov REG[0xd0],>__r0
@@ -240,7 +241,7 @@
  00B4 60D5              mov REG[0xd5],A
  00B6 5100              mov A,[__r0]
  00B8 3F00              mvi [__r3],A
- 00BA                   .dbline 61
+ 00BA                   .dbline 62
  00BA           ;       
  00BA           ;       UART_Write(txbuffer, length + 5);
  00BA 52F9              mov A,[X-7]
@@ -275,12 +276,12 @@
  00CE                   .dbline -1
  00CE 10                push X
  00CF 4F                mov X,SP
- 00D0                   .dbline 65
+ 00D0                   .dbline 66
  00D0           ; }
  00D0           ; 
  00D0           ; void Comm_WritePacket(COMMPACKET* pPacket)
  00D0           ; {
- 00D0                   .dbline 66
+ 00D0                   .dbline 67
  00D0           ;       Comm_WriteCommand(pPacket->cmd, pPacket->pData, pPacket->length);
  00D0 62D000            mov REG[0xd0],>__r0
  00D3 52FC              mov A,[X-4]
@@ -326,12 +327,12 @@
  010D                   .dbline -1
  010D 10                push X
  010E 4F                mov X,SP
- 010F                   .dbline 70
+ 010F                   .dbline 71
  010F           ; }
  010F           ; 
  010F           ; void Comm_ReadPacket(COMMPACKET* pPacket)
  010F           ; {
- 010F                   .dbline 71
+ 010F                   .dbline 72
  010F           ;       pPacket->cmd = rxbuffer[2];
  010F 62D000            mov REG[0xd0],>__r0
  0112 52FC              mov A,[X-4]
@@ -342,7 +343,7 @@
  011D 5102              mov A,[_rxbuffer+2]
  011F 62D000            mov REG[0xd0],>__r0
  0122 3F00              mvi [__r1],A
- 0124                   .dbline 72
+ 0124                   .dbline 73
  0124           ;       pPacket->length = rxbuffer[3];
  0124 52FC              mov A,[X-4]
  0126 0101              add A,1
@@ -354,7 +355,7 @@
  0133 5103              mov A,[_rxbuffer+3]
  0135 62D000            mov REG[0xd0],>__r0
  0138 3F00              mvi [__r1],A
- 013A                   .dbline 73
+ 013A                   .dbline 74
  013A           ;       memcpy(pPacket->pData, &rxbuffer[4], rxbuffer[3]);
  013A 62D000            mov REG[0xd0],>_rxbuffer
  013D 5103              mov A,[_rxbuffer+3]
@@ -384,7 +385,7 @@
  0169 08                push A
  016A 7C0000            xcall _memcpyLMM
  016D 38FA              add SP,-6
- 016F                   .dbline 75
+ 016F                   .dbline 76
  016F           ;       
  016F           ;       comm_packet_received = FALSE;
  016F 62D000            mov REG[0xd0],>_comm_packet_received
@@ -397,11 +398,11 @@
  0177                   .dbsym l pPacket -5 pS[.1]
  0177                   .dbend
                         .area data(ram, con, rel)
- 0000                   .dbfile Z:\Desktop\RTC\RTC\comm.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
  0000           L24:
  0000 00                .byte 0
                         .area text(rom, con, rel)
- 0177                   .dbfile Z:\Desktop\RTC\RTC\comm.c
+ 0177                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
  0177                   .dbfunc e Comm_Uart_RxInt _Comm_Uart_RxInt fV
  0177                   .dbsym s counter L24 c
  0177           _Comm_Uart_RxInt::
@@ -447,26 +448,26 @@
  01B2 08                push A
  01B3 5100              mov A,[__rZ]
  01B5 08                push A
- 01B6                   .dbline 80
+ 01B6                   .dbline 81
  01B6           ; }
  01B6           ; 
  01B6           ; #pragma interrupt_handler Comm_Uart_RxInt
  01B6           ; void Comm_Uart_RxInt(void)
  01B6           ; {
- 01B6                   .dbline 83
+ 01B6                   .dbline 84
  01B6           ;       static BYTE counter = 0;
  01B6           ;       
  01B6           ;       if (comm_packet_received) // don't receive new packets until current is read
  01B6 62D000            mov REG[0xd0],>_comm_packet_received
  01B9 3C0000            cmp [_comm_packet_received],0
  01BC A003              jz L25
- 01BE                   .dbline 85
+ 01BE                   .dbline 86
  01BE           ;       {
  01BE           ;               return;
- 01BE                   .dbline 85
+ 01BE                   .dbline 86
  01BE 8110              xjmp L23
  01C0           L25:
- 01C0                   .dbline 88
+ 01C0                   .dbline 89
  01C0           ;       }
  01C0           ;       
  01C0           ;       if (bUART_ReadRxStatus() & UART_RX_ERROR) // check for UART errors
@@ -477,21 +478,21 @@
  01C8 5300              mov [__r0],A
  01CA 4700E0            tst [__r0],-32
  01CD A01F              jz L27
- 01CF                   .dbline 90
+ 01CF                   .dbline 91
  01CF           ;       {
  01CF           ;               comm_error = bUART_ReadRxStatus() & UART_RX_ERROR;
- 01CF                   .dbline 90
+ 01CF                   .dbline 91
  01CF 10                push X
  01D0 7C0000            xcall _bUART_ReadRxStatus
  01D3 20                pop X
  01D4 21E0              and A,-32
  01D6 62D000            mov REG[0xd0],>_comm_error
  01D9 5300              mov [_comm_error],A
- 01DB                   .dbline 91
+ 01DB                   .dbline 92
  01DB           ;               counter = 0;
  01DB 62D000            mov REG[0xd0],>L24
  01DE 550000            mov [L24],0
- 01E1                   .dbline 93
+ 01E1                   .dbline 94
  01E1           ;               
  01E1           ;               UART_bReadRxData();
  01E1 10                push X
@@ -499,11 +500,12 @@
  01E5 20                pop X
  01E6 62D000            mov REG[0xd0],>__r0
  01E9 5300              mov [__r0],A
- 01EB                   .dbline 94
+ 01EB                   .dbline 96
+ 01EB           ;               //cprintf("RX error %x\n", comm_error);
  01EB           ;               return;
  01EB 80E3              xjmp L23
  01ED           L27:
- 01ED                   .dbline 97
+ 01ED                   .dbline 99
  01ED           ;       }
  01ED           ;       
  01ED           ;       rxbuffer[counter] = UART_bReadRxData(); // read received byte
@@ -523,84 +525,85 @@
  020C 60D5              mov REG[0xd5],A
  020E 5100              mov A,[__r0]
  0210 3F00              mvi [__r3],A
- 0212                   .dbline 99
+ 0212                   .dbline 102
+ 0212           ;       //cprintf("got byte %x\n", rxbuffer[counter]);
  0212           ;       
  0212           ;       if (counter == 0)
  0212 62D000            mov REG[0xd0],>L24
  0215 3C0000            cmp [L24],0
  0218 B011              jnz L29
- 021A                   .dbline 101
+ 021A                   .dbline 104
  021A           ;       {
  021A           ;               if (rxbuffer[0] != COMM_PACKET_HEADER_1ST)
- 021A                   .dbline 101
+ 021A                   .dbline 104
  021A 62D000            mov REG[0xd0],>_rxbuffer
  021D 3C0055            cmp [_rxbuffer],85
  0220 A0A9              jz L30
- 0222                   .dbline 103
+ 0222                   .dbline 106
  0222           ;               {
  0222           ;                       counter = 0;
- 0222                   .dbline 103
+ 0222                   .dbline 106
  0222 62D000            mov REG[0xd0],>L24
  0225 550000            mov [L24],0
- 0228                   .dbline 104
+ 0228                   .dbline 107
  0228           ;                       return;
  0228 80A6              xjmp L23
  022A           L29:
- 022A                   .dbline 107
+ 022A                   .dbline 110
  022A           ;               }
  022A           ;       }
  022A           ;       else if (counter == 1)
  022A 62D000            mov REG[0xd0],>L24
  022D 3C0001            cmp [L24],1
  0230 B011              jnz L33
- 0232                   .dbline 109
+ 0232                   .dbline 112
  0232           ;       {
  0232           ;               if (rxbuffer[1] != COMM_PACKET_HEADER_2ND)
- 0232                   .dbline 109
+ 0232                   .dbline 112
  0232 62D000            mov REG[0xd0],>_rxbuffer
  0235 3C01AA            cmp [_rxbuffer+1],-86
  0238 A091              jz L34
- 023A                   .dbline 111
+ 023A                   .dbline 114
  023A           ;               {
  023A           ;                       counter = 0;
- 023A                   .dbline 111
+ 023A                   .dbline 114
  023A 62D000            mov REG[0xd0],>L24
  023D 550000            mov [L24],0
- 0240                   .dbline 112
+ 0240                   .dbline 115
  0240           ;                       return;
  0240 808E              xjmp L23
  0242           L33:
- 0242                   .dbline 115
+ 0242                   .dbline 118
  0242           ;               }
  0242           ;       }
  0242           ;       else if (counter == 3)
  0242 62D000            mov REG[0xd0],>L24
  0245 3C0003            cmp [L24],3
  0248 B018              jnz L38
- 024A                   .dbline 117
+ 024A                   .dbline 120
  024A           ;       {
  024A           ;               if (rxbuffer[3] > COMM_MAX_DATA_SIZE)
- 024A                   .dbline 117
+ 024A                   .dbline 120
  024A 62D000            mov REG[0xd0],>_rxbuffer
  024D 500A              mov A,10
  024F 3A03              cmp A,[_rxbuffer+3]
  0251 D078              jnc L39
  0253           X2:
- 0253                   .dbline 119
+ 0253                   .dbline 122
  0253           ;               {
  0253           ;                       comm_error = COMM_PACKET_RX_OVERRUN_ERROR;
- 0253                   .dbline 119
+ 0253                   .dbline 122
  0253 62D000            mov REG[0xd0],>_comm_error
  0256 550010            mov [_comm_error],16
- 0259                   .dbline 120
+ 0259                   .dbline 123
  0259           ;                       counter = 0;
  0259 62D000            mov REG[0xd0],>L24
  025C 550000            mov [L24],0
- 025F                   .dbline 121
+ 025F                   .dbline 124
  025F           ;                       return;
  025F 806F              xjmp L23
  0261           L38:
- 0261                   .dbline 124
+ 0261                   .dbline 127
  0261           ;               }
  0261           ;       }
  0261           ;       else if (counter == rxbuffer[3] + 4) // CHECKSUM BYTE
@@ -614,10 +617,10 @@
  0272 62D000            mov REG[0xd0],>__r0
  0275 3A00              cmp A,[__r0]
  0277 B052              jnz L43
- 0279                   .dbline 126
+ 0279                   .dbline 129
  0279           ;       {
  0279           ;               if (Comm_CalculateChecksum(rxbuffer, rxbuffer[3]+4) == rxbuffer[rxbuffer[3] + 4])
- 0279                   .dbline 126
+ 0279                   .dbline 129
  0279 62D000            mov REG[0xd0],>_rxbuffer
  027C 5103              mov A,[_rxbuffer+3]
  027E 0104              add A,4
@@ -645,39 +648,39 @@
  02AE 5100              mov A,[__r0]
  02B0 3A00              cmp A,[__r2]
  02B2 B009              jnz L46
- 02B4                   .dbline 128
+ 02B4                   .dbline 131
  02B4           ;               {
  02B4           ;                       comm_packet_received = TRUE;
- 02B4                   .dbline 128
+ 02B4                   .dbline 131
  02B4 62D000            mov REG[0xd0],>_comm_packet_received
  02B7 550001            mov [_comm_packet_received],1
- 02BA                   .dbline 129
+ 02BA                   .dbline 132
  02BA           ;               }
  02BA 8007              xjmp L47
  02BC           L46:
- 02BC                   .dbline 131
+ 02BC                   .dbline 134
  02BC           ;               else
  02BC           ;               {
- 02BC                   .dbline 132
+ 02BC                   .dbline 135
  02BC           ;                       comm_error = COMM_PACKET_RX_CHECKSUM_ERROR;
  02BC 62D000            mov REG[0xd0],>_comm_error
  02BF 550008            mov [_comm_error],8
- 02C2                   .dbline 133
+ 02C2                   .dbline 136
  02C2           ;               }
  02C2           L47:
- 02C2                   .dbline 135
+ 02C2                   .dbline 138
  02C2           ;               
  02C2           ;               counter = 0;
  02C2 62D000            mov REG[0xd0],>L24
  02C5 550000            mov [L24],0
- 02C8                   .dbline 136
+ 02C8                   .dbline 139
  02C8           ;               return;
  02C8 8006              xjmp L23
  02CA           L43:
  02CA           L39:
  02CA           L34:
  02CA           L30:
- 02CA                   .dbline 139
+ 02CA                   .dbline 142
  02CA           ;       }
  02CA           ;               
  02CA           ;       counter++;
@@ -729,7 +732,7 @@
  030C 7E                reti
  030D                   .dbend
                         .area data(ram, con, rel)
- 0000                   .dbfile Z:\Desktop\RTC\RTC\comm.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
  0000           _rxbuffer:
  0000 00000000000000000000      .word 0,0,0,0,0
  000A 0000000000        .byte 0,0,0,0,0

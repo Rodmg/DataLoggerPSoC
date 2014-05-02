@@ -6,7 +6,7 @@
 #include "Rtc.h"
 #include "BcdUtil.h"
 #include "LedArray.h"
-#include <stdio.h>
+//#include <stdio.h>
 
 void Logger_Start(void)
 {
@@ -112,6 +112,7 @@ void Logger_Loop(void)
 		}
 		else 
 		{
+			Leds_TurnOff(LED_3 | LED_4);
 			PWM8_Stop();
 		}
 		

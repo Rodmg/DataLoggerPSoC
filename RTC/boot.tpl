@@ -156,7 +156,7 @@ ENDIF
     reti
 
     org   2Ch                      ;PSoC Block DCB03 Interrupt Vector
-    `@INTERRUPT_11`
+    ljmp _Comm_Uart_RxInt
     reti
 
     org   30h                      ;PSoC Block DBB10 Interrupt Vector

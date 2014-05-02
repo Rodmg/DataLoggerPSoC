@@ -6,9 +6,9 @@
 *		for CY8C29466
 ******************************************************************************/
 
-#define CPU_CLOCK              0x0     //CPU clock value
+#define CPU_CLOCK              0x2     //CPU clock value
 #define CPU_CLOCK_MASK         0x7     //CPU clock mask
-#define CPU_CLOCK_JUST         0x0     //CPU clock value justified
+#define CPU_CLOCK_JUST         0x2     //CPU clock value justified
 #define SELECT_32K             0x0     //32K select value
 #define SELECT_32K_MASK        0x80    //32K select mask
 #define SELECT_32K_JUST        0x0     //32K select value justified
@@ -33,12 +33,12 @@
 #define CLOCK_DIV_VC2          0xf     // VC2 clock divider 
 #define CLOCK_DIV_VC2_MASK     0xf     // VC2 clock divider mask
 #define CLOCK_DIV_VC2_JUST     0xf     // VC2 clock divider justified
-#define CLOCK_INPUT_VC3        0x1     // VC3 clock source
+#define CLOCK_INPUT_VC3        0x0     // VC3 clock source
 #define CLOCK_INPUT_VC3_MASK   0x3     // VC3 clock source mask
-#define CLOCK_INPUT_VC3_JUST   0x1     // VC3 clock source justified
-#define CLOCK_DIV_VC3          0x26    // VC3 clock divider
+#define CLOCK_INPUT_VC3_JUST   0x0     // VC3 clock source justified
+#define CLOCK_DIV_VC3          0x9b    // VC3 clock divider
 #define CLOCK_DIV_VC3_MASK     0xff    // VC3 clock divider mask
-#define CLOCK_DIV_VC3_JUST     0x26    // VC3 clock divider justified
+#define CLOCK_DIV_VC3_JUST     0x9b    // VC3 clock divider justified
 #define ANALOG_BUFFER_PWR      0x0     // Analog buffer power level
 #define ANALOG_BUFFER_PWR_MASK 0x1     // Analog buffer power level mask
 #define ANALOG_BUFFER_PWR_JUST 0x0     // Analog buffer power level justified

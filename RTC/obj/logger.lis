@@ -2,7 +2,7 @@
                         .module logger.c
                         .area text(rom, con, rel)
  0000                   .dbfile ./logger.c
- 0000                   .dbfile Z:\Desktop\RTC\RTC\logger.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\logger.c
  0000                   .dbfunc e Logger_Start _Logger_Start fV
  0000           _Logger_Start::
  0000                   .dbline -1
@@ -15,7 +15,7 @@
  0000           ; #include "Rtc.h"
  0000           ; #include "BcdUtil.h"
  0000           ; #include "LedArray.h"
- 0000           ; #include <stdio.h>
+ 0000           ; //#include <stdio.h>
  0000           ; 
  0000           ; void Logger_Start(void)
  0000           ; {
@@ -39,15 +39,15 @@
  0001 7F                ret
  0002                   .dbend
                         .area data(ram, con, rel)
- 0000                   .dbfile Z:\Desktop\RTC\RTC\logger.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\logger.c
  0000           L36:
  0000 00                .byte 0
                         .area data(ram, con, rel)
- 0000                   .dbfile Z:\Desktop\RTC\RTC\logger.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\logger.c
  0000           L37:
  0000 00                .byte 0
                         .area text(rom, con, rel)
- 0002                   .dbfile Z:\Desktop\RTC\RTC\logger.c
+ 0002                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\logger.c
  0002                   .dbfunc e Logger_Loop _Logger_Loop fV
  0002                   .dbstruct 0 1 .4
  0002                   .dbfield 0 registerEnabled F[8:1]
@@ -127,7 +127,7 @@
  0012 62D000            mov REG[0xd0],>L37
  0015 520B              mov A,[X+11]
  0017 3A00              cmp A,[L37]
- 0019 A274              jz L38
+ 0019 A27C              jz L38
  001B                   .dbline 39
  001B           ;       {
  001B           ;               //cprintf("Tick\n");
@@ -564,7 +564,7 @@
  0277 20                pop X
  0278                   .dbline 106
  0278           ;                       }
- 0278 8015              xjmp L67
+ 0278 801D              xjmp L67
  027A           L73:
  027A                   .dbline 108
  027A           ;                       else
@@ -584,40 +584,46 @@
  0287           ;                       }
  0287                   .dbline 112
  0287           ;               }
- 0287 8006              xjmp L67
+ 0287 800E              xjmp L67
  0289           L66:
  0289                   .dbline 114
  0289           ;               else 
  0289           ;               {
  0289                   .dbline 115
- 0289           ;                       PWM8_Stop();
- 0289 10                push X
- 028A 7C0000            xcall _PWM8_Stop
- 028D 20                pop X
- 028E                   .dbline 116
- 028E           ;               }
- 028E           L67:
- 028E                   .dbline 118
- 028E           ;               
- 028E           ;       }
- 028E           L38:
- 028E                   .dbline -2
- 028E           L35:
- 028E 38E0              add SP,-32
- 0290 20                pop X
- 0291                   .dbline 0 ; func end
- 0291 7F                ret
- 0292                   .dbsym l now 30 S[.1]
- 0292                   .dbsym l currentYear 29 c
- 0292                   .dbsym l currentMonth 28 c
- 0292                   .dbsym l currentDate 27 c
- 0292                   .dbsym l timestampEnd 25 I
- 0292                   .dbsym l timestampStart 23 I
- 0292                   .dbsym l currentMin 22 c
- 0292                   .dbsym l currentHour 21 c
- 0292                   .dbsym l timestampNow 19 I
- 0292                   .dbsym l record 13 S[.6]
- 0292                   .dbsym l currentTemp 12 c
- 0292                   .dbsym l currentSecond 11 c
- 0292                   .dbsym l conf 0 S[.3]
- 0292                   .dbend
+ 0289           ;                       Leds_TurnOff(LED_3 | LED_4);
+ 0289 5018              mov A,24
+ 028B 08                push A
+ 028C 7C0000            xcall _Leds_TurnOff
+ 028F 38FF              add SP,-1
+ 0291                   .dbline 116
+ 0291           ;                       PWM8_Stop();
+ 0291 10                push X
+ 0292 7C0000            xcall _PWM8_Stop
+ 0295 20                pop X
+ 0296                   .dbline 117
+ 0296           ;               }
+ 0296           L67:
+ 0296                   .dbline 119
+ 0296           ;               
+ 0296           ;       }
+ 0296           L38:
+ 0296                   .dbline -2
+ 0296           L35:
+ 0296 38E0              add SP,-32
+ 0298 20                pop X
+ 0299                   .dbline 0 ; func end
+ 0299 7F                ret
+ 029A                   .dbsym l now 30 S[.1]
+ 029A                   .dbsym l currentYear 29 c
+ 029A                   .dbsym l currentMonth 28 c
+ 029A                   .dbsym l currentDate 27 c
+ 029A                   .dbsym l timestampEnd 25 I
+ 029A                   .dbsym l timestampStart 23 I
+ 029A                   .dbsym l currentMin 22 c
+ 029A                   .dbsym l currentHour 21 c
+ 029A                   .dbsym l timestampNow 19 I
+ 029A                   .dbsym l record 13 S[.6]
+ 029A                   .dbsym l currentTemp 12 c
+ 029A                   .dbsym l currentSecond 11 c
+ 029A                   .dbsym l conf 0 S[.3]
+ 029A                   .dbend

@@ -2,7 +2,7 @@
 #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
 #include "EEPROM.h"
 #include "Persist.h"
-#include <stdio.h>
+//#include <stdio.h>
 
 void Persist_Start(void)
 {
@@ -44,7 +44,7 @@ BOOL Persist_SaveRecord(Record *record)
 
 	index = sizeof(Config) + ((conf.nRecords - 1) * sizeof(Record));
 	
-	cprintf("Record Index: %d\nNrecords: %d\n", index, conf.nRecords);
+	//cprintf("Record Index: %d\nNrecords: %d\n", index, conf.nRecords);
 
 	if(EEPROM_Write((void*) record, index, sizeof(Record)) != EEPROM_NOERROR) return FALSE;
 	if(!Persist_SaveConfig(&conf)) return FALSE;

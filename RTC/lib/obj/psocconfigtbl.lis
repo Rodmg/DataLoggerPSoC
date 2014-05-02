@@ -964,8 +964,8 @@
  00B1 D200              db              d2h, 00h                ; GlobalDigitalInterconnect_Drive_Odd_Output register (GDI_O_OU)
  00B3 E17F              db              e1h, 7fh                ; OscillatorControl_1 register (OSC_CR1)
  00B5 E200              db              e2h, 00h                ; OscillatorControl_2 register (OSC_CR2)
- 00B7 DF26              db              dfh, 26h                ; OscillatorControl_3 register (OSC_CR3)
- 00B9 DE01              db              deh, 01h                ; OscillatorControl_4 register (OSC_CR4)
+ 00B7 DF9B              db              dfh, 9bh                ; OscillatorControl_3 register (OSC_CR3)
+ 00B9 DE00              db              deh, 00h                ; OscillatorControl_4 register (OSC_CR4)
  00BB DD00              db              ddh, 00h                ; OscillatorGlobalBusEnableControl register (OSC_GO_EN)
  00BD E748              db              e7h, 48h                ; Type2Decimator_Control register (DEC_CR2)
  00BF FF                db              ffh

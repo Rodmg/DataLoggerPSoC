@@ -24,7 +24,7 @@ int TempSensor_GetTemp(void)
 	temp = ADCINC_wClearFlagGetData();
 	latemp = temp;
 	//cprintf("Raw: %d\n",latemp);
-	temp = (((temp)*500.0)/1023.0)-264;//270.5;
+	temp = (((temp)*500.0)/1023.0)-281.5;
 	latemp = temp;
 	//cprintf("Conversion: %d\n",latemp);
 	

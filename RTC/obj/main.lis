@@ -2,7 +2,7 @@
                         .module main.c
                         .area text(rom, con, rel)
  0000                   .dbfile ./main.c
- 0000                   .dbfile Z:\Desktop\RTC\RTC\main.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\main.c
  0000                   .dbfunc e putchar _putchar fI
  0000           ;              c -> X-4
  0000           _putchar::
@@ -175,7 +175,7 @@
  009E 3D0107            cmp [X+1],7
  00A1 A026              jz L24
  00A3           X8:
- 00A3 8027              xjmp L14
+ 00A3 802A              xjmp L14
  00A5           L17:
  00A5                   .dbline 60
  00A5           ;               {
@@ -184,7 +184,7 @@
  00A5 7C0000            xcall _MainView_Update
  00A8                   .dbline 61
  00A8           ;                               break;
- 00A8 8022              xjmp L15
+ 00A8 8025              xjmp L15
  00AA           L18:
  00AA                   .dbline 63
  00AA           ;                       case DATETIME_CONFIG:
@@ -192,7 +192,7 @@
  00AA 7C0000            xcall _DateTimeView_Update
  00AD                   .dbline 64
  00AD           ;                               break;
- 00AD 801D              xjmp L15
+ 00AD 8020              xjmp L15
  00AF           L19:
  00AF                   .dbline 66
  00AF           ;                       case REGTIME_CONFIG:
@@ -200,7 +200,7 @@
  00AF 7C0000            xcall _RegTimeView_Update
  00B2                   .dbline 67
  00B2           ;                               break;
- 00B2 8018              xjmp L15
+ 00B2 801B              xjmp L15
  00B4           L20:
  00B4                   .dbline 69
  00B4           ;                       case LEVEL_CONFIG:
@@ -208,7 +208,7 @@
  00B4 7C0000            xcall _LevelView_Update
  00B7                   .dbline 70
  00B7           ;                               break;
- 00B7 8013              xjmp L15
+ 00B7 8016              xjmp L15
  00B9           L21:
  00B9                   .dbline 72
  00B9           ;                       case CONFIG:
@@ -216,7 +216,7 @@
  00B9 7C0000            xcall _ConfigView_Update
  00BC                   .dbline 73
  00BC           ;                               break;
- 00BC 800E              xjmp L15
+ 00BC 8011              xjmp L15
  00BE           L22:
  00BE                   .dbline 75
  00BE           ;                       case TEMP:
@@ -224,7 +224,7 @@
  00BE 7C0000            xcall _TempView_Update
  00C1                   .dbline 76
  00C1           ;                               break;
- 00C1 8009              xjmp L15
+ 00C1 800C              xjmp L15
  00C3           L23:
  00C3                   .dbline 78
  00C3           ;                       case DELET:
@@ -232,31 +232,34 @@
  00C3 7C0000            xcall _DeletView_Update
  00C6                   .dbline 79
  00C6           ;                               break;
- 00C6 8004              xjmp L15
+ 00C6 8007              xjmp L15
  00C8           L24:
  00C8                   .dbline 81
  00C8           ;                       case PC:
  00C8           ;                               PCView_Update();
  00C8 7C0000            xcall _PCView_Update
- 00CB                   .dbline 83
- 00CB           ;                               //Funcion para checar comando
- 00CB           ;                               break;
- 00CB           L14:
- 00CB           L15:
- 00CB                   .dbline 85
- 00CB           ;               }
- 00CB           ;               Logger_Loop();
- 00CB 7C0000            xcall _Logger_Loop
+ 00CB                   .dbline 82
+ 00CB           ;                               DevControl_Check();
+ 00CB 7C0000            xcall _DevControl_Check
+ 00CE                   .dbline 84
+ 00CE           ;                               //Funcion para checar comando
+ 00CE           ;                               break;
+ 00CE           L14:
+ 00CE           L15:
  00CE                   .dbline 86
- 00CE           ;       }
- 00CE                   .dbline 55
- 00CE                   .dbline 55
- 00CE 8F7A              xjmp L10
- 00D0           X0:
- 00D0                   .dbline -2
- 00D0           L9:
- 00D0 38FE              add SP,-2
- 00D2 20                pop X
- 00D3                   .dbline 0 ; func end
- 00D3 8FFF              jmp .
- 00D5                   .dbend
+ 00CE           ;               }
+ 00CE           ;               Logger_Loop();
+ 00CE 7C0000            xcall _Logger_Loop
+ 00D1                   .dbline 87
+ 00D1           ;       }
+ 00D1                   .dbline 55
+ 00D1                   .dbline 55
+ 00D1 8F77              xjmp L10
+ 00D3           X0:
+ 00D3                   .dbline -2
+ 00D3           L9:
+ 00D3 38FE              add SP,-2
+ 00D5 20                pop X
+ 00D6                   .dbline 0 ; func end
+ 00D6 8FFF              jmp .
+ 00D8                   .dbend
