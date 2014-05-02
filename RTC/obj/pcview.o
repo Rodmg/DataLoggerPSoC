@@ -11,7 +11,7 @@ S _MainView_Callback Ref0000
 S _currentView Ref0000
 A text size 5B flags 0
 dbfile ./pcview.c
-dbfile Z:\Desktop\RTC\RTC\pcview.c
+dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\pcview.c
 dbfunc e PCView_Start 0 fV
 dbline FFFFFFFF 0
 dbline D 0

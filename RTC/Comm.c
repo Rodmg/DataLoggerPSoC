@@ -3,6 +3,7 @@
 #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
 #include <string.h>
 #include "Comm.h"
+#include <stdio.h>
 
 // PACKET
 // BYTE 0 --> [COMM_PACKET_HEADER_1ST]
@@ -91,10 +92,12 @@ void Comm_Uart_RxInt(void)
 		counter = 0;
 		
 		UART_bReadRxData();
+		//cprintf("RX error %x\n", comm_error);
 		return;
 	}
 	
 	rxbuffer[counter] = UART_bReadRxData(); // read received byte
+	//cprintf("got byte %x\n", rxbuffer[counter]);
 	
 	if (counter == 0)
 	{

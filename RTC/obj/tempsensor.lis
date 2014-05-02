@@ -2,7 +2,7 @@
                         .module tempsensor.c
                         .area text(rom, con, rel)
  0000                   .dbfile ./tempsensor.c
- 0000                   .dbfile Z:\Desktop\RTC\RTC\tempsensor.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\tempsensor.c
  0000                   .dbfunc e TempSensor_Start _TempSensor_Start fV
  0000           _TempSensor_Start::
  0000                   .dbline -1
@@ -226,7 +226,7 @@
  011E 38FE              add SP,-2
  0120                   .dbline 27
  0120           ;       //cprintf("Raw: %d\n",latemp);
- 0120           ;       temp = (((temp)*500.0)/1023.0)-264;//270.5;
+ 0120           ;       temp = (((temp)*500.0)/1023.0)-281.5;
  0120 5200              mov A,[X+0]
  0122 08                push A
  0123 5201              mov A,[X+1]
@@ -280,59 +280,60 @@
  016E 38FC              add SP,-4
  0170 5043              mov A,67
  0172 08                push A
- 0173 5084              mov A,-124
+ 0173 508C              mov A,-116
  0175 08                push A
- 0176 5000              mov A,0
+ 0176 50C0              mov A,-64
  0178 08                push A
- 0179 08                push A
- 017A 5100              mov A,[__r0]
- 017C 08                push A
- 017D 5100              mov A,[__r1]
- 017F 08                push A
- 0180 5100              mov A,[__r2]
- 0182 08                push A
- 0183 5100              mov A,[__r3]
- 0185 08                push A
- 0186 7C0000            xcall __fpsub
- 0189 18                pop A
- 018A 5403              mov [X+3],A
- 018C 18                pop A
- 018D 5402              mov [X+2],A
- 018F 18                pop A
- 0190 5401              mov [X+1],A
- 0192 18                pop A
- 0193 5400              mov [X+0],A
- 0195 38FC              add SP,-4
- 0197                   .dbline 28
- 0197           ;       latemp = temp;
- 0197 5200              mov A,[X+0]
- 0199 08                push A
- 019A 5201              mov A,[X+1]
- 019C 08                push A
- 019D 5202              mov A,[X+2]
- 019F 08                push A
- 01A0 5203              mov A,[X+3]
- 01A2 08                push A
- 01A3 7C0000            xcall __fp2long
- 01A6 18                pop A
- 01A7 5405              mov [X+5],A
- 01A9 18                pop A
- 01AA 5404              mov [X+4],A
- 01AC 38FE              add SP,-2
- 01AE                   .dbline 31
- 01AE           ;       //cprintf("Conversion: %d\n",latemp);
- 01AE           ;       
- 01AE           ;       return latemp;
- 01AE 5205              mov A,[X+5]
- 01B0 5300              mov [__r1],A
- 01B2 5204              mov A,[X+4]
- 01B4 5300              mov [__r0],A
- 01B6                   .dbline -2
- 01B6           L3:
- 01B6 38FA              add SP,-6
- 01B8 20                pop X
- 01B9                   .dbline 0 ; func end
- 01B9 7F                ret
- 01BA                   .dbsym l latemp 4 I
- 01BA                   .dbsym l temp 0 D
- 01BA                   .dbend
+ 0179 5000              mov A,0
+ 017B 08                push A
+ 017C 5100              mov A,[__r0]
+ 017E 08                push A
+ 017F 5100              mov A,[__r1]
+ 0181 08                push A
+ 0182 5100              mov A,[__r2]
+ 0184 08                push A
+ 0185 5100              mov A,[__r3]
+ 0187 08                push A
+ 0188 7C0000            xcall __fpsub
+ 018B 18                pop A
+ 018C 5403              mov [X+3],A
+ 018E 18                pop A
+ 018F 5402              mov [X+2],A
+ 0191 18                pop A
+ 0192 5401              mov [X+1],A
+ 0194 18                pop A
+ 0195 5400              mov [X+0],A
+ 0197 38FC              add SP,-4
+ 0199                   .dbline 28
+ 0199           ;       latemp = temp;
+ 0199 5200              mov A,[X+0]
+ 019B 08                push A
+ 019C 5201              mov A,[X+1]
+ 019E 08                push A
+ 019F 5202              mov A,[X+2]
+ 01A1 08                push A
+ 01A2 5203              mov A,[X+3]
+ 01A4 08                push A
+ 01A5 7C0000            xcall __fp2long
+ 01A8 18                pop A
+ 01A9 5405              mov [X+5],A
+ 01AB 18                pop A
+ 01AC 5404              mov [X+4],A
+ 01AE 38FE              add SP,-2
+ 01B0                   .dbline 31
+ 01B0           ;       //cprintf("Conversion: %d\n",latemp);
+ 01B0           ;       
+ 01B0           ;       return latemp;
+ 01B0 5205              mov A,[X+5]
+ 01B2 5300              mov [__r1],A
+ 01B4 5204              mov A,[X+4]
+ 01B6 5300              mov [__r0],A
+ 01B8                   .dbline -2
+ 01B8           L3:
+ 01B8 38FA              add SP,-6
+ 01BA 20                pop X
+ 01BB                   .dbline 0 ; func end
+ 01BB 7F                ret
+ 01BC                   .dbsym l latemp 4 I
+ 01BC                   .dbsym l temp 0 D
+ 01BC                   .dbend

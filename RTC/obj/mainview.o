@@ -21,7 +21,7 @@ S _TempView_Callback Ref0000
 S _currentView Ref0000
 A text size 13A flags 0
 dbfile ./mainview.c
-dbfile Z:\Desktop\RTC\RTC\mainview.c
+dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\mainview.c
 dbfunc e MainView_Start 0 fV
 dbline FFFFFFFF 0
 dbline 16 0
@@ -72,7 +72,7 @@ S _MainView_Update Def00C3
 S _MainView_Callback Def00B1
 S _MainView_Start Def0000
 A data size 4 flags 20
-dbfile Z:\Desktop\RTC\RTC\mainview.c
+dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\mainview.c
 dbstruct 18 .1
 dbfield 0 text A[16:16]c
 dbfield 16 callback pfV
@@ -85,7 +85,7 @@ dbend
 dbsym e menu 0 S[.2]
 S _menu Def0000
 A data size 7E flags 20
-dbfile Z:\Desktop\RTC\RTC\mainview.c
+dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\mainview.c
 dbsym e entries 0 A[126:7]S[.1]
 S _entries Def0000
 A lit size 62 flags 1

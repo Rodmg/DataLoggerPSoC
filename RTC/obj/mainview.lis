@@ -2,7 +2,7 @@
                         .module mainview.c
                         .area text(rom, con, rel)
  0000                   .dbfile ./mainview.c
- 0000                   .dbfile Z:\Desktop\RTC\RTC\mainview.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\mainview.c
  0000                   .dbfunc e MainView_Start _MainView_Start fV
  0000           _MainView_Start::
  0000                   .dbline -1
@@ -300,7 +300,7 @@
  0139 7F                ret
  013A                   .dbend
                         .area data(ram, con, rel)
- 0000                   .dbfile Z:\Desktop\RTC\RTC\mainview.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\mainview.c
  0000           _menu::
  0000 00000000          .byte 0,0,0,0
  0004                   .dbstruct 0 18 .1
@@ -314,7 +314,7 @@
  0004                   .dbend
  0004                   .dbsym e menu _menu S[.2]
                         .area data(ram, con, rel)
- 0000                   .dbfile Z:\Desktop\RTC\RTC\mainview.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\mainview.c
  0000           _entries::
  0000 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
  003C 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000  .word 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

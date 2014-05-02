@@ -2,7 +2,7 @@
                         .module pcview.c
                         .area text(rom, con, rel)
  0000                   .dbfile ./pcview.c
- 0000                   .dbfile Z:\Desktop\RTC\RTC\pcview.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\pcview.c
  0000                   .dbfunc e PCView_Start _PCView_Start fV
  0000           _PCView_Start::
  0000                   .dbline -1

@@ -2,7 +2,7 @@
                         .module persist.c
                         .area text(rom, con, rel)
  0000                   .dbfile ./persist.c
- 0000                   .dbfile Z:\Desktop\RTC\RTC\persist.c
+ 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\persist.c
  0000                   .dbfunc e Persist_Start _Persist_Start fV
  0000           _Persist_Start::
  0000                   .dbline -1
@@ -11,7 +11,7 @@
  0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
  0000           ; #include "EEPROM.h"
  0000           ; #include "Persist.h"
- 0000           ; #include <stdio.h>
+ 0000           ; //#include <stdio.h>
  0000           ; 
  0000           ; void Persist_Start(void)
  0000           ; {
@@ -115,7 +115,7 @@
  0039 5007              mov A,7
  003B 08                push A
  003C 10                push X
- 003D 910C              xcall _Persist_SaveConfig
+ 003D 90F7              xcall _Persist_SaveConfig
  003F 38FE              add SP,-2
  0041 62D000            mov REG[0xd0],>__r0
  0044                   .dbline -2
@@ -159,7 +159,7 @@
  004F 5007              mov A,7
  0051 08                push A
  0052 10                push X
- 0053 911C              xcall _Persist_LoadConfig
+ 0053 9107              xcall _Persist_LoadConfig
  0055 38FE              add SP,-2
  0057 62D000            mov REG[0xd0],>__r0
  005A                   .dbline 41
@@ -178,7 +178,7 @@
  0069                   .dbline 43
  0069 62D000            mov REG[0xd0],>__r0
  006C 5000              mov A,0
- 006E 8080              xjmp L21
+ 006E 806B              xjmp L21
  0070           L23:
  0070                   .dbline 45
  0070           ; 
@@ -208,240 +208,222 @@
  009A 5100              mov A,[__r0]
  009C 0900              adc A,0
  009E 540B              mov [X+11],A
- 00A0                   .dbline 47
+ 00A0                   .dbline 49
  00A0           ;       
- 00A0           ;       cprintf("Record Index: %d\nNrecords: %d\n", index, conf.nRecords);
- 00A0 5209              mov A,[X+9]
+ 00A0           ;       //cprintf("Record Index: %d\nNrecords: %d\n", index, conf.nRecords);
+ 00A0           ; 
+ 00A0           ;       if(EEPROM_Write((void*) record, index, sizeof(Record)) != EEPROM_NOERROR) return FALSE;
+ 00A0 5006              mov A,6
  00A2 08                push A
- 00A3 520A              mov A,[X+10]
+ 00A3 520B              mov A,[X+11]
  00A5 08                push A
- 00A6 520B              mov A,[X+11]
+ 00A6 520C              mov A,[X+12]
  00A8 08                push A
- 00A9 520C              mov A,[X+12]
+ 00A9 52FB              mov A,[X-5]
  00AB 08                push A
- 00AC 5000              mov A,>L27
+ 00AC 52FC              mov A,[X-4]
  00AE 08                push A
- 00AF 5000              mov A,<L27
- 00B1 08                push A
- 00B2 7C0000            xcall _cprintf
- 00B5                   .dbline 49
- 00B5           ; 
- 00B5           ;       if(EEPROM_Write((void*) record, index, sizeof(Record)) != EEPROM_NOERROR) return FALSE;
- 00B5 5006              mov A,6
- 00B7 08                push A
- 00B8 520B              mov A,[X+11]
- 00BA 08                push A
- 00BB 520C              mov A,[X+12]
- 00BD 08                push A
- 00BE 52FB              mov A,[X-5]
- 00C0 08                push A
- 00C1 52FC              mov A,[X-4]
- 00C3 08                push A
- 00C4 7C0000            xcall _EEPROM_Write
- 00C7 38F5              add SP,-11
- 00C9 62D000            mov REG[0xd0],>__r0
- 00CC 3900              cmp A,0
- 00CE A005              jz L29
- 00D0                   .dbline 49
- 00D0 5000              mov A,0
- 00D2 801C              xjmp L21
- 00D4           L29:
- 00D4                   .dbline 50
- 00D4           ;       if(!Persist_SaveConfig(&conf)) return FALSE;
- 00D4 62D000            mov REG[0xd0],>__r0
- 00D7 5007              mov A,7
- 00D9 08                push A
- 00DA 10                push X
- 00DB 906E              xcall _Persist_SaveConfig
- 00DD 38FE              add SP,-2
- 00DF 62D000            mov REG[0xd0],>__r0
- 00E2 3900              cmp A,0
- 00E4 B005              jnz L31
- 00E6                   .dbline 50
- 00E6 5000              mov A,0
- 00E8 8006              xjmp L21
- 00EA           L31:
- 00EA                   .dbline 52
- 00EA           ; 
- 00EA           ;       return TRUE;
- 00EA 62D000            mov REG[0xd0],>__r0
- 00ED 5001              mov A,1
- 00EF                   .dbline -2
- 00EF           L21:
- 00EF 38F3              add SP,-13
- 00F1 20                pop X
- 00F2                   .dbline 0 ; func end
- 00F2 7F                ret
- 00F3                   .dbsym l index 11 s
- 00F3                   .dbsym l conf 0 S[.3]
- 00F3                   .dbsym l record -5 pS[.6]
- 00F3                   .dbend
- 00F3                   .dbfunc e Persist_LoadRecord _Persist_LoadRecord fc
- 00F3           ;          index -> X+0
- 00F3           ;              n -> X-6
- 00F3           ;         record -> X-5
- 00F3           _Persist_LoadRecord::
- 00F3                   .dbline -1
- 00F3 10                push X
- 00F4 4F                mov X,SP
- 00F5 3802              add SP,2
- 00F7                   .dbline 57
- 00F7           ; }
- 00F7           ; 
- 00F7           ; // Loads record n in record.
- 00F7           ; BOOL Persist_LoadRecord(Record *record, BYTE n)
- 00F7           ; {
- 00F7                   .dbline 58
- 00F7           ;       unsigned short index = sizeof(Config) + (n * sizeof(Record));
- 00F7 62D000            mov REG[0xd0],>__r0
- 00FA 52FA              mov A,[X-6]
+ 00AF 7C0000            xcall _EEPROM_Write
+ 00B2 38FB              add SP,-5
+ 00B4 62D000            mov REG[0xd0],>__r0
+ 00B7 3900              cmp A,0
+ 00B9 A005              jz L27
+ 00BB                   .dbline 49
+ 00BB 5000              mov A,0
+ 00BD 801C              xjmp L21
+ 00BF           L27:
+ 00BF                   .dbline 50
+ 00BF           ;       if(!Persist_SaveConfig(&conf)) return FALSE;
+ 00BF 62D000            mov REG[0xd0],>__r0
+ 00C2 5007              mov A,7
+ 00C4 08                push A
+ 00C5 10                push X
+ 00C6 906E              xcall _Persist_SaveConfig
+ 00C8 38FE              add SP,-2
+ 00CA 62D000            mov REG[0xd0],>__r0
+ 00CD 3900              cmp A,0
+ 00CF B005              jnz L29
+ 00D1                   .dbline 50
+ 00D1 5000              mov A,0
+ 00D3 8006              xjmp L21
+ 00D5           L29:
+ 00D5                   .dbline 52
+ 00D5           ; 
+ 00D5           ;       return TRUE;
+ 00D5 62D000            mov REG[0xd0],>__r0
+ 00D8 5001              mov A,1
+ 00DA                   .dbline -2
+ 00DA           L21:
+ 00DA 38F3              add SP,-13
+ 00DC 20                pop X
+ 00DD                   .dbline 0 ; func end
+ 00DD 7F                ret
+ 00DE                   .dbsym l index 11 s
+ 00DE                   .dbsym l conf 0 S[.3]
+ 00DE                   .dbsym l record -5 pS[.6]
+ 00DE                   .dbend
+ 00DE                   .dbfunc e Persist_LoadRecord _Persist_LoadRecord fc
+ 00DE           ;          index -> X+0
+ 00DE           ;              n -> X-6
+ 00DE           ;         record -> X-5
+ 00DE           _Persist_LoadRecord::
+ 00DE                   .dbline -1
+ 00DE 10                push X
+ 00DF 4F                mov X,SP
+ 00E0 3802              add SP,2
+ 00E2                   .dbline 57
+ 00E2           ; }
+ 00E2           ; 
+ 00E2           ; // Loads record n in record.
+ 00E2           ; BOOL Persist_LoadRecord(Record *record, BYTE n)
+ 00E2           ; {
+ 00E2                   .dbline 58
+ 00E2           ;       unsigned short index = sizeof(Config) + (n * sizeof(Record));
+ 00E2 62D000            mov REG[0xd0],>__r0
+ 00E5 52FA              mov A,[X-6]
+ 00E7 5300              mov [__r1],A
+ 00E9 5000              mov A,0
+ 00EB 08                push A
+ 00EC 5100              mov A,[__r1]
+ 00EE 08                push A
+ 00EF 5000              mov A,0
+ 00F1 08                push A
+ 00F2 5006              mov A,6
+ 00F4 08                push A
+ 00F5 7C0000            xcall __mul16
+ 00F8 38FC              add SP,-4
+ 00FA 5100              mov A,[__rX]
  00FC 5300              mov [__r1],A
- 00FE 5000              mov A,0
- 0100 08                push A
- 0101 5100              mov A,[__r1]
- 0103 08                push A
- 0104 5000              mov A,0
- 0106 08                push A
- 0107 5006              mov A,6
- 0109 08                push A
- 010A 7C0000            xcall __mul16
- 010D 38FC              add SP,-4
- 010F 5100              mov A,[__rX]
- 0111 5300              mov [__r1],A
- 0113 5100              mov A,[__rY]
- 0115 5300              mov [__r0],A
- 0117 5100              mov A,[__r1]
- 0119 010B              add A,11
- 011B 5401              mov [X+1],A
- 011D 5100              mov A,[__r0]
- 011F 0900              adc A,0
- 0121 5400              mov [X+0],A
- 0123                   .dbline 60
- 0123           ; 
- 0123           ;       if(EEPROM_Read((void*) record, index, sizeof(Record)) != EEPROM_NOERROR) return FALSE;
- 0123 5006              mov A,6
- 0125 08                push A
- 0126 5200              mov A,[X+0]
- 0128 08                push A
- 0129 5201              mov A,[X+1]
- 012B 08                push A
- 012C 52FB              mov A,[X-5]
- 012E 08                push A
- 012F 52FC              mov A,[X-4]
- 0131 08                push A
- 0132 7C0000            xcall _EEPROM_Read
- 0135 38FB              add SP,-5
- 0137 62D000            mov REG[0xd0],>__r0
- 013A 3900              cmp A,0
- 013C A005              jz L34
- 013E                   .dbline 60
- 013E 5000              mov A,0
- 0140 8006              xjmp L33
- 0142           L34:
- 0142                   .dbline 62
- 0142           ; 
- 0142           ;       return TRUE;
- 0142 62D000            mov REG[0xd0],>__r0
- 0145 5001              mov A,1
- 0147                   .dbline -2
- 0147           L33:
- 0147 38FE              add SP,-2
- 0149 20                pop X
- 014A                   .dbline 0 ; func end
- 014A 7F                ret
- 014B                   .dbsym l index 0 s
- 014B                   .dbsym l n -6 c
- 014B                   .dbsym l record -5 pS[.6]
- 014B                   .dbend
- 014B                   .dbfunc e Persist_SaveConfig _Persist_SaveConfig fc
- 014B           ;         config -> X-5
- 014B           _Persist_SaveConfig::
- 014B                   .dbline -1
- 014B 10                push X
- 014C 4F                mov X,SP
- 014D                   .dbline 67
- 014D           ; }
- 014D           ; 
- 014D           ; // Saves config
- 014D           ; BOOL Persist_SaveConfig(Config *config)
- 014D           ; {
- 014D                   .dbline 68
- 014D           ;       if(EEPROM_Write((void*) config, 0, sizeof(Config)) != EEPROM_NOERROR) return FALSE;
- 014D 500B              mov A,11
- 014F 08                push A
- 0150 5000              mov A,0
- 0152 08                push A
- 0153 08                push A
- 0154 52FB              mov A,[X-5]
- 0156 08                push A
- 0157 52FC              mov A,[X-4]
- 0159 08                push A
- 015A 7C0000            xcall _EEPROM_Write
- 015D 38FB              add SP,-5
- 015F 62D000            mov REG[0xd0],>__r0
- 0162 3900              cmp A,0
- 0164 A005              jz L37
- 0166                   .dbline 68
- 0166 5000              mov A,0
- 0168 8006              xjmp L36
- 016A           L37:
- 016A                   .dbline 70
- 016A           ; 
- 016A           ;       return TRUE;
- 016A 62D000            mov REG[0xd0],>__r0
- 016D 5001              mov A,1
- 016F                   .dbline -2
- 016F           L36:
- 016F 20                pop X
- 0170                   .dbline 0 ; func end
- 0170 7F                ret
- 0171                   .dbsym l config -5 pS[.3]
- 0171                   .dbend
- 0171                   .dbfunc e Persist_LoadConfig _Persist_LoadConfig fc
- 0171           ;         config -> X-5
- 0171           _Persist_LoadConfig::
- 0171                   .dbline -1
- 0171 10                push X
- 0172 4F                mov X,SP
- 0173                   .dbline 75
- 0173           ; }
- 0173           ; 
- 0173           ; // Loads config.
- 0173           ; BOOL Persist_LoadConfig(Config *config)
- 0173           ; {
- 0173                   .dbline 76
- 0173           ;       if(EEPROM_Read((void*) config, 0, sizeof(Config)) != EEPROM_NOERROR) return FALSE;
- 0173 500B              mov A,11
- 0175 08                push A
- 0176 5000              mov A,0
- 0178 08                push A
- 0179 08                push A
- 017A 52FB              mov A,[X-5]
- 017C 08                push A
- 017D 52FC              mov A,[X-4]
- 017F 08                push A
- 0180 7C0000            xcall _EEPROM_Read
- 0183 38FB              add SP,-5
- 0185 62D000            mov REG[0xd0],>__r0
- 0188 3900              cmp A,0
- 018A A005              jz L40
- 018C                   .dbline 76
- 018C 5000              mov A,0
- 018E 8006              xjmp L39
- 0190           L40:
- 0190                   .dbline 78
- 0190           ; 
- 0190           ;       return TRUE;
- 0190 62D000            mov REG[0xd0],>__r0
- 0193 5001              mov A,1
- 0195                   .dbline -2
- 0195           L39:
- 0195 20                pop X
- 0196                   .dbline 0 ; func end
- 0196 7F                ret
- 0197                   .dbsym l config -5 pS[.3]
- 0197                   .dbend
-                        .area lit(rom, con, rel, lit)
- 0000           L27:
- 0000 5265636F726420496E6465783A202564  .byte 'R,'e,'c,'o,'r,'d,32,'I,'n,'d,'e,'x,58,32,37,'d
- 0010 0A4E7265636F7264733A2025640A00    .byte 10,'N,'r,'e,'c,'o,'r,'d,'s,58,32,37,'d,10,0
+ 00FE 5100              mov A,[__rY]
+ 0100 5300              mov [__r0],A
+ 0102 5100              mov A,[__r1]
+ 0104 010B              add A,11
+ 0106 5401              mov [X+1],A
+ 0108 5100              mov A,[__r0]
+ 010A 0900              adc A,0
+ 010C 5400              mov [X+0],A
+ 010E                   .dbline 60
+ 010E           ; 
+ 010E           ;       if(EEPROM_Read((void*) record, index, sizeof(Record)) != EEPROM_NOERROR) return FALSE;
+ 010E 5006              mov A,6
+ 0110 08                push A
+ 0111 5200              mov A,[X+0]
+ 0113 08                push A
+ 0114 5201              mov A,[X+1]
+ 0116 08                push A
+ 0117 52FB              mov A,[X-5]
+ 0119 08                push A
+ 011A 52FC              mov A,[X-4]
+ 011C 08                push A
+ 011D 7C0000            xcall _EEPROM_Read
+ 0120 38FB              add SP,-5
+ 0122 62D000            mov REG[0xd0],>__r0
+ 0125 3900              cmp A,0
+ 0127 A005              jz L32
+ 0129                   .dbline 60
+ 0129 5000              mov A,0
+ 012B 8006              xjmp L31
+ 012D           L32:
+ 012D                   .dbline 62
+ 012D           ; 
+ 012D           ;       return TRUE;
+ 012D 62D000            mov REG[0xd0],>__r0
+ 0130 5001              mov A,1
+ 0132                   .dbline -2
+ 0132           L31:
+ 0132 38FE              add SP,-2
+ 0134 20                pop X
+ 0135                   .dbline 0 ; func end
+ 0135 7F                ret
+ 0136                   .dbsym l index 0 s
+ 0136                   .dbsym l n -6 c
+ 0136                   .dbsym l record -5 pS[.6]
+ 0136                   .dbend
+ 0136                   .dbfunc e Persist_SaveConfig _Persist_SaveConfig fc
+ 0136           ;         config -> X-5
+ 0136           _Persist_SaveConfig::
+ 0136                   .dbline -1
+ 0136 10                push X
+ 0137 4F                mov X,SP
+ 0138                   .dbline 67
+ 0138           ; }
+ 0138           ; 
+ 0138           ; // Saves config
+ 0138           ; BOOL Persist_SaveConfig(Config *config)
+ 0138           ; {
+ 0138                   .dbline 68
+ 0138           ;       if(EEPROM_Write((void*) config, 0, sizeof(Config)) != EEPROM_NOERROR) return FALSE;
+ 0138 500B              mov A,11
+ 013A 08                push A
+ 013B 5000              mov A,0
+ 013D 08                push A
+ 013E 08                push A
+ 013F 52FB              mov A,[X-5]
+ 0141 08                push A
+ 0142 52FC              mov A,[X-4]
+ 0144 08                push A
+ 0145 7C0000            xcall _EEPROM_Write
+ 0148 38FB              add SP,-5
+ 014A 62D000            mov REG[0xd0],>__r0
+ 014D 3900              cmp A,0
+ 014F A005              jz L35
+ 0151                   .dbline 68
+ 0151 5000              mov A,0
+ 0153 8006              xjmp L34
+ 0155           L35:
+ 0155                   .dbline 70
+ 0155           ; 
+ 0155           ;       return TRUE;
+ 0155 62D000            mov REG[0xd0],>__r0
+ 0158 5001              mov A,1
+ 015A                   .dbline -2
+ 015A           L34:
+ 015A 20                pop X
+ 015B                   .dbline 0 ; func end
+ 015B 7F                ret
+ 015C                   .dbsym l config -5 pS[.3]
+ 015C                   .dbend
+ 015C                   .dbfunc e Persist_LoadConfig _Persist_LoadConfig fc
+ 015C           ;         config -> X-5
+ 015C           _Persist_LoadConfig::
+ 015C                   .dbline -1
+ 015C 10                push X
+ 015D 4F                mov X,SP
+ 015E                   .dbline 75
+ 015E           ; }
+ 015E           ; 
+ 015E           ; // Loads config.
+ 015E           ; BOOL Persist_LoadConfig(Config *config)
+ 015E           ; {
+ 015E                   .dbline 76
+ 015E           ;       if(EEPROM_Read((void*) config, 0, sizeof(Config)) != EEPROM_NOERROR) return FALSE;
+ 015E 500B              mov A,11
+ 0160 08                push A
+ 0161 5000              mov A,0
+ 0163 08                push A
+ 0164 08                push A
+ 0165 52FB              mov A,[X-5]
+ 0167 08                push A
+ 0168 52FC              mov A,[X-4]
+ 016A 08                push A
+ 016B 7C0000            xcall _EEPROM_Read
+ 016E 38FB              add SP,-5
+ 0170 62D000            mov REG[0xd0],>__r0
+ 0173 3900              cmp A,0
+ 0175 A005              jz L38
+ 0177                   .dbline 76
+ 0177 5000              mov A,0
+ 0179 8006              xjmp L37
+ 017B           L38:
+ 017B                   .dbline 78
+ 017B           ; 
+ 017B           ;       return TRUE;
+ 017B 62D000            mov REG[0xd0],>__r0
+ 017E 5001              mov A,1
+ 0180                   .dbline -2
+ 0180           L37:
+ 0180 20                pop X
+ 0181                   .dbline 0 ; func end
+ 0181 7F                ret
+ 0182                   .dbsym l config -5 pS[.3]
+ 0182                   .dbend
