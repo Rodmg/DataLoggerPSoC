@@ -19,7 +19,7 @@ void PCView_Callback(void)
 	currentView = PC;
 	Menu_Clear();
 	LCD_Position(0, 0);
-	LCD_PrCString("¡Conecte el");
+	LCD_PrCString("Conecte el");
 	LCD_Position(1, 0);
 	LCD_PrCString("cable serial!");
 }
