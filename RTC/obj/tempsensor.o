@@ -24,7 +24,7 @@ S __fpsub Ref0000
 S __fpmul Ref0000
 A text size 1BC flags 0
 dbfile ./tempsensor.c
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\tempsensor.c
+dbfile Z:\Desktop\RTC\RTC\tempsensor.c
 dbfunc e TempSensor_Start 0 fV
 dbline FFFFFFFF 0
 dbline 8 0

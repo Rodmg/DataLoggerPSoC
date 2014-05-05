@@ -11,7 +11,7 @@ S _MainView_Callback Ref0000
 S _currentView Ref0000
 A text size 5B flags 0
 dbfile ./pcview.c
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\pcview.c
+dbfile Z:\Desktop\RTC\RTC\pcview.c
 dbfunc e PCView_Start 0 fV
 dbline FFFFFFFF 0
 dbline D 0
@@ -43,7 +43,7 @@ dbline 0 5A
 S _PCView_Update Def002F
 S _PCView_Callback Def0001
 S _PCView_Start Def0000
-A lit size 1B flags 1
+A lit size 19 flags 1
 T 00 00 7F 62 D0 00 00 55 00 00 07 7C 00 00 10 50
 R 00 00 00 00 43 05 00 07 03 08 00 07 02 0C 00 01
 T 00 0C 00 57 00 7C 00 00 50 00 0E 08 50 00 0E 5C
@@ -62,5 +62,5 @@ T 00 59 20 7F
 R 00 00 00 00
 T 00 00 63 61 62 6C 65 20 73 65 72 69 61 6C 21 00
 R 00 00 00 01
-T 00 0E C2 A1 43 6F 6E 65 63 74 65 20 65 6C 00
+T 00 0E 43 6F 6E 65 63 74 65 20 65 6C 00
 R 00 00 00 01

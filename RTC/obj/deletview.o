@@ -12,7 +12,7 @@ S _MainView_Callback Ref0000
 S _currentView Ref0000
 A text size 4D flags 0
 dbfile ./deletview.c
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\deletview.c
+dbfile Z:\Desktop\RTC\RTC\deletview.c
 dbfunc e DeletView_Start 0 fV
 dbline FFFFFFFF 0
 dbline E 0

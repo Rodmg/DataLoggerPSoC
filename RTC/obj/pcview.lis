@@ -2,7 +2,7 @@
                         .module pcview.c
                         .area text(rom, con, rel)
  0000                   .dbfile ./pcview.c
- 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\pcview.c
+ 0000                   .dbfile Z:\Desktop\RTC\RTC\pcview.c
  0000                   .dbfunc e PCView_Start _PCView_Start fV
  0000           _PCView_Start::
  0000                   .dbline -1
@@ -48,7 +48,7 @@
  000D 5700              mov X,0
  000F 7C0000            xcall _LCD_Position
  0012                   .dbline 22
- 0012           ;       LCD_PrCString("¡Conecte el");
+ 0012           ;       LCD_PrCString("Conecte el");
  0012 500E              mov A,>L6
  0014 08                push A
  0015 500E              mov A,<L6
@@ -132,4 +132,4 @@
  0000           L7:
  0000 6361626C652073657269616C2100      .byte 'c,'a,'b,'l,'e,32,'s,'e,'r,'i,'a,'l,33,0
  000E           L6:
- 000E C2A1436F6E6563746520656C00        .byte 194,161,'C,'o,'n,'e,'c,'t,'e,32,'e,'l,0
+ 000E 436F6E6563746520656C00    .byte 'C,'o,'n,'e,'c,'t,'e,32,'e,'l,0

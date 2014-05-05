@@ -25,7 +25,7 @@ S _UART_IntCntl Ref0000
 S _memcpyLMM Ref0000
 A text size 30D flags 0
 dbfile ./comm.c
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
+dbfile Z:\Desktop\RTC\RTC\comm.c
 dbstruct 4 .1
 dbfield 0 cmd c
 dbfield 1 length c
@@ -154,21 +154,21 @@ S _Comm_WritePacket Def00CE
 S _Comm_Stop Def000D
 A data size 1 flags 20
 dbfile ./comm.c
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
+dbfile Z:\Desktop\RTC\RTC\comm.c
 dbsym e comm_packet_received 0 c
 S _comm_packet_received Def0000
 A data size 0 flags 20
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
+dbfile Z:\Desktop\RTC\RTC\comm.c
 A data size 1 flags 20
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
+dbfile Z:\Desktop\RTC\RTC\comm.c
 dbsym e comm_error 0 c
 S _comm_error Def0000
 A data size 0 flags 20
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
+dbfile Z:\Desktop\RTC\RTC\comm.c
 A data size 1 flags 20
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
+dbfile Z:\Desktop\RTC\RTC\comm.c
 A data size F flags 20
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\comm.c
+dbfile Z:\Desktop\RTC\RTC\comm.c
 dbsym s rxbuffer 0 A[15:15]c
 T 00 00 00
 R 00 00 00 01

@@ -7,7 +7,7 @@ S __r3 Ref0000
 S __divmodu_8X8_8 Ref0000
 A text size 70 flags 0
 dbfile ./bcdutil.c
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\bcdutil.c
+dbfile Z:\Desktop\RTC\RTC\bcdutil.c
 dbfunc e bcdToDec 0 fV
 dbsym l dec FFFFFFF9 pc
 dbsym l bcd FFFFFFFB c

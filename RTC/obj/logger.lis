@@ -2,7 +2,7 @@
                         .module logger.c
                         .area text(rom, con, rel)
  0000                   .dbfile ./logger.c
- 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\logger.c
+ 0000                   .dbfile Z:\Desktop\RTC\RTC\logger.c
  0000                   .dbfunc e Logger_Start _Logger_Start fV
  0000           _Logger_Start::
  0000                   .dbline -1
@@ -39,15 +39,15 @@
  0001 7F                ret
  0002                   .dbend
                         .area data(ram, con, rel)
- 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\logger.c
+ 0000                   .dbfile Z:\Desktop\RTC\RTC\logger.c
  0000           L36:
  0000 00                .byte 0
                         .area data(ram, con, rel)
- 0000                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\logger.c
+ 0000                   .dbfile Z:\Desktop\RTC\RTC\logger.c
  0000           L37:
  0000 00                .byte 0
                         .area text(rom, con, rel)
- 0002                   .dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\logger.c
+ 0002                   .dbfile Z:\Desktop\RTC\RTC\logger.c
  0002                   .dbfunc e Logger_Loop _Logger_Loop fV
  0002                   .dbstruct 0 1 .4
  0002                   .dbfield 0 registerEnabled F[8:1]

@@ -20,7 +20,7 @@ S _datetime Ref0000
 S _PWM8_Start Ref0000
 A text size 29A flags 0
 dbfile ./logger.c
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\logger.c
+dbfile Z:\Desktop\RTC\RTC\logger.c
 dbstruct 1 .4
 dbfield 0 registerEnabled F[8:1]
 dbfield 0 alarmEnabled F[9:1]
@@ -137,9 +137,9 @@ S _Logger_Start Def0000
 S _Logger_End Def0001
 S _Logger_Loop Def0002
 A data size 1 flags 20
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\logger.c
+dbfile Z:\Desktop\RTC\RTC\logger.c
 A data size 1 flags 20
-dbfile X:\10OS~A33\SIST~DJW\PSoC\RTC\RTC\logger.c
+dbfile Z:\Desktop\RTC\RTC\logger.c
 T 00 00 7F 7F
 R 00 00 00 00
 T 00 00 00
