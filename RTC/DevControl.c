@@ -5,6 +5,8 @@
 #include "TempSensor.h"
 #include "Persist.h"
 #include "Rtc.h"
+#include <string.h>
+#include <stdio.h>
 
 /* Comandos:
 0 - Ping
@@ -75,14 +77,13 @@ void DevControl_Check(void)
 				break;
 
 			case CMD_ENTRY:	
-				//Persist_LoadRecord(&rec,buffer[0]);
-				//memcpy(&buffer[0],&rec,sizeof(rec));
-				//Comm_WriteCommand(CMD_ENTRY,&buffer[0],sizeof(rec));
+				Persist_LoadRecord(&rec,packet.pData[0]);
+				memcpy(&buffer[0],&rec,sizeof(Record));
+				Comm_WriteCommand(CMD_ENTRY,&buffer[0],sizeof(Record));
 				break;
 
-			case CMD_GET_TIME:	
-				//memcpy(&buffer[0],&conf,sizeof(conf));
-				//Comm_WriteCommand(CMD_GET_TIME,&buffer[0],sizeof(datetime));
+			case CMD_GET_TIME:
+				//Comm_WriteCommand(CMD_GET_TIME,&conf.datetime,sizeof(DateTime));
 				break;
 
 			case CMD_SET_TIME:	
@@ -95,11 +96,12 @@ void DevControl_Check(void)
 				break;
 
 			case CMD_SET_H_ALARM:
-				if (buffer[0] < 100 && buffer[0] > 0)
+				//cprintf("length: %d\n",packet.pData[0]);
+				if (packet.pData[0] < 100 && packet.pData[0] > 0)
 				{
-					conf.maxTemp = buffer[0];
+					conf.maxTemp = packet.pData[0];
 					Persist_SaveConfig(&conf);
-					Comm_WriteCommand(CMD_SET_H_ALARM,&buffer[0],1);
+					Comm_WriteCommand(CMD_SET_H_ALARM,&buffer[0],0);
 				} 
 				break;
 
@@ -109,11 +111,11 @@ void DevControl_Check(void)
 				break;
 
 			case CMD_SET_L_ALARM:
-				if (buffer[0] < 100 && buffer[0] > 0)
+				if (packet.pData[0] < 100 && packet.pData[0] > 0)
 				{
-					conf.minTemp = buffer[0];
+					conf.minTemp = packet.pData[0];
 					Persist_SaveConfig(&conf);
-					Comm_WriteCommand(CMD_SET_L_ALARM,&buffer[0],1);
+					Comm_WriteCommand(CMD_SET_L_ALARM,&buffer[0],0);
 				} 
 				break;
 

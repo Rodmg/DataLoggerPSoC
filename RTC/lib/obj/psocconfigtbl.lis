@@ -938,7 +938,7 @@
  0089           ;  Instance name TempBuf, User Module DigBuf
  0089           ;       Instance name TempBuf, Block Name DigBuf(DBB01)
  0089 2422              db              24h, 22h                ;TempBuf_FUNC_REG(DBB01FN)
- 008B 2567              db              25h, 67h                ;TempBuf_INPUT_REG(DBB01IN)
+ 008B 2566              db              25h, 66h                ;TempBuf_INPUT_REG(DBB01IN)
  008D 2645              db              26h, 45h                ;TempBuf_OUTPUT_REG(DBB01OU)
  008F           ;  Instance name UART, User Module UART
  008F           ;       Instance name UART, Block Name RX(DCB03)

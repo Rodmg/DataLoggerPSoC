@@ -119,7 +119,7 @@ LoadConfigTBL_rtc_Bank1:
 ;  Instance name TempBuf, User Module DigBuf
 ;       Instance name TempBuf, Block Name DigBuf(DBB01)
 	db		24h, 22h		;TempBuf_FUNC_REG(DBB01FN)
-	db		25h, 67h		;TempBuf_INPUT_REG(DBB01IN)
+	db		25h, 66h		;TempBuf_INPUT_REG(DBB01IN)
 	db		26h, 45h		;TempBuf_OUTPUT_REG(DBB01OU)
 ;  Instance name UART, User Module UART
 ;       Instance name UART, Block Name RX(DCB03)

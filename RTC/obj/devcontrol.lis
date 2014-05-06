@@ -6,13 +6,16 @@
  0000                   .dbfunc e DevControl_Start _DevControl_Start fV
  0000           _DevControl_Start::
  0000                   .dbline -1
- 0000                   .dbline 40
+ 0000                   .dbline 43
  0000           ; #include <m8c.h>        // part specific constants and macros
  0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
  0000           ; #include "Comm.h"
  0000           ; #include "DevControl.h"
  0000           ; #include "TempSensor.h"
  0000           ; #include "Persist.h"
+ 0000           ; #include "Rtc.h"
+ 0000           ; #include <string.h>
+ 0000           ; #include <stdio.h>
  0000           ; 
  0000           ; /* Comandos:
  0000           ; 0 - Ping
@@ -47,38 +50,43 @@
  0000           ; 
  0000           ; void DevControl_Start(void)
  0000           ; {
- 0000                   .dbline 41
+ 0000                   .dbline 44
  0000           ;       Comm_Start(); // initialize comm
  0000 7C0000            xcall _Comm_Start
  0003                   .dbline -2
- 0003           L8:
+ 0003           L34:
  0003                   .dbline 0 ; func end
  0003 7F                ret
  0004                   .dbend
  0004                   .dbfunc e DevControl_Stop _DevControl_Stop fV
  0004           _DevControl_Stop::
  0004                   .dbline -1
- 0004                   .dbline 45
+ 0004                   .dbline 48
  0004           ; }
  0004           ; 
  0004           ; void DevControl_Stop(void)
  0004           ; {
- 0004                   .dbline 46
+ 0004                   .dbline 49
  0004           ;       Comm_Stop();
  0004 7C0000            xcall _Comm_Stop
  0007                   .dbline -2
- 0007           L9:
+ 0007           L35:
  0007                   .dbline 0 ; func end
  0007 7F                ret
  0008                   .dbend
                         .area lit(rom, con, rel, lit)
- 0000           L11:
+ 0000           L37:
  0000 00                .byte 0
  0001 00000000000000000000      .word 0,0,0,0,0
  000B 000000000000000000        .byte 0,0,0,0,0,0,0,0,0
                         .area text(rom, con, rel)
  0008                   .dbfile Z:\Desktop\RTC\RTC\devcontrol.c
  0008                   .dbfunc e DevControl_Check _DevControl_Check fV
+ 0008                   .dbstruct 0 4 .1
+ 0008                   .dbfield 0 cmd c
+ 0008                   .dbfield 1 length c
+ 0008                   .dbfield 2 pData pc
+ 0008                   .dbend
  0008                   .dbstruct 0 1 .5
  0008                   .dbfield 0 registerEnabled F[0:1]
  0008                   .dbfield 0 alarmEnabled F[1:1]
@@ -97,29 +105,35 @@
  0008                   .dbfield 8 minRegisteredTemp c
  0008                   .dbfield 9 nRecords s
  0008                   .dbend
- 0008                   .dbstruct 0 4 .1
- 0008                   .dbfield 0 cmd c
- 0008                   .dbfield 1 length c
- 0008                   .dbfield 2 pData pc
+ 0008                   .dbstruct 0 3 .3
+ 0008                   .dbfield 0 date c
+ 0008                   .dbfield 1 month c
+ 0008                   .dbfield 2 year c
  0008                   .dbend
- 0008           ;         packet -> X+31
- 0008           ;           conf -> X+20
+ 0008                   .dbstruct 0 6 .7
+ 0008                   .dbfield 0 date S[.3]
+ 0008                   .dbfield 3 time S[.2]
+ 0008                   .dbfield 5 temp c
+ 0008                   .dbend
+ 0008           ;            rec -> X+35
+ 0008           ;           conf -> X+24
+ 0008           ;         packet -> X+20
  0008           ;         buffer -> X+0
  0008           _DevControl_Check::
  0008                   .dbline -1
  0008 10                push X
  0009 4F                mov X,SP
- 000A 3825              add SP,37
- 000C                   .dbline 50
+ 000A 382B              add SP,43
+ 000C                   .dbline 53
  000C           ; }
  000C           ; 
  000C           ; void DevControl_Check(void)
  000C           ; {
- 000C                   .dbline 51
+ 000C                   .dbline 54
  000C           ;       BYTE buffer[20] = { 0 };
  000C 62D000            mov REG[0xd0],>__r0
- 000F 550000            mov [__r1],<L11
- 0012 550000            mov [__r0],>L11
+ 000F 550000            mov [__r1],<L37
+ 0012 550000            mov [__r0],>L37
  0015 5A00              mov [__r3],X
  0017 62D507            mov REG[0xd5],7
  001A 10                push X
@@ -138,100 +152,101 @@
  002F 3C0014            cmp [__rX],20
  0032 BFEF              jnz X0
  0034 20                pop X
- 0035                   .dbline 54
+ 0035                   .dbline 58
  0035           ;       COMMPACKET packet;
  0035           ;       Config conf;
+ 0035           ;       Record rec;
  0035           ;       Persist_LoadConfig(&conf);
  0035 5A00              mov [__r1],X
- 0037 060014            add [__r1],20
+ 0037 060018            add [__r1],24
  003A 5007              mov A,7
  003C 08                push A
  003D 5100              mov A,[__r1]
  003F 08                push A
  0040 7C0000            xcall _Persist_LoadConfig
  0043 38FE              add SP,-2
- 0045                   .dbline 56
+ 0045                   .dbline 60
  0045           ; 
  0045           ;       if (comm_packet_received == TRUE)
  0045 62D000            mov REG[0xd0],>_comm_packet_received
  0048 3C0001            cmp [_comm_packet_received],1
- 004B B17D              jnz L12
- 004D                   .dbline 58
+ 004B B210              jnz L38
+ 004D                   .dbline 62
  004D           ;       {       
  004D           ;               Comm_ReadPacket(&packet);
- 004D                   .dbline 58
+ 004D                   .dbline 62
  004D 62D000            mov REG[0xd0],>__r0
  0050 5A00              mov [__r1],X
- 0052 06001F            add [__r1],31
+ 0052 060014            add [__r1],20
  0055 5007              mov A,7
  0057 08                push A
  0058 5100              mov A,[__r1]
  005A 08                push A
  005B 7C0000            xcall _Comm_ReadPacket
  005E 38FE              add SP,-2
- 0060                   .dbline 59
+ 0060                   .dbline 63
  0060           ;               switch (packet.cmd) 
- 0060 521F              mov A,[X+31]
- 0062 5424              mov [X+36],A
- 0064 562300            mov [X+35],0
- 0067 3D2300            cmp [X+35],0
+ 0060 5214              mov A,[X+20]
+ 0062 542A              mov [X+42],A
+ 0064 562900            mov [X+41],0
+ 0067 3D2900            cmp [X+41],0
  006A B006              jnz X1
- 006C 3D2400            cmp [X+36],0
- 006F A067              jz L17
+ 006C 3D2A00            cmp [X+42],0
+ 006F A067              jz L43
  0071           X1:
- 0071 3D2300            cmp [X+35],0
+ 0071 3D2900            cmp [X+41],0
  0074 B006              jnz X2
- 0076 3D2401            cmp [X+36],1
- 0079 A071              jz L18
+ 0076 3D2A01            cmp [X+42],1
+ 0079 A071              jz L44
  007B           X2:
- 007B 3D2300            cmp [X+35],0
+ 007B 3D2900            cmp [X+41],0
  007E B006              jnz X3
- 0080 3D2402            cmp [X+36],2
- 0083 A07E              jz L19
+ 0080 3D2A02            cmp [X+42],2
+ 0083 A07E              jz L45
  0085           X3:
- 0085 3D2300            cmp [X+35],0
+ 0085 3D2900            cmp [X+41],0
  0088 B006              jnz X4
- 008A 3D2403            cmp [X+36],3
- 008D A13B              jz L15
+ 008A 3D2A03            cmp [X+42],3
+ 008D A08C              jz L47
  008F           X4:
- 008F 3D2300            cmp [X+35],0
+ 008F 3D2900            cmp [X+41],0
  0092 B006              jnz X5
- 0094 3D2404            cmp [X+36],4
- 0097 A131              jz L15
+ 0094 3D2A04            cmp [X+42],4
+ 0097 A1C4              jz L41
  0099           X5:
- 0099 3D2300            cmp [X+35],0
+ 0099 3D2900            cmp [X+41],0
  009C B006              jnz X6
- 009E 3D2405            cmp [X+36],5
- 00A1 A127              jz L15
+ 009E 3D2A05            cmp [X+42],5
+ 00A1 A1BA              jz L41
  00A3           X6:
- 00A3 3D2300            cmp [X+35],0
+ 00A3 3D2900            cmp [X+41],0
  00A6 B006              jnz X7
- 00A8 3D2406            cmp [X+36],6
- 00AB A06E              jz L24
+ 00A8 3D2A06            cmp [X+42],6
+ 00AB A0BB              jz L51
  00AD           X7:
- 00AD 3D2300            cmp [X+35],0
+ 00AD 3D2900            cmp [X+41],0
  00B0 B006              jnz X8
- 00B2 3D2407            cmp [X+36],7
- 00B5 A07C              jz L26
+ 00B2 3D2A07            cmp [X+42],7
+ 00B5 A0C9              jz L53
  00B7           X8:
- 00B7 3D2300            cmp [X+35],0
+ 00B7 3D2900            cmp [X+41],0
  00BA B006              jnz X9
- 00BC 3D2408            cmp [X+36],8
- 00BF A0A4              jz L30
+ 00BC 3D2A08            cmp [X+42],8
+ 00BF A114              jz L60
  00C1           X9:
- 00C1 3D2300            cmp [X+35],0
+ 00C1 3D2900            cmp [X+41],0
  00C4 B006              jnz X10
- 00C6 3D2409            cmp [X+36],9
- 00C9 A0B2              jz L32
+ 00C6 3D2A09            cmp [X+42],9
+ 00C9 A122              jz L62
  00CB           X10:
- 00CB 3D2300            cmp [X+35],0
+ 00CB 3D2900            cmp [X+41],0
  00CE B006              jnz X11
- 00D0 3D240A            cmp [X+36],10
- 00D3 A0DC              jz L36
+ 00D0 3D2A0A            cmp [X+42],10
+ 00D3 A16F              jz L69
  00D5           X11:
- 00D5 80F3              xjmp L15
- 00D7           L17:
- 00D7                   .dbline 62
+ 00D5 8186              xjmp L41
+ 00D7           L43:
+ 00D7                   .dbline 66
  00D7           ;               {
  00D7           ;                       case CMD_PING:
  00D7           ;                               Comm_WriteCommand(CMD_PING,&buffer[0],0);
@@ -245,16 +260,16 @@
  00E3 08                push A
  00E4 7C0000            xcall _Comm_WriteCommand
  00E7 38FC              add SP,-4
- 00E9                   .dbline 63
+ 00E9                   .dbline 67
  00E9           ;                               break;
- 00E9 80DF              xjmp L15
- 00EB           L18:
- 00EB                   .dbline 66
+ 00E9 8172              xjmp L41
+ 00EB           L44:
+ 00EB                   .dbline 70
  00EB           ; 
  00EB           ;                       case CMD_EREASE_MEMORY:
  00EB           ;                               Persist_Clear();
  00EB 7C0000            xcall _Persist_Clear
- 00EE                   .dbline 67
+ 00EE                   .dbline 71
  00EE           ;                               Comm_WriteCommand(CMD_EREASE_MEMORY,&buffer[0],0);
  00EE 5000              mov A,0
  00F0 08                push A
@@ -266,18 +281,18 @@
  00FA 08                push A
  00FB 7C0000            xcall _Comm_WriteCommand
  00FE 38FC              add SP,-4
- 0100                   .dbline 68
+ 0100                   .dbline 72
  0100           ;                               break;
- 0100 80C8              xjmp L15
- 0102           L19:
- 0102                   .dbline 71
+ 0100 815B              xjmp L41
+ 0102           L45:
+ 0102                   .dbline 75
  0102           ; 
  0102           ;                       case CMD_N_ENTRIES:
  0102           ;                               buffer[0] = conf.nRecords;
  0102 62D000            mov REG[0xd0],>__r0
- 0105 521E              mov A,[X+30]
+ 0105 5222              mov A,[X+34]
  0107 5400              mov [X+0],A
- 0109                   .dbline 72
+ 0109                   .dbline 76
  0109           ;                               Comm_WriteCommand(CMD_N_ENTRIES,&buffer[0],1);
  0109 5001              mov A,1
  010B 08                push A
@@ -288,193 +303,277 @@
  0112 08                push A
  0113 7C0000            xcall _Comm_WriteCommand
  0116 38FC              add SP,-4
- 0118                   .dbline 73
+ 0118                   .dbline 77
  0118           ;                               break;
- 0118 80B0              xjmp L15
- 011A           L24:
- 011A                   .dbline 88
+ 0118 8143              xjmp L41
+ 011A           L47:
+ 011A                   .dbline 80
  011A           ; 
  011A           ;                       case CMD_ENTRY: 
- 011A           ; 
- 011A           ;                               break;
- 011A           ; 
- 011A           ;                       case CMD_GET_TIME:      
- 011A           ; 
- 011A           ;                               break;
- 011A           ; 
- 011A           ;                       case CMD_SET_TIME:      
- 011A           ; 
- 011A           ;                               break;
- 011A           ; 
- 011A           ;                       case CMD_GET_H_ALARM:
- 011A           ;                               buffer[0] = conf.maxTemp;
- 011A 5219              mov A,[X+25]
- 011C 5400              mov [X+0],A
- 011E                   .dbline 89
- 011E           ;                               Comm_WriteCommand(CMD_GET_H_ALARM,&buffer[0],1);
- 011E 5001              mov A,1
- 0120 08                push A
- 0121 62D000            mov REG[0xd0],>__r0
- 0124 5007              mov A,7
- 0126 08                push A
- 0127 10                push X
- 0128 5006              mov A,6
- 012A 08                push A
- 012B 7C0000            xcall _Comm_WriteCommand
- 012E 38FC              add SP,-4
- 0130                   .dbline 90
- 0130           ;                               break;
- 0130 8098              xjmp L15
- 0132           L26:
- 0132                   .dbline 93
- 0132           ; 
- 0132           ;                       case CMD_SET_H_ALARM:
- 0132           ;                               if (buffer[0] < 100 && buffer[0] > 0)
- 0132 3D0064            cmp [X+0],100
- 0135 D093              jnc L15
- 0137           X12:
- 0137 5000              mov A,0
- 0139 3B00              cmp A,[X+0]
- 013B D08D              jnc L15
- 013D           X13:
- 013D                   .dbline 95
- 013D           ;                               {
- 013D           ;                                       conf.maxTemp = buffer[0];
- 013D                   .dbline 95
- 013D 5200              mov A,[X+0]
- 013F 5419              mov [X+25],A
- 0141                   .dbline 96
- 0141           ;                                       Persist_SaveConfig(&conf);
- 0141 62D000            mov REG[0xd0],>__r0
- 0144 5A00              mov [__r1],X
- 0146 060014            add [__r1],20
- 0149 5007              mov A,7
+ 011A           ;                               Persist_LoadRecord(&rec,packet.pData[0]);
+ 011A 62D000            mov REG[0xd0],>__r0
+ 011D 5217              mov A,[X+23]
+ 011F 5300              mov [__r1],A
+ 0121 5216              mov A,[X+22]
+ 0123 60D4              mov REG[0xd4],A
+ 0125 3E00              mvi A,[__r1]
+ 0127 08                push A
+ 0128 5A00              mov [__r1],X
+ 012A 060023            add [__r1],35
+ 012D 5007              mov A,7
+ 012F 08                push A
+ 0130 5100              mov A,[__r1]
+ 0132 08                push A
+ 0133 7C0000            xcall _Persist_LoadRecord
+ 0136 38FD              add SP,-3
+ 0138 62D000            mov REG[0xd0],>__r0
+ 013B                   .dbline 81
+ 013B           ;                               memcpy(&buffer[0],&rec,sizeof(Record));
+ 013B 5000              mov A,0
+ 013D 08                push A
+ 013E 5006              mov A,6
+ 0140 08                push A
+ 0141 5A00              mov [__r1],X
+ 0143 060023            add [__r1],35
+ 0146 5007              mov A,7
+ 0148 08                push A
+ 0149 5100              mov A,[__r1]
  014B 08                push A
- 014C 5100              mov A,[__r1]
+ 014C 5007              mov A,7
  014E 08                push A
- 014F 7C0000            xcall _Persist_SaveConfig
- 0152 62D000            mov REG[0xd0],>__r0
- 0155                   .dbline 97
- 0155           ;                                       Comm_WriteCommand(CMD_SET_H_ALARM,&buffer[0],1);
- 0155 5001              mov A,1
- 0157 08                push A
- 0158 5007              mov A,7
- 015A 08                push A
- 015B 10                push X
- 015C 08                push A
- 015D 7C0000            xcall _Comm_WriteCommand
- 0160 38FA              add SP,-6
- 0162                   .dbline 98
- 0162           ;                               } 
- 0162                   .dbline 99
- 0162           ;                               break;
- 0162 8066              xjmp L15
- 0164           L30:
- 0164                   .dbline 102
- 0164           ; 
- 0164           ;                       case CMD_GET_L_ALARM:
- 0164           ;                               buffer[0] = conf.minTemp;
- 0164 521A              mov A,[X+26]
- 0166 5400              mov [X+0],A
- 0168                   .dbline 103
- 0168           ;                               Comm_WriteCommand(CMD_GET_L_ALARM,&buffer[0],1);
- 0168 5001              mov A,1
- 016A 08                push A
- 016B 62D000            mov REG[0xd0],>__r0
- 016E 5007              mov A,7
- 0170 08                push A
- 0171 10                push X
- 0172 5008              mov A,8
- 0174 08                push A
- 0175 7C0000            xcall _Comm_WriteCommand
- 0178 38FC              add SP,-4
- 017A                   .dbline 104
- 017A           ;                               break;
- 017A 804E              xjmp L15
- 017C           L32:
- 017C                   .dbline 107
- 017C           ; 
- 017C           ;                       case CMD_SET_L_ALARM:
- 017C           ;                               if (buffer[0] < 100 && buffer[0] > 0)
- 017C 3D0064            cmp [X+0],100
- 017F D049              jnc L15
- 0181           X14:
- 0181 5000              mov A,0
- 0183 3B00              cmp A,[X+0]
- 0185 D043              jnc L15
- 0187           X15:
- 0187                   .dbline 109
- 0187           ;                               {
- 0187           ;                                       conf.minTemp = buffer[0];
- 0187                   .dbline 109
- 0187 5200              mov A,[X+0]
- 0189 541A              mov [X+26],A
- 018B                   .dbline 110
- 018B           ;                                       Persist_SaveConfig(&conf);
- 018B 62D000            mov REG[0xd0],>__r0
- 018E 5A00              mov [__r1],X
- 0190 060014            add [__r1],20
- 0193 5007              mov A,7
- 0195 08                push A
- 0196 5100              mov A,[__r1]
- 0198 08                push A
- 0199 7C0000            xcall _Persist_SaveConfig
- 019C 62D000            mov REG[0xd0],>__r0
- 019F                   .dbline 111
- 019F           ;                                       Comm_WriteCommand(CMD_SET_L_ALARM,&buffer[0],1);
- 019F 5001              mov A,1
- 01A1 08                push A
- 01A2 5007              mov A,7
- 01A4 08                push A
- 01A5 10                push X
- 01A6 5009              mov A,9
- 01A8 08                push A
- 01A9 7C0000            xcall _Comm_WriteCommand
- 01AC 38FA              add SP,-6
- 01AE                   .dbline 112
- 01AE           ;                               } 
- 01AE                   .dbline 113
- 01AE           ;                               break;
- 01AE 801A              xjmp L15
- 01B0           L36:
- 01B0                   .dbline 116
- 01B0           ; 
- 01B0           ;                       case CMD_TEMP:
- 01B0           ;                               buffer[0] = TempSensor_GetTemp();
- 01B0 7C0000            xcall _TempSensor_GetTemp
- 01B3 62D000            mov REG[0xd0],>__r0
- 01B6 5100              mov A,[__r1]
- 01B8 5400              mov [X+0],A
- 01BA                   .dbline 117
- 01BA           ;                               Comm_WriteCommand(CMD_TEMP, &buffer[0],1);
- 01BA 5001              mov A,1
- 01BC 08                push A
- 01BD 5007              mov A,7
- 01BF 08                push A
- 01C0 10                push X
- 01C1 500A              mov A,10
- 01C3 08                push A
- 01C4 7C0000            xcall _Comm_WriteCommand
- 01C7 38FC              add SP,-4
- 01C9                   .dbline 118
- 01C9           ;                               break;
- 01C9                   .dbline 122
- 01C9           ; 
- 01C9           ;                       default:
- 01C9           ;                               //¡UNKNOWN CMD!
- 01C9           ;                               break;
- 01C9           L15:
- 01C9                   .dbline 124
- 01C9           ;               }
- 01C9           ;       }
- 01C9           L12:
- 01C9                   .dbline -2
- 01C9           L10:
- 01C9 38DB              add SP,-37
- 01CB 20                pop X
- 01CC                   .dbline 0 ; func end
- 01CC 7F                ret
- 01CD                   .dbsym l packet 31 S[.1]
- 01CD                   .dbsym l conf 20 S[.4]
- 01CD                   .dbsym l buffer 0 A[20:20]c
- 01CD                   .dbend
+ 014F 10                push X
+ 0150 7C0000            xcall _memcpyLMM
+ 0153                   .dbline 82
+ 0153           ;                               Comm_WriteCommand(CMD_ENTRY,&buffer[0],sizeof(Record));
+ 0153 5006              mov A,6
+ 0155 08                push A
+ 0156 62D000            mov REG[0xd0],>__r0
+ 0159 5007              mov A,7
+ 015B 08                push A
+ 015C 10                push X
+ 015D 5003              mov A,3
+ 015F 08                push A
+ 0160 7C0000            xcall _Comm_WriteCommand
+ 0163 38F6              add SP,-10
+ 0165                   .dbline 83
+ 0165           ;                               break;
+ 0165 80F6              xjmp L41
+ 0167           L51:
+ 0167                   .dbline 94
+ 0167           ; 
+ 0167           ;                       case CMD_GET_TIME:
+ 0167           ;                               //Comm_WriteCommand(CMD_GET_TIME,&conf.datetime,sizeof(DateTime));
+ 0167           ;                               break;
+ 0167           ; 
+ 0167           ;                       case CMD_SET_TIME:      
+ 0167           ; 
+ 0167           ;                               break;
+ 0167           ; 
+ 0167           ;                       case CMD_GET_H_ALARM:
+ 0167           ;                               buffer[0] = conf.maxTemp;
+ 0167 521D              mov A,[X+29]
+ 0169 5400              mov [X+0],A
+ 016B                   .dbline 95
+ 016B           ;                               Comm_WriteCommand(CMD_GET_H_ALARM,&buffer[0],1);
+ 016B 5001              mov A,1
+ 016D 08                push A
+ 016E 62D000            mov REG[0xd0],>__r0
+ 0171 5007              mov A,7
+ 0173 08                push A
+ 0174 10                push X
+ 0175 5006              mov A,6
+ 0177 08                push A
+ 0178 7C0000            xcall _Comm_WriteCommand
+ 017B 38FC              add SP,-4
+ 017D                   .dbline 96
+ 017D           ;                               break;
+ 017D 80DE              xjmp L41
+ 017F           L53:
+ 017F                   .dbline 100
+ 017F           ; 
+ 017F           ;                       case CMD_SET_H_ALARM:
+ 017F           ;                               //cprintf("length: %d\n",packet.pData[0]);
+ 017F           ;                               if (packet.pData[0] < 100 && packet.pData[0] > 0)
+ 017F 62D000            mov REG[0xd0],>__r0
+ 0182 5217              mov A,[X+23]
+ 0184 5300              mov [__r1],A
+ 0186 5216              mov A,[X+22]
+ 0188 60D4              mov REG[0xd4],A
+ 018A 3E00              mvi A,[__r1]
+ 018C 3964              cmp A,100
+ 018E D0CD              jnc L41
+ 0190           X12:
+ 0190 62D000            mov REG[0xd0],>__r0
+ 0193 5217              mov A,[X+23]
+ 0195 5300              mov [__r1],A
+ 0197 5216              mov A,[X+22]
+ 0199 60D4              mov REG[0xd4],A
+ 019B 3E00              mvi A,[__r1]
+ 019D 5300              mov [__r0],A
+ 019F 5000              mov A,0
+ 01A1 3A00              cmp A,[__r0]
+ 01A3 D0B8              jnc L41
+ 01A5           X13:
+ 01A5                   .dbline 102
+ 01A5           ;                               {
+ 01A5           ;                                       conf.maxTemp = packet.pData[0];
+ 01A5                   .dbline 102
+ 01A5 62D000            mov REG[0xd0],>__r0
+ 01A8 5217              mov A,[X+23]
+ 01AA 5300              mov [__r1],A
+ 01AC 5216              mov A,[X+22]
+ 01AE 60D4              mov REG[0xd4],A
+ 01B0 3E00              mvi A,[__r1]
+ 01B2 541D              mov [X+29],A
+ 01B4                   .dbline 103
+ 01B4           ;                                       Persist_SaveConfig(&conf);
+ 01B4 5A00              mov [__r1],X
+ 01B6 060018            add [__r1],24
+ 01B9 5007              mov A,7
+ 01BB 08                push A
+ 01BC 5100              mov A,[__r1]
+ 01BE 08                push A
+ 01BF 7C0000            xcall _Persist_SaveConfig
+ 01C2 62D000            mov REG[0xd0],>__r0
+ 01C5                   .dbline 104
+ 01C5           ;                                       Comm_WriteCommand(CMD_SET_H_ALARM,&buffer[0],0);
+ 01C5 5000              mov A,0
+ 01C7 08                push A
+ 01C8 5007              mov A,7
+ 01CA 08                push A
+ 01CB 10                push X
+ 01CC 08                push A
+ 01CD 7C0000            xcall _Comm_WriteCommand
+ 01D0 38FA              add SP,-6
+ 01D2                   .dbline 105
+ 01D2           ;                               } 
+ 01D2                   .dbline 106
+ 01D2           ;                               break;
+ 01D2 8089              xjmp L41
+ 01D4           L60:
+ 01D4                   .dbline 109
+ 01D4           ; 
+ 01D4           ;                       case CMD_GET_L_ALARM:
+ 01D4           ;                               buffer[0] = conf.minTemp;
+ 01D4 521E              mov A,[X+30]
+ 01D6 5400              mov [X+0],A
+ 01D8                   .dbline 110
+ 01D8           ;                               Comm_WriteCommand(CMD_GET_L_ALARM,&buffer[0],1);
+ 01D8 5001              mov A,1
+ 01DA 08                push A
+ 01DB 62D000            mov REG[0xd0],>__r0
+ 01DE 5007              mov A,7
+ 01E0 08                push A
+ 01E1 10                push X
+ 01E2 5008              mov A,8
+ 01E4 08                push A
+ 01E5 7C0000            xcall _Comm_WriteCommand
+ 01E8 38FC              add SP,-4
+ 01EA                   .dbline 111
+ 01EA           ;                               break;
+ 01EA 8071              xjmp L41
+ 01EC           L62:
+ 01EC                   .dbline 114
+ 01EC           ; 
+ 01EC           ;                       case CMD_SET_L_ALARM:
+ 01EC           ;                               if (packet.pData[0] < 100 && packet.pData[0] > 0)
+ 01EC 62D000            mov REG[0xd0],>__r0
+ 01EF 5217              mov A,[X+23]
+ 01F1 5300              mov [__r1],A
+ 01F3 5216              mov A,[X+22]
+ 01F5 60D4              mov REG[0xd4],A
+ 01F7 3E00              mvi A,[__r1]
+ 01F9 3964              cmp A,100
+ 01FB D060              jnc L41
+ 01FD           X14:
+ 01FD 62D000            mov REG[0xd0],>__r0
+ 0200 5217              mov A,[X+23]
+ 0202 5300              mov [__r1],A
+ 0204 5216              mov A,[X+22]
+ 0206 60D4              mov REG[0xd4],A
+ 0208 3E00              mvi A,[__r1]
+ 020A 5300              mov [__r0],A
+ 020C 5000              mov A,0
+ 020E 3A00              cmp A,[__r0]
+ 0210 D04B              jnc L41
+ 0212           X15:
+ 0212                   .dbline 116
+ 0212           ;                               {
+ 0212           ;                                       conf.minTemp = packet.pData[0];
+ 0212                   .dbline 116
+ 0212 62D000            mov REG[0xd0],>__r0
+ 0215 5217              mov A,[X+23]
+ 0217 5300              mov [__r1],A
+ 0219 5216              mov A,[X+22]
+ 021B 60D4              mov REG[0xd4],A
+ 021D 3E00              mvi A,[__r1]
+ 021F 541E              mov [X+30],A
+ 0221                   .dbline 117
+ 0221           ;                                       Persist_SaveConfig(&conf);
+ 0221 5A00              mov [__r1],X
+ 0223 060018            add [__r1],24
+ 0226 5007              mov A,7
+ 0228 08                push A
+ 0229 5100              mov A,[__r1]
+ 022B 08                push A
+ 022C 7C0000            xcall _Persist_SaveConfig
+ 022F 62D000            mov REG[0xd0],>__r0
+ 0232                   .dbline 118
+ 0232           ;                                       Comm_WriteCommand(CMD_SET_L_ALARM,&buffer[0],0);
+ 0232 5000              mov A,0
+ 0234 08                push A
+ 0235 5007              mov A,7
+ 0237 08                push A
+ 0238 10                push X
+ 0239 5009              mov A,9
+ 023B 08                push A
+ 023C 7C0000            xcall _Comm_WriteCommand
+ 023F 38FA              add SP,-6
+ 0241                   .dbline 119
+ 0241           ;                               } 
+ 0241                   .dbline 120
+ 0241           ;                               break;
+ 0241 801A              xjmp L41
+ 0243           L69:
+ 0243                   .dbline 123
+ 0243           ; 
+ 0243           ;                       case CMD_TEMP:
+ 0243           ;                               buffer[0] = TempSensor_GetTemp();
+ 0243 7C0000            xcall _TempSensor_GetTemp
+ 0246 62D000            mov REG[0xd0],>__r0
+ 0249 5100              mov A,[__r1]
+ 024B 5400              mov [X+0],A
+ 024D                   .dbline 124
+ 024D           ;                               Comm_WriteCommand(CMD_TEMP, &buffer[0],1);
+ 024D 5001              mov A,1
+ 024F 08                push A
+ 0250 5007              mov A,7
+ 0252 08                push A
+ 0253 10                push X
+ 0254 500A              mov A,10
+ 0256 08                push A
+ 0257 7C0000            xcall _Comm_WriteCommand
+ 025A 38FC              add SP,-4
+ 025C                   .dbline 125
+ 025C           ;                               break;
+ 025C                   .dbline 129
+ 025C           ; 
+ 025C           ;                       default:
+ 025C           ;                               //¡UNKNOWN CMD!
+ 025C           ;                               break;
+ 025C           L41:
+ 025C                   .dbline 131
+ 025C           ;               }
+ 025C           ;       }
+ 025C           L38:
+ 025C                   .dbline -2
+ 025C           L36:
+ 025C 38D5              add SP,-43
+ 025E 20                pop X
+ 025F                   .dbline 0 ; func end
+ 025F 7F                ret
+ 0260                   .dbsym l rec 35 S[.7]
+ 0260                   .dbsym l conf 24 S[.4]
+ 0260                   .dbsym l packet 20 S[.1]
+ 0260                   .dbsym l buffer 0 A[20:20]c
+ 0260                   .dbend

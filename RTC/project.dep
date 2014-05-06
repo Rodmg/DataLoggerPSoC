@@ -61,8 +61,12 @@
    C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/M8C.h\
    C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/CY8C29~1/m8c.h\
    C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/_const.h\
+   C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/stdarg.h\
+   C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/stdio.h\
+   C:/ARCHIV~1/Cypress/PSOCDE~1/5.4/Common/CY3E64~1/tools/include/string.h\
    Z:\Desktop\RTC\RTC\Comm.h Z:\Desktop\RTC\RTC\DEVC~L89.H\
-   Z:\Desktop\RTC\RTC\Persist.h Z:\Desktop\RTC\RTC\TEMP~A5Y.H
+   Z:\Desktop\RTC\RTC\Persist.h Z:\Desktop\RTC\RTC\Rtc.h\
+   Z:\Desktop\RTC\RTC\TEMP~A5Y.H
 ./obj/eeprom.o :  ./lib/ADCINC.h ./lib/I2Cm.h ./lib/LCD.h ./lib/PGA.h\
    ./lib/PSoCAPI.h ./lib/PSOC~FJE.H ./lib/PWM8.h ./lib/TempBuf.h\
    ./lib/UART.h\
