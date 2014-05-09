@@ -6,7 +6,7 @@
  0000                   .dbfunc e Leds_Start _Leds_Start fV
  0000           _Leds_Start::
  0000                   .dbline -1
- 0000                   .dbline 44
+ 0000                   .dbline 53
  0000           ; #include <m8c.h>        // part specific constants and macros
  0000           ; #include "PSoCAPI.h"    // PSoC API definitions for all User Modules
  0000           ; #include "LedArray.h"
@@ -20,6 +20,9 @@
  0000           ;       #if LEDS_SHADOWREG == 1
  0000           ;               extern BYTE Port_0_Data_SHADE;
  0000           ;               #define Port_Data_SHADE Port_0_Data_SHADE
+ 0000           ;               #define Port_Data_DM0_SHADE Port_0_DriveMode_0_SHADE
+ 0000           ;               #define Port_Data_DM1_SHADE Port_0_DriveMode_1_SHADE
+ 0000           ;               #define Port_Data_DM2_SHADE Port_0_DriveMode_2_SHADE
  0000           ;       #endif 
  0000           ;               
  0000           ; #elif LEDS_PORT == 1
@@ -31,6 +34,9 @@
  0000           ;       #if LEDS_SHADOWREG == 1
  0000           ;               extern BYTE Port_1_Data_SHADE;
  0000           ;               #define Port_Data_SHADE Port_1_Data_SHADE
+ 0000           ;               #define Port_Data_DM0_SHADE Port_1_DriveMode_0_SHADE
+ 0000           ;               #define Port_Data_DM1_SHADE Port_1_DriveMode_1_SHADE
+ 0000           ;               #define Port_Data_DM2_SHADE Port_1_DriveMode_2_SHADE
  0000           ;       #endif 
  0000           ;               
  0000           ; #elif LEDS_PORT == 2
@@ -41,7 +47,10 @@
  0000           ;               
  0000           ;       #if LEDS_SHADOWREG == 1
  0000           ;               extern BYTE Port_2_Data_SHADE;
- 0000           ;               #define Port_Data_SHADE Port_2_Data_SHADE
+ 0000           ;               #define Port_Data_SHADE Port_2_Data_SHADEs
+ 0000           ;               #define Port_Data_DM0_SHADE Port_2_DriveMode_0_SHADE
+ 0000           ;               #define Port_Data_DM1_SHADE Port_2_DriveMode_1_SHADE
+ 0000           ;               #define Port_Data_DM2_SHADE Port_2_DriveMode_2_SHADE
  0000           ;       #endif 
  0000           ;               
  0000           ; #else 
@@ -51,136 +60,153 @@
  0000           ; //inicialize LED driver
  0000           ; void Leds_Start(void)
  0000           ; {
- 0000                   .dbline 45
- 0000           ;       PRTxDM2 &= ~LEDS_MASK;  //initialize led
- 0000 4103E7            and REG[0x3],-25
- 0003                   .dbline 46
- 0003           ;       PRTxDM1 &= ~LEDS_MASK;
- 0003 7110              or F,0x10  ; iopage = 1
+ 0000                   .dbline 68
+ 0000           ;               #if  LED_SHADOWREG == 1
+ 0000           ;               
+ 0000           ;               Port_Data_DM0_SHADE |= LEDS_MASK; //Initialize LED, Strong drive
+ 0000           ;               PRTxDM0 = Port_Data_DM0_SHADE;
+ 0000           ;               
+ 0000           ;               Port_Data_DM1_SHADE &= ~LEDS_MASK;
+ 0000           ;               PRTxDM1 = Port_Data_DM1_SHADE;
+ 0000           ;       
+ 0000           ;               Port_Data_DM2_SHADE &= ~LEDS_MASK;
+ 0000           ;               PRTxDM2 = Port_Data_DM2_SHADE;
+ 0000           ;       
+ 0000           ;               Port_Data_SHADE &= ~LEDS_MASK;
+ 0000           ;               PRTxDR = Port_Data_SHADE;
+ 0000           ;       #else 
+ 0000           ;               PRTxDM0 |= LEDS_MASK;   //Initialize LED, Strong drive
+ 0000 7110              or F,0x10  ; iopage = 1
+ 0002 430018            or REG[0],24
+ 0005                   .dbline 69
+ 0005           ;               PRTxDM1 &= ~LEDS_MASK;
  0005 4101E7            and REG[0x1],-25
- 0008                   .dbline 47
- 0008           ;       PRTxDM0 |= LEDS_MASK;
- 0008 430018            or REG[0],24
- 000B                   .dbline 50
- 000B           ;       
- 000B           ;       #if LEDS_SHADOWREG == 1
- 000B           ;               Port_Data_SHADE &= ~LEDS_MASK;
- 000B 70CF              and F,0xCF      ; iopage = 0
- 000D 62D000            mov REG[0xd0],>_Port_0_Data_SHADE
- 0010 2600E7            and [_Port_0_Data_SHADE],-25
- 0013                   .dbline 51
- 0013           ;               PRTxDR = Port_Data_SHADE;       //turn off led
- 0013 5100              mov A,[_Port_0_Data_SHADE]
- 0015 6000              mov REG[0],A
- 0017                   .dbline -2
- 0017           L1:
- 0017                   .dbline 0 ; func end
- 0017 7F                ret
- 0018                   .dbend
- 0018                   .dbfunc e Leds_TurnOn _Leds_TurnOn fV
- 0018           ;           leds -> X-4
- 0018           _Leds_TurnOn::
- 0018                   .dbline -1
- 0018 10                push X
- 0019 4F                mov X,SP
- 001A                   .dbline 59
- 001A           ;       #else 
- 001A           ;               PRTxDR &= ~LEDS_MASK;
- 001A           ;       #endif
- 001A           ; }
- 001A           ; 
- 001A           ; //Turn on led
- 001A           ; void Leds_TurnOn(BYTE leds)
- 001A           ; {
- 001A                   .dbline 60
- 001A           ;       leds &= LEDS_MASK;
- 001A 27FC18            and [X-4],24
- 001D                   .dbline 62
- 001D           ;       #if LEDS_SHADOWREG == 1
- 001D           ;               Port_Data_SHADE |= leds;
- 001D 62D000            mov REG[0xd0],>_Port_0_Data_SHADE
- 0020 52FC              mov A,[X-4]
- 0022 2C00              or [_Port_0_Data_SHADE],A
- 0024                   .dbline 63
- 0024           ;               PRTxDR = Port_Data_SHADE;       //turn on led
- 0024 5100              mov A,[_Port_0_Data_SHADE]
- 0026 6000              mov REG[0],A
- 0028                   .dbline -2
- 0028           L2:
- 0028 20                pop X
- 0029                   .dbline 0 ; func end
- 0029 7F                ret
- 002A                   .dbsym l leds -4 c
- 002A                   .dbend
- 002A                   .dbfunc e Leds_TurnOff _Leds_TurnOff fV
- 002A           ;           leds -> X-4
- 002A           _Leds_TurnOff::
- 002A                   .dbline -1
- 002A 10                push X
- 002B 4F                mov X,SP
- 002C                   .dbline 71
- 002C           ;       #else 
- 002C           ;               PRTxDR |= leds;
- 002C           ;       #endif
- 002C           ; }
- 002C           ; 
- 002C           ; //Turn off led
- 002C           ; void Leds_TurnOff(BYTE leds)
- 002C           ; {
- 002C                   .dbline 72
- 002C           ;       leds &= LEDS_MASK;
- 002C 27FC18            and [X-4],24
- 002F                   .dbline 74
- 002F           ;       #if LEDS_SHADOWREG == 1
- 002F           ;               Port_Data_SHADE &= ~leds;
- 002F 52FC              mov A,[X-4]
- 0031 73                cpl A
- 0032 62D000            mov REG[0xd0],>_Port_0_Data_SHADE
- 0035 2400              and [_Port_0_Data_SHADE],A
- 0037                   .dbline 75
- 0037           ;               PRTxDR = Port_Data_SHADE;       //turn off led
- 0037 5100              mov A,[_Port_0_Data_SHADE]
- 0039 6000              mov REG[0],A
- 003B                   .dbline -2
- 003B           L3:
- 003B 20                pop X
- 003C                   .dbline 0 ; func end
- 003C 7F                ret
- 003D                   .dbsym l leds -4 c
- 003D                   .dbend
- 003D                   .dbfunc e Leds_Toggle _Leds_Toggle fV
- 003D           ;           leds -> X-4
- 003D           _Leds_Toggle::
- 003D                   .dbline -1
- 003D 10                push X
- 003E 4F                mov X,SP
- 003F                   .dbline 83
- 003F           ;       #else 
- 003F           ;               PRTxDR &= ~leds;
- 003F           ;       #endif
- 003F           ; }
- 003F           ; 
- 003F           ; //Toggle led
- 003F           ; void Leds_Toggle(BYTE leds)
- 003F           ; {
- 003F                   .dbline 84
- 003F           ;       leds &= LEDS_MASK;
- 003F 27FC18            and [X-4],24
- 0042                   .dbline 86
- 0042           ;       #if LEDS_SHADOWREG == 1
- 0042           ;               Port_Data_SHADE ^= leds;
- 0042 62D000            mov REG[0xd0],>_Port_0_Data_SHADE
- 0045 5100              mov A,[_Port_0_Data_SHADE]
- 0047 33FC              xor A,[X-4]
- 0049 5300              mov [_Port_0_Data_SHADE],A
- 004B                   .dbline 87
- 004B           ;               PRTxDR = Port_Data_SHADE;       //turn off led
- 004B 5100              mov A,[_Port_0_Data_SHADE]
- 004D 6000              mov REG[0],A
- 004F                   .dbline -2
- 004F           L4:
- 004F 20                pop X
- 0050                   .dbline 0 ; func end
- 0050 7F                ret
- 0051                   .dbsym l leds -4 c
- 0051                   .dbend
+ 0008                   .dbline 70
+ 0008           ;               PRTxDM2 &= ~LEDS_MASK;
+ 0008 70CF              and F,0xCF      ; iopage = 0
+ 000A 4103E7            and REG[0x3],-25
+ 000D                   .dbline 72
+ 000D           ;       
+ 000D           ;               PRTxDR &= ~LEDS_MASK;
+ 000D 4100E7            and REG[0],-25
+ 0010                   .dbline -2
+ 0010           L1:
+ 0010                   .dbline 0 ; func end
+ 0010 7F                ret
+ 0011                   .dbend
+ 0011                   .dbfunc e Leds_TurnOn _Leds_TurnOn fV
+ 0011           ;           leds -> X-4
+ 0011           _Leds_TurnOn::
+ 0011                   .dbline -1
+ 0011 10                push X
+ 0012 4F                mov X,SP
+ 0013                   .dbline 89
+ 0013           ;       #endif 
+ 0013           ;       
+ 0013           ; //    PRTxDM2 &= ~LEDS_MASK;//initialize led
+ 0013           ; //    PRTxDM1 &= ~LEDS_MASK;
+ 0013           ; //    PRTxDM0 |= LEDS_MASK;
+ 0013           ; //    
+ 0013           ; //    #if LEDS_SHADOWREG == 1
+ 0013           ; //            Port_Data_SHADE &= ~LEDS_MASK;
+ 0013           ; //            PRTxDR = Port_Data_SHADE;       //turn off led
+ 0013           ; //    #else 
+ 0013           ; //            PRTxDR &= ~LEDS_MASK;
+ 0013           ; //    #endif
+ 0013           ; }
+ 0013           ; 
+ 0013           ; //Turn on led
+ 0013           ; void Leds_TurnOn(BYTE leds)
+ 0013           ; {
+ 0013                   .dbline 90
+ 0013           ;       leds &= LEDS_MASK;
+ 0013 27FC18            and [X-4],24
+ 0016                   .dbline 92
+ 0016           ;       #if LEDS_SHADOWREG == 1
+ 0016           ;               Port_Data_SHADE |= leds;
+ 0016 62D000            mov REG[0xd0],>_Port_0_Data_SHADE
+ 0019 52FC              mov A,[X-4]
+ 001B 2C00              or [_Port_0_Data_SHADE],A
+ 001D                   .dbline 93
+ 001D           ;               PRTxDR = Port_Data_SHADE;       //turn on led
+ 001D 5100              mov A,[_Port_0_Data_SHADE]
+ 001F 6000              mov REG[0],A
+ 0021                   .dbline -2
+ 0021           L2:
+ 0021 20                pop X
+ 0022                   .dbline 0 ; func end
+ 0022 7F                ret
+ 0023                   .dbsym l leds -4 c
+ 0023                   .dbend
+ 0023                   .dbfunc e Leds_TurnOff _Leds_TurnOff fV
+ 0023           ;           leds -> X-4
+ 0023           _Leds_TurnOff::
+ 0023                   .dbline -1
+ 0023 10                push X
+ 0024 4F                mov X,SP
+ 0025                   .dbline 101
+ 0025           ;       #else 
+ 0025           ;               PRTxDR |= leds;
+ 0025           ;       #endif
+ 0025           ; }
+ 0025           ; 
+ 0025           ; //Turn off led
+ 0025           ; void Leds_TurnOff(BYTE leds)
+ 0025           ; {
+ 0025                   .dbline 102
+ 0025           ;       leds &= LEDS_MASK;
+ 0025 27FC18            and [X-4],24
+ 0028                   .dbline 104
+ 0028           ;       #if LEDS_SHADOWREG == 1
+ 0028           ;               Port_Data_SHADE &= ~leds;
+ 0028 52FC              mov A,[X-4]
+ 002A 73                cpl A
+ 002B 62D000            mov REG[0xd0],>_Port_0_Data_SHADE
+ 002E 2400              and [_Port_0_Data_SHADE],A
+ 0030                   .dbline 105
+ 0030           ;               PRTxDR = Port_Data_SHADE;       //turn off led
+ 0030 5100              mov A,[_Port_0_Data_SHADE]
+ 0032 6000              mov REG[0],A
+ 0034                   .dbline -2
+ 0034           L3:
+ 0034 20                pop X
+ 0035                   .dbline 0 ; func end
+ 0035 7F                ret
+ 0036                   .dbsym l leds -4 c
+ 0036                   .dbend
+ 0036                   .dbfunc e Leds_Toggle _Leds_Toggle fV
+ 0036           ;           leds -> X-4
+ 0036           _Leds_Toggle::
+ 0036                   .dbline -1
+ 0036 10                push X
+ 0037 4F                mov X,SP
+ 0038                   .dbline 113
+ 0038           ;       #else 
+ 0038           ;               PRTxDR &= ~leds;
+ 0038           ;       #endif
+ 0038           ; }
+ 0038           ; 
+ 0038           ; //Toggle led
+ 0038           ; void Leds_Toggle(BYTE leds)
+ 0038           ; {
+ 0038                   .dbline 114
+ 0038           ;       leds &= LEDS_MASK;
+ 0038 27FC18            and [X-4],24
+ 003B                   .dbline 116
+ 003B           ;       #if LEDS_SHADOWREG == 1
+ 003B           ;               Port_Data_SHADE ^= leds;
+ 003B 62D000            mov REG[0xd0],>_Port_0_Data_SHADE
+ 003E 5100              mov A,[_Port_0_Data_SHADE]
+ 0040 33FC              xor A,[X-4]
+ 0042 5300              mov [_Port_0_Data_SHADE],A
+ 0044                   .dbline 117
+ 0044           ;               PRTxDR = Port_Data_SHADE;       //turn off led
+ 0044 5100              mov A,[_Port_0_Data_SHADE]
+ 0046 6000              mov REG[0],A
+ 0048                   .dbline -2
+ 0048           L4:
+ 0048 20                pop X
+ 0049                   .dbline 0 ; func end
+ 0049 7F                ret
+ 004A                   .dbsym l leds -4 c
+ 004A                   .dbend

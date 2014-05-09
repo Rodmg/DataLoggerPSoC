@@ -1,6 +1,6 @@
 Project:      output/RTC
 Build Number: 0
-Date:         Tue May 06 11:46:57 2014
+Date:         Thu May 08 13:07:38 2014
 Compiler:     ICCM8C
 Version:      7.05.00
 
@@ -215,7 +215,7 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
 
 Area                               Addr   Size   Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------
-                            text   0F42   3A49 =  14921. bytes (rel,con,rom,code)
+                            text   0F42   3A42 =  14914. bytes (rel,con,rom,code)
 
        Addr  Global Symbol
       -----  --------------------------------
@@ -260,81 +260,81 @@ Area                               Addr   Size   Decimal Bytes (Attributes)
        1D23  _Keypad_GetKey
        1D2C  _Keypad_GPIO_ISR
        1DE1  _Leds_Start
-       1DF9  _Leds_TurnOn
-       1E0B  _Leds_TurnOff
-       1E1E  _Leds_Toggle
-       1E32  _LevelView_Start
-       1E33  _LevelView_Callback
-       1EE0  _LevelView_Update
-       2072  _Logger_Start
-       2073  _Logger_End
-       2074  _Logger_Loop
-       230C  _putchar
-       2317  _main
-       23E4  _MainView_Start
-       2495  _MainView_Callback
-       24A7  _MainView_Update
-       251E  _Menu_Start
-       251F  _Menu_Stop
-       2520  _Menu_Update
-       261C  _Menu_Up
-       265B  _Menu_Down
-       26A9  _Menu_Select
-       277F  _Menu_Clear
-       27A4  _PCView_Start
-       27A5  _PCView_Callback
-       27D3  _PCView_Update
-       27FF  _Persist_Start
-       2803  _Persist_Stop
-       2807  _Persist_Clear
-       2847  _Persist_SaveRecord
-       28DD  _Persist_LoadRecord
-       2935  _Persist_SaveConfig
-       295B  _Persist_LoadConfig
-       2981  _RegTimeView_Start
-       2982  _RegTimeView_Callback
-       298C  _RegTimeView_Update
-       2C17  _Rtc_Start
-       2C2B  _Rtc_Stop
-       2C41  _Rtc_EnableSqw1Hz
-       2C5E  _Rtc_WriteToRtc
-       2C72  _Rtc_ReadFromRtc
-       2C86  _Rtc_SetSqwOutConfig
-       2C9A  _Rtc_GetSqwOutConfig
-       2CB3  _Rtc_WriteToRam
-       2D29  _Rtc_ReadFromRam
-       2DD3  _TempSensor_Start
-       2DE5  _TempSensor_Stop
-       2DEE  _TempSensor_GetTemp
-       2F8F  _TempView_Start
-       2F90  _TempView_Callback
-       3011  _TempView_Update
-       308A  _Time_Start
-       30A6  _Time_Stop
-       30AA  _Time_Pause
-       30DB  _Time_Adj_1224hrs
-       32B6  _Time_Adj_S
-       3374  _Time_Adj_Mi
-       3432  _Time_Adj_H
-       362C  _Time_Adj_D
-       3799  _Time_Adj_Mo
-       3907  _Time_Adj_Y
-       3FF0  _memcpyLMM
-       3FFF  _memcpy
-       401E  _cstrcpyLMM
-       4029  _cstrcpy
-       404B  __plcall
-       4057  _itoa
-       4230  _utoa
-       4373  _isdigit
-       4394  _islower
-       43B5  _isspace
-       43D6  _toupper
-       4414  _cprintf
-       4455  __cprint
-       498B  __xidata_start
-       498B  __text_end
-       499D  __xidata_end
+       1DF2  _Leds_TurnOn
+       1E04  _Leds_TurnOff
+       1E17  _Leds_Toggle
+       1E2B  _LevelView_Start
+       1E2C  _LevelView_Callback
+       1ED9  _LevelView_Update
+       206B  _Logger_Start
+       206C  _Logger_End
+       206D  _Logger_Loop
+       2305  _putchar
+       2310  _main
+       23DD  _MainView_Start
+       248E  _MainView_Callback
+       24A0  _MainView_Update
+       2517  _Menu_Start
+       2518  _Menu_Stop
+       2519  _Menu_Update
+       2615  _Menu_Up
+       2654  _Menu_Down
+       26A2  _Menu_Select
+       2778  _Menu_Clear
+       279D  _PCView_Start
+       279E  _PCView_Callback
+       27CC  _PCView_Update
+       27F8  _Persist_Start
+       27FC  _Persist_Stop
+       2800  _Persist_Clear
+       2840  _Persist_SaveRecord
+       28D6  _Persist_LoadRecord
+       292E  _Persist_SaveConfig
+       2954  _Persist_LoadConfig
+       297A  _RegTimeView_Start
+       297B  _RegTimeView_Callback
+       2985  _RegTimeView_Update
+       2C10  _Rtc_Start
+       2C24  _Rtc_Stop
+       2C3A  _Rtc_EnableSqw1Hz
+       2C57  _Rtc_WriteToRtc
+       2C6B  _Rtc_ReadFromRtc
+       2C7F  _Rtc_SetSqwOutConfig
+       2C93  _Rtc_GetSqwOutConfig
+       2CAC  _Rtc_WriteToRam
+       2D22  _Rtc_ReadFromRam
+       2DCC  _TempSensor_Start
+       2DDE  _TempSensor_Stop
+       2DE7  _TempSensor_GetTemp
+       2F88  _TempView_Start
+       2F89  _TempView_Callback
+       300A  _TempView_Update
+       3083  _Time_Start
+       309F  _Time_Stop
+       30A3  _Time_Pause
+       30D4  _Time_Adj_1224hrs
+       32AF  _Time_Adj_S
+       336D  _Time_Adj_Mi
+       342B  _Time_Adj_H
+       3625  _Time_Adj_D
+       3792  _Time_Adj_Mo
+       3900  _Time_Adj_Y
+       3FE9  _memcpyLMM
+       3FF8  _memcpy
+       4017  _cstrcpyLMM
+       4022  _cstrcpy
+       4044  __plcall
+       4050  _itoa
+       4229  _utoa
+       436C  _isdigit
+       438D  _islower
+       43AE  _isspace
+       43CF  _toupper
+       440D  _cprintf
+       444E  __cprint
+       4984  __xidata_start
+       4984  __text_end
+       4996  __xidata_end
 
 Area                               Start  End    Decimal Bytes (Attributes)
 --------------------------------   ----   ----   ------- ----- ------------

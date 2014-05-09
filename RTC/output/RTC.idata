@@ -1,9 +1,9 @@
-flash 498B SRAM    F:
+flash 4984 SRAM    F:
  00 166 bytes
-flash 498F SRAM   C4:
+flash 4988 SRAM   C4:
  00 12 bytes
-flash 4993 SRAM   D4:
+flash 498C SRAM   D4:
  <size at next line>   F
   [size:] 1 bytes
-flash 4997 SRAM   D5:
+flash 4990 SRAM   D5:
  00 10 bytes

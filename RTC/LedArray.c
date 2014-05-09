@@ -11,6 +11,9 @@
 	#if LEDS_SHADOWREG == 1
 		extern BYTE Port_0_Data_SHADE;
 		#define Port_Data_SHADE Port_0_Data_SHADE
+		#define Port_Data_DM0_SHADE Port_0_DriveMode_0_SHADE
+		#define Port_Data_DM1_SHADE Port_0_DriveMode_1_SHADE
+		#define Port_Data_DM2_SHADE Port_0_DriveMode_2_SHADE
 	#endif 
 		
 #elif LEDS_PORT == 1
@@ -22,6 +25,9 @@
 	#if LEDS_SHADOWREG == 1
 		extern BYTE Port_1_Data_SHADE;
 		#define Port_Data_SHADE Port_1_Data_SHADE
+		#define Port_Data_DM0_SHADE Port_1_DriveMode_0_SHADE
+		#define Port_Data_DM1_SHADE Port_1_DriveMode_1_SHADE
+		#define Port_Data_DM2_SHADE Port_1_DriveMode_2_SHADE
 	#endif 
 		
 #elif LEDS_PORT == 2
@@ -32,7 +38,10 @@
 		
 	#if LEDS_SHADOWREG == 1
 		extern BYTE Port_2_Data_SHADE;
-		#define Port_Data_SHADE Port_2_Data_SHADE
+		#define Port_Data_SHADE Port_2_Data_SHADEs
+		#define Port_Data_DM0_SHADE Port_2_DriveMode_0_SHADE
+		#define Port_Data_DM1_SHADE Port_2_DriveMode_1_SHADE
+		#define Port_Data_DM2_SHADE Port_2_DriveMode_2_SHADE
 	#endif 
 		
 #else 
@@ -42,16 +51,37 @@
 //inicialize LED driver
 void Leds_Start(void)
 {
-	PRTxDM2 &= ~LEDS_MASK;	//initialize led
-	PRTxDM1 &= ~LEDS_MASK;
-	PRTxDM0 |= LEDS_MASK;
+		#if  LED_SHADOWREG == 1
+		
+		Port_Data_DM0_SHADE |= LEDS_MASK; //Initialize LED, Strong drive
+		PRTxDM0 = Port_Data_DM0_SHADE;
+		
+		Port_Data_DM1_SHADE &= ~LEDS_MASK;
+		PRTxDM1 = Port_Data_DM1_SHADE;
 	
-	#if LEDS_SHADOWREG == 1
+		Port_Data_DM2_SHADE &= ~LEDS_MASK;
+		PRTxDM2 = Port_Data_DM2_SHADE;
+	
 		Port_Data_SHADE &= ~LEDS_MASK;
-		PRTxDR = Port_Data_SHADE;	//turn off led
+		PRTxDR = Port_Data_SHADE;
 	#else 
+		PRTxDM0 |= LEDS_MASK;	//Initialize LED, Strong drive
+		PRTxDM1 &= ~LEDS_MASK;
+		PRTxDM2 &= ~LEDS_MASK;
+	
 		PRTxDR &= ~LEDS_MASK;
-	#endif
+	#endif 
+	
+//	PRTxDM2 &= ~LEDS_MASK;//initialize led
+//	PRTxDM1 &= ~LEDS_MASK;
+//	PRTxDM0 |= LEDS_MASK;
+//	
+//	#if LEDS_SHADOWREG == 1
+//		Port_Data_SHADE &= ~LEDS_MASK;
+//		PRTxDR = Port_Data_SHADE;	//turn off led
+//	#else 
+//		PRTxDR &= ~LEDS_MASK;
+//	#endif
 }
 
 //Turn on led
